@@ -23,25 +23,25 @@ scenarios.push(new Scenario(
 	'March 194',
 	'194-03-01', [
 		// name, ruler, color, cities
-		['Cao Cao Forces', 15, '#00f', [8, 9]],				// 0	
-		['Liu Bei Forces', 247, '#0f0', [10]],				// 1
-		['Sun Ce Forces', 382, '#f00', [45]],				// 2
-		['Lu Bu Forces', 277, '#666', [7]],					// 3
-		['Tao Qian Forces', 415, '#afa', [11]],				// 4
-		['Yuan Shu Forces', 552, '#f516ed', [12, 13]],		// 5
-		['Kong Rong Forces', 217, '#afa', [18]],			// 6
-		['Yuan Shao Forces', 551, '#ff0', [15, 19, 20]],	// 7
-		['Gongsun Zan Forces', 124, '#e33a10', [21, 22]],	// 8
-		['Gongsun Du Forces', 117, '#925df5', [23]],		// 9
-		['Zhang Yang Forces', 596, '#3b1604', [17]],		// 10
-		['Ma Teng Forces', 303, '#572a03', [0, 1]],			// 11
-		['Liu Yong Forces', 269, '#130a45', [44]],			// 12
-		['Yan Baihu Forces', 510, '#7a4b1c', [43]],			// 13
-		['Wang Lang Forces', 434, '#ccc', [46]],			// 14
-		['Shi Xie Forces', 364, '#7a283e', [49]],			// 15
-		['Liu Biao Forces', 248, '#2bc8f0', [34, 35, 37]],	// 16
-		['Zhang Lu Forces', 580, '#5bf55b', [24]],			// 17
-		['Liu Zhang Forces', 272, '#0d0d47', [26, 27, 28]]	// 18
+		['Cao Cao Forces', 15, '#0000FF', [8, 9]],				// 0	
+		['Liu Bei Forces', 247, '#00FF00', [10]],				// 1
+		['Sun Ce Forces', 382, '#FF0000', [45]],				// 2
+		['Lu Bu Forces', 277, '#666666', [7]],					// 3
+		['Tao Qian Forces', 415, '#AAFFAA', [11]],				// 4
+		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],		// 5
+		['Kong Rong Forces', 217, '#AAFFAA', [18]],			// 6
+		['Yuan Shao Forces', 551, '#FFFF00', [15, 19, 20]],	// 7
+		['Gongsun Zan Forces', 124, '#E33A10', [21, 22]],	// 8
+		['Gongsun Du Forces', 117, '#925DF5', [23]],		// 9
+		['Zhang Yang Forces', 596, '#3B1604', [17]],		// 10
+		['Ma Teng Forces', 303, '#572A03', [0, 1]],			// 11
+		['Liu Yong Forces', 269, '#130A45', [44]],			// 12
+		['Yan Baihu Forces', 510, '#7A4B1C', [43]],			// 13
+		['Wang Lang Forces', 434, '#CCCCCC', [46]],			// 14
+		['Shi Xie Forces', 364, '#7A283E', [49]],			// 15
+		['Liu Biao Forces', 248, '#2BC8F0', [34, 35, 37]],	// 16
+		['Zhang Lu Forces', 580, '#5BF55B', [24]],			// 17
+		['Liu Zhang Forces', 272, '#0D0D47', [26, 27, 28]]	// 18
 	], [
 		// force, name, position
 		[0, 'Cao Cao', 8],
@@ -229,8 +229,6 @@ function draw () {
 				ctx.fillStyle = endColor; 
 				ctx.fillRect(x, y, squareSize, squareSize);
 			}
-			
-			
 			/*
 			else if (map[i][j] == 2) {
 				ctx.fillStyle = startColor; 
@@ -251,7 +249,7 @@ function draw () {
 				else {
 					ctx.fillStyle = forces[cities[index].Force].Color;
 					ctx.fillRect(x, y, squareSize, squareSize);
-					ctx.fillStyle = fontColor;
+					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
 					ctx.fillText(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
 				}
 				
@@ -286,7 +284,7 @@ function draw () {
 		ctx.fillRect(x, y, buttonWidth, buttonHeight);
 	}
 	ctx.rect(x, y, buttonWidth, buttonHeight);
-	ctx.fillStyle = fontColor;
+	ctx.fillStyle = fontDark;
 	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
 	
 	y += buttonHeight + squareSize;
@@ -339,6 +337,20 @@ function applyScenario (name) {
 			}
 		}
 	}
+}
+
+function hexToDecimal (decimal) {
+	return parseInt(decimal, 16);
+}
+
+function getTextColor (cityColor) {
+	var r = hexToDecimal(cityColor.slice(1, 3));
+	var g = hexToDecimal(cityColor.slice(3, 5));
+	var b = hexToDecimal(cityColor.slice(5));
+	var average = (r + g + b) / 3;
+	
+	if (average < 80) return fontLight;
+	else return fontDark;
 }
 
 function reset () {
