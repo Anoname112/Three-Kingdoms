@@ -38,6 +38,9 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 			 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,89, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 			 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const isPortrait = window.innerWidth < window.innerHeight;
+
 const timerInterval = 10;
 
 const canvasPadding = 0;
@@ -45,7 +48,7 @@ const cityPadding = 2;
 const buttonPadding = 6;
 const buttonColor = '#4444FF';
 const lineHeight = 15;
-const canvasFont = '14px Consolas';
+const canvasFont = (isMobile || isPortrait) ? '8px Consolas' : '14px Consolas';
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
 
