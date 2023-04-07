@@ -147,7 +147,7 @@ var squareSize = 18;
 var buttonWidth = 60;
 var buttonHeight = 30;
 
-var c;
+var canvas;
 var ctx;
 var hoverCard;
 var mousePosition;
@@ -164,9 +164,11 @@ var finalPath;
 var date;
 
 function draw () {
-	c.width = c.width;
-	hoverCard.style.visibility = 'hidden';
+	// Invalidate
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	canvas.width = canvas.width;
 	
+	hoverCard.style.visibility = 'hidden';
 	ctx.font = canvasFont;
 	
 	// Begin drawing
@@ -257,9 +259,9 @@ function draw () {
 					hoverCard.style.visibility = 'visible';
 					hoverCard.style.top = 'auto';
 					hoverCard.style.bottom = 'auto';
-					hoverCard.style.left = mousePosition.X;
-					if (mousePosition.Y + 125 > window.innerHeight) hoverCard.style.top = mousePosition.Y - 125;
-					else hoverCard.style.top = mousePosition.Y;
+					hoverCard.style.left = mousePosition.X + 'px';
+					if (mousePosition.Y + 125 > window.innerHeight) hoverCard.style.top = (mousePosition.Y - 125) + 'px';
+					else hoverCard.style.top = mousePosition.Y + 'px';
 					hoverCard.innerHTML = '<b>' + cities[index].Name + '</b>';
 					
 					var forceName = '-';
@@ -409,18 +411,18 @@ function onMouseMove (e) {
 }
 
 window.onload = function () {
-	c = document.getElementById('myCanvas');
-	ctx = c.getContext('2d');
+	canvas = document.getElementById('myCanvas');
+	ctx = canvas.getContext('2d');
 	
-	c.width = window.innerWidth;
-	c.height = window.innerHeight;
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 	
 	hoverCard = document.createElement('div');
 	hoverCard.style.border = '1px solid #000';
 	hoverCard.style.padding = '5px 5px';
 	hoverCard.style.background = '#bbb';
 	hoverCard.style.font = canvasFont;
-	hoverCard.style.position = 'absolute';
+	hoverCard.style.position = 'fixed';
 	hoverCard.style.visibility = 'hidden';
 	hoverCard.style.cursor = 'none';
 	document.body.appendChild(hoverCard);
