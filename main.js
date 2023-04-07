@@ -163,10 +163,145 @@ var finalPath;
 
 var date;
 
+window.onload = function () {
+	canvas = document.getElementById('myCanvas');
+	ctx = canvas.getContext('2d');
+	
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	
+	hoverCard = document.createElement('div');
+	hoverCard.style.border = '1px solid #000';
+	hoverCard.style.padding = '5px 5px';
+	hoverCard.style.background = '#bbb';
+	hoverCard.style.font = canvasFont;
+	hoverCard.style.position = 'fixed';
+	hoverCard.style.visibility = 'hidden';
+	hoverCard.style.cursor = 'none';
+	document.body.appendChild(hoverCard);
+	
+	document.onclick = onMouseClick;
+	document.onmousemove = onMouseMove;
+	
+	// Prepare canvas
+	var fill = window.innerHeight;
+	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
+	squareSize = fill / map.length;
+	buttonWidth = 3.5 * squareSize;
+	buttonHeight = 1.5 * squareSize;
+	
+	// Prepare officers
+	for (var i = 0; i < baseOfficers.length; i++) {
+		officers.push(new Officer(
+			baseOfficers[i]['name'],
+			'-',
+			new Point(0, 0),
+			baseOfficers[i]['ldr'],
+			baseOfficers[i]['war'],
+			baseOfficers[i]['int'],
+			baseOfficers[i]['pol'],
+			baseOfficers[i]['chr']
+		));
+	}
+	
+	//invert map
+	for (var i = 0; i < map.length; i++) {
+		for (var j = i + 1; j < map.length; j++) {
+			var temp = map[i][j];
+			map[i][j] = map[j][i];
+			map[j][i] = temp;
+		}
+	}
+	
+	reset();
+}
+
+function reset () {
+	applyScenario('March 194');
+	
+	paths = [];
+	explored = [];
+	openset = [];
+	finalPath = null;
+	mousePosition = new Point(0, 0);
+	
+	// Initiate start point and openset
+	paths.push(new Path([startPoint]));
+	explored.push(startPoint);
+	var neighbours = getNeighbours(startPoint);
+	for (var i = 0; i < neighbours.length; i++) {
+		if (!isExplored(neighbours[i]) && !inOpenset(neighbours[i]) && map[neighbours[i].X][neighbours[i].Y] != 1) {
+			openset.push(neighbours[i]);
+		}
+	}
+	
+	if (instant) {
+		while (finalPath == null && paths.length > 0) expand();
+		draw();
+	}
+	else intervalId  = setInterval(timerTick, timerInterval);
+}
+
+function applyScenario (name) {
+	for (var i = 0; i < scenarios.length; i++) {
+		if (scenarios[i].Name == name) {
+			date = scenarios[i].date;
+			for (var j = 0; j < scenarios[i].Forces.length; j++) {
+				forces.push(new Force(scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
+				for (var k = 0; k < scenarios[i].Forces[j][3].length; k++) {
+					cities[scenarios[i].Forces[j][3][k]].Force = forces.length - 1;
+				}
+			}
+		}
+	}
+}
+
+function onMouseClick (e) {
+	var eX = e.clientX;
+	var eY = e.clientY;
+	
+	// Instant button
+	var instantX = canvasPadding * 2 + mapWidth * squareSize;
+	var instantY = canvasPadding;
+	if (eX >= instantX && eX < instantX + buttonWidth && eY >= instantY && eY < instantY + buttonHeight) {
+		instant = !instant;
+		reset();
+	}
+	
+	// End point
+	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+		var indexX = parseInt((eX - canvasPadding) / squareSize);
+		var indexY = parseInt((eY - canvasPadding) / squareSize);
+		
+		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
+			endPoint.X = indexX;
+			endPoint.Y = indexY;
+			reset();
+		}
+	}
+}
+
+function onMouseMove (e) {
+	mousePosition = new Point(e.clientX, e.clientY);
+}
+
+function hexToDecimal (decimal) {
+	return parseInt(decimal, 16);
+}
+
+function getTextColor (cityColor) {
+	var r = hexToDecimal(cityColor.slice(1, 3));
+	var g = hexToDecimal(cityColor.slice(3, 5));
+	var b = hexToDecimal(cityColor.slice(5));
+	var average = (r + g + b) / 3;
+	
+	if (average < 80) return fontLight;
+	else return fontDark;
+}
+
 function draw () {
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	canvas.width = canvas.width;
 	
 	hoverCard.style.visibility = 'hidden';
 	ctx.font = canvasFont;
@@ -290,6 +425,35 @@ function draw () {
 	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
 	
 	y += buttonHeight + squareSize;
+	var infos = [[
+			'Start square',
+			startColor
+		], [
+			'End square (click to change the end square)',
+			endColor
+		], [
+			'Wall',
+			wallColor
+		], [
+			'Explored squares',
+			exploredColor
+		], [
+			'Unexplored neighbours',
+			opensetColor
+		], [
+			'Found shortest path',
+			finalPathColor
+		]
+	];
+
+	for (var i = 0; i < infos.length; i++) {
+		ctx.fillStyle = infos[i][1];
+		ctx.fillRect(x, y, squareSize, squareSize);
+		ctx.fillText(infos[i][0], x + squareSize *  2, y + lineHeight);
+		y += squareSize * 2;
+	}
+	
+	/*
 	ctx.fillStyle = startColor;
 	ctx.fillRect(x, y, squareSize, squareSize);
 	ctx.fillText('Start square', x + squareSize *  2, y + lineHeight);
@@ -318,147 +482,12 @@ function draw () {
 	ctx.fillStyle = finalPathColor;
 	ctx.fillRect(x, y, squareSize, squareSize);
 	ctx.fillText('Found shortest path', x + squareSize *  2, y + lineHeight);
-	
+	*/
+
 	ctx.stroke();
 }
 
 function timerTick () {
 	if (finalPath == null && paths.length > 0) expand();
 	draw();
-}
-
-function applyScenario (name) {
-	for (var i = 0; i < scenarios.length; i++) {
-		if (scenarios[i].Name == name) {
-			date = scenarios[i].date;
-			for (var j = 0; j < scenarios[i].Forces.length; j++) {
-				forces.push(new Force(scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
-				for (var k = 0; k < scenarios[i].Forces[j][3].length; k++) {
-					cities[scenarios[i].Forces[j][3][k]].Force = forces.length - 1;
-				}
-			}
-		}
-	}
-}
-
-function hexToDecimal (decimal) {
-	return parseInt(decimal, 16);
-}
-
-function getTextColor (cityColor) {
-	var r = hexToDecimal(cityColor.slice(1, 3));
-	var g = hexToDecimal(cityColor.slice(3, 5));
-	var b = hexToDecimal(cityColor.slice(5));
-	var average = (r + g + b) / 3;
-	
-	if (average < 80) return fontLight;
-	else return fontDark;
-}
-
-function reset () {
-	applyScenario('March 194');
-	
-	paths = [];
-	explored = [];
-	openset = [];
-	finalPath = null;
-	mousePosition = new Point(0, 0);
-	
-	// Initiate start point and openset
-	paths.push(new Path([startPoint]));
-	explored.push(startPoint);
-	var neighbours = getNeighbours(startPoint);
-	for (var i = 0; i < neighbours.length; i++) {
-		if (!isExplored(neighbours[i]) && !inOpenset(neighbours[i]) && map[neighbours[i].X][neighbours[i].Y] != 1) {
-			openset.push(neighbours[i]);
-		}
-	}
-	
-	if (instant) {
-		while (finalPath == null && paths.length > 0) expand();
-		draw();
-	}
-	else intervalId  = setInterval(timerTick, timerInterval);
-}
-
-function onMouseClick (e) {
-	var eX = e.clientX;
-	var eY = e.clientY;
-	
-	// Instant button
-	var instantX = canvasPadding * 2 + mapWidth * squareSize;
-	var instantY = canvasPadding;
-	if (eX >= instantX && eX < instantX + buttonWidth && eY >= instantY && eY < instantY + buttonHeight) {
-		instant = !instant;
-		reset();
-	}
-	
-	// End point
-	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
-		var indexX = parseInt((eX - canvasPadding) / squareSize);
-		var indexY = parseInt((eY - canvasPadding) / squareSize);
-		
-		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
-			endPoint.X = indexX;
-			endPoint.Y = indexY;
-			reset();
-		}
-	}
-}
-
-function onMouseMove (e) {
-	mousePosition = new Point(e.clientX, e.clientY);
-}
-
-window.onload = function () {
-	canvas = document.getElementById('myCanvas');
-	ctx = canvas.getContext('2d');
-	
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-	
-	hoverCard = document.createElement('div');
-	hoverCard.style.border = '1px solid #000';
-	hoverCard.style.padding = '5px 5px';
-	hoverCard.style.background = '#bbb';
-	hoverCard.style.font = canvasFont;
-	hoverCard.style.position = 'fixed';
-	hoverCard.style.visibility = 'hidden';
-	hoverCard.style.cursor = 'none';
-	document.body.appendChild(hoverCard);
-	
-	document.onclick = onMouseClick;
-	document.onmousemove = onMouseMove;
-	
-	// Prepare canvas
-	var fill = window.innerHeight;
-	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
-	squareSize = fill / map.length;
-	buttonWidth = 3.5 * squareSize;
-	buttonHeight = 1.5 * squareSize;
-	
-	// Prepare officers
-	for (var i = 0; i < baseOfficers.length; i++) {
-		officers.push(new Officer(
-			baseOfficers[i]['name'],
-			'-',
-			new Point(0, 0),
-			baseOfficers[i]['ldr'],
-			baseOfficers[i]['war'],
-			baseOfficers[i]['int'],
-			baseOfficers[i]['pol'],
-			baseOfficers[i]['chr']
-		));
-	}
-	
-	//invert map
-	for (var i = 0; i < map.length; i++) {
-		for (var j = i + 1; j < map.length; j++) {
-			var temp = map[i][j];
-			map[i][j] = map[j][i];
-			map[j][i] = temp;
-		}
-	}
-	
-	reset();
 }
