@@ -1,3 +1,12 @@
+var canvas;
+var ctx;
+var hoverCard;
+
+var intervalId;
+var instant = false;
+var date;
+var mousePosition;
+
 var forces = [];
 var officers = [];
 var units = [];
@@ -147,13 +156,6 @@ var squareSize = 18;
 var buttonWidth = 60;
 var buttonHeight = 30;
 
-var canvas;
-var ctx;
-var hoverCard;
-var mousePosition;
-var intervalId;
-var instant = false;
-
 var startPoint = new Point(4, 10);
 var endPoint = new Point(5, 10);
 var paths;
@@ -161,9 +163,10 @@ var explored;
 var openset;
 var finalPath;
 
-var date;
-
 window.onload = function () {
+	document.onclick = onMouseClick;
+	document.onmousemove = onMouseMove;
+	
 	canvas = document.getElementById('myCanvas');
 	ctx = canvas.getContext('2d');
 	
@@ -179,9 +182,6 @@ window.onload = function () {
 	hoverCard.style.visibility = 'hidden';
 	hoverCard.style.cursor = 'none';
 	document.body.appendChild(hoverCard);
-	
-	document.onclick = onMouseClick;
-	document.onmousemove = onMouseMove;
 	
 	// Prepare canvas
 	var fill = window.innerHeight;
