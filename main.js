@@ -423,66 +423,22 @@ function draw () {
 	ctx.rect(x, y, buttonWidth, buttonHeight);
 	ctx.fillStyle = fontDark;
 	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
-	
 	y += buttonHeight + squareSize;
-	var infos = [[
-			'Start square',
-			startColor
-		], [
-			'End square (click to change the end square)',
-			endColor
-		], [
-			'Wall',
-			wallColor
-		], [
-			'Explored squares',
-			exploredColor
-		], [
-			'Unexplored neighbours',
-			opensetColor
-		], [
-			'Found shortest path',
-			finalPathColor
-		]
-	];
 
+	var infos = [
+		['Start square', startColor],
+		['End square (click to change the end square)', endColor],
+		['Wall', wallColor],
+		['Explored squares', exploredColor],
+		['Unexplored neighbours', opensetColor],
+		['Found shortest path', finalPathColor]
+	];
 	for (var i = 0; i < infos.length; i++) {
 		ctx.fillStyle = infos[i][1];
 		ctx.fillRect(x, y, squareSize, squareSize);
 		ctx.fillText(infos[i][0], x + squareSize *  2, y + lineHeight);
 		y += squareSize * 2;
 	}
-	
-	/*
-	ctx.fillStyle = startColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('Start square', x + squareSize *  2, y + lineHeight);
-	
-	y += squareSize * 2;
-	ctx.fillStyle = endColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('End square (click to change the end square)', x + squareSize *  2, y + lineHeight);
-	
-	y += squareSize * 2;
-	ctx.fillStyle = wallColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('Wall', x + squareSize *  2, y + lineHeight);
-	
-	y += squareSize * 2;
-	ctx.fillStyle = exploredColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('Explored squares', x + squareSize *  2, y + lineHeight);
-	
-	y += squareSize * 2;
-	ctx.fillStyle = opensetColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('Unexplored neighbours', x + squareSize *  2, y + lineHeight);
-	
-	y += squareSize * 2;
-	ctx.fillStyle = finalPathColor;
-	ctx.fillRect(x, y, squareSize, squareSize);
-	ctx.fillText('Found shortest path', x + squareSize *  2, y + lineHeight);
-	*/
 
 	ctx.stroke();
 }
