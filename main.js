@@ -151,7 +151,7 @@ var canvas;
 var ctx;
 var hoverCard;
 var mousePosition;
-var intervalId = null;
+var intervalId;
 var instant = false;
 
 var startPoint = new Point(4, 10);
@@ -424,22 +424,23 @@ function draw () {
 	ctx.fillStyle = fontDark;
 	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
 	y += buttonHeight + squareSize;
-
+	
+	// Draw infos
 	var infos = [
-		['Start square', startColor],
-		['End square (click to change the end square)', endColor],
-		['Wall', wallColor],
-		['Explored squares', exploredColor],
-		['Unexplored neighbours', opensetColor],
-		['Found shortest path', finalPathColor]
+		[startColor, 'Start square'],
+		[endColor, 'End square (click to change the end square)'],
+		[wallColor, 'Wall'],
+		[exploredColor, 'Explored squares'],
+		[opensetColor, 'Unexplored neighbours'],
+		[finalPathColor, 'Found shortest path']
 	];
 	for (var i = 0; i < infos.length; i++) {
-		ctx.fillStyle = infos[i][1];
+		ctx.fillStyle = infos[i][0];
 		ctx.fillRect(x, y, squareSize, squareSize);
-		ctx.fillText(infos[i][0], x + squareSize *  2, y + lineHeight);
+		ctx.fillText(infos[i][1], x + squareSize *  2, y + lineHeight);
 		y += squareSize * 2;
 	}
-
+	
 	ctx.stroke();
 }
 
