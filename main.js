@@ -382,6 +382,7 @@ function draw () {
 					ctx.fillText(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
 				}
 				
+				
 				if (mousePosition.X >= x && mousePosition.X < x + squareSize && mousePosition.Y >= y && mousePosition.Y < y + squareSize) {
 					hoverCard.style.visibility = 'visible';
 					hoverCard.style.top = 'auto';
@@ -389,26 +390,23 @@ function draw () {
 					hoverCard.style.left = mousePosition.X + 'px';
 					if (mousePosition.Y + 125 > window.innerHeight) hoverCard.style.top = (mousePosition.Y - 125) + 'px';
 					else hoverCard.style.top = mousePosition.Y + 'px';
+					var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
 					
 					var forceName = '-';
 					var forceRulerName = '';
 					if (cities[index].Force != '-') {
-						forceName = forces[cities[index].Force].Name;
-						forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+						var forceName = forces[cities[index].Force].Name;
+						var forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+						string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
+						string += '<b>' + forceName + '</b><br />';
 					}
 					
-					hoverCard.innerHTML = '';
-					if (forceRulerName.length > 0) {
-						hoverCard.innerHTML += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-					}
-					hoverCard.innerHTML += '<b>' + cities[index].Name + '</b>';
-					hoverCard.innerHTML += '<br><b>' + forceName + '</b>';
-					
-					hoverCard.innerHTML += '<br />Farm: ' + cities[index].cFarm + '/' + cities[index].Farm +
-						'<br />Trade: ' + cities[index].cTrade + '/' + cities[index].Trade +
-						'<br />Tech: ' + cities[index].cTech + '/' + cities[index].Tech +
-						'<br />Defense: ' + cities[index].cDefense + '/' + cities[index].Defense +
-						'<br />Order: ' + cities[index].cOrder + '/100';
+					string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
+						'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
+						'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
+						'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
+						'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
+					hoverCard.innerHTML = string;
 				}
 			}
 		}

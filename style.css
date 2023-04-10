@@ -13,16 +13,45 @@ body {
 
 .hoverCard {
 	position: fixed;
-	padding: 5px;
 	border: 1px solid #000000;
-	border-radius: 5px;
 	background-color: #DDDDDD;
-	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+	font-family: "Segoe UI", "Tahoma", "Trebuchet MS", "Arial", "Helvetica";
 	visibility: hidden;
 	cursor: none;
+	overflow: hidden;
+}
+
+.cityName {
+	padding: 5px;
+	background-color: #4F1E02;
+	background-image: linear-gradient(to bottom right, #1F0B01, #7E3316);
+	font-size: 15px;
+	color: #FFFFFF;
+}
+
+.cityInfo {
+	padding: 5px;
+	font-size: 13px;
 }
 
 .smallPortrait {
 	height: 30px;
 	border-radius: 15px;
+}
+
+.cityStats {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-collapse: collapse;
+	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+	font-size: 13px;
+}
+
+.cityStats tr td {
+	padding: 0;
+}
+
+.right {
+	text-align: right;
 }
