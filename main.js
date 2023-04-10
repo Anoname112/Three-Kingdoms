@@ -150,11 +150,9 @@ cities[47] = new City('Jian An', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[48] = new City('Nan Hai', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[49] = new City('Jiao Zhi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 
-var mapWidth = map.length;
-var mapHeight = map[0].length;
-var squareSize = 18;
-var buttonWidth = 60;
-var buttonHeight = 30;
+var squareSize;
+var buttonWidth;
+var buttonHeight;
 
 var startPoint = new Point(4, 10);
 var endPoint = new Point(5, 10);

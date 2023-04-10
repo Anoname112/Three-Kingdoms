@@ -42,6 +42,8 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
 const timerInterval = 10;
+const mapWidth = map.length;
+const mapHeight = map[0].length;
 
 const canvasPadding = 0;
 const canvasFont = (isMobile || isPortrait) ? '8px Consolas' : '14px Consolas';
