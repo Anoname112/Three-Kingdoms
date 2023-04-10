@@ -11,6 +11,17 @@ body {
 	height: 100%;
 }
 
+.hoverCard {
+	position: fixed;
+	padding: 5px;
+	border: 1px solid #000000;
+	border-radius: 5px;
+	background-color: #DDDDDD;
+	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+	visibility: hidden;
+	cursor: none;
+}
+
 .smallPortrait {
 	height: 30px;
 	border-radius: 15px;

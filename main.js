@@ -172,13 +172,7 @@ window.onload = function () {
 	canvas.height = window.innerHeight;
 	
 	hoverCard = document.createElement('div');
-	hoverCard.style.border = '1px solid #000';
-	hoverCard.style.padding = '5px 5px';
-	hoverCard.style.background = '#bbb';
-	hoverCard.style.font = canvasFont;
-	hoverCard.style.position = 'fixed';
-	hoverCard.style.visibility = 'hidden';
-	hoverCard.style.cursor = 'none';
+	hoverCard.classList.add('hoverCard');
 	document.body.appendChild(hoverCard);
 	
 	// Prepare canvas

@@ -53,6 +53,7 @@ const lineHeight = (isMobile || isPortrait) ? 7 : 14;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
 
+// Pathfingding
 const buttonColor = '#4444FF';
 const wallColor = '#000000';
 const cityColor = '#888888';
