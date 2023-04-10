@@ -395,17 +395,26 @@ function draw () {
 					hoverCard.style.left = mousePosition.X + 'px';
 					if (mousePosition.Y + 125 > window.innerHeight) hoverCard.style.top = (mousePosition.Y - 125) + 'px';
 					else hoverCard.style.top = mousePosition.Y + 'px';
-					hoverCard.innerHTML = '<b>' + cities[index].Name + '</b>';
 					
 					var forceName = '-';
-					if (cities[index].Force != '-') forceName = forces[cities[index].Force].Name;
+					var forceRulerName = '';
+					if (cities[index].Force != '-') {
+						forceName = forces[cities[index].Force].Name;
+						forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+					}
+					
+					hoverCard.innerHTML = '';
+					if (forceRulerName.length > 0) {
+						hoverCard.innerHTML += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
+					}
+					hoverCard.innerHTML += '<b>' + cities[index].Name + '</b>';
 					hoverCard.innerHTML += '<br><b>' + forceName + '</b>';
 					
-					hoverCard.innerHTML += '<br>Farm: ' + cities[index].cFarm + '/' + cities[index].Farm +
-						'<br>Trade: ' + cities[index].cTrade + '/' + cities[index].Trade +
-						'<br>Tech: ' + cities[index].cTech + '/' + cities[index].Tech +
-						'<br>Defense: ' + cities[index].cDefense + '/' + cities[index].Defense +
-						'<br>Order: ' + cities[index].cOrder + '/100';
+					hoverCard.innerHTML += '<br />Farm: ' + cities[index].cFarm + '/' + cities[index].Farm +
+						'<br />Trade: ' + cities[index].cTrade + '/' + cities[index].Trade +
+						'<br />Tech: ' + cities[index].cTech + '/' + cities[index].Tech +
+						'<br />Defense: ' + cities[index].cDefense + '/' + cities[index].Defense +
+						'<br />Order: ' + cities[index].cOrder + '/100';
 				}
 			}
 		}
