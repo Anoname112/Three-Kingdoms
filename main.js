@@ -100,15 +100,18 @@ scenarios.push(new Scenario(
 	], [
 		// Units
 		// type, force, position, morale, strength
-		[0, 0, 8, 90, 8000],
-		[0, 0, 8, 90, 8000],
-		[0, 0, 8, 90, 8000],
-		[1, 0, 8, 85, 8000],
-		[2, 0, 8, 85, 8000],
-		[0, 0, 9, 90, 8000],
-		[1, 0, 9, 85, 8000],
-		[1, 0, 9, 85, 8000],
-		[2, 0, 9, 85, 8000]
+		[0, 0, 8, 90, 7000],
+		[0, 0, 8, 90, 7000],
+		[1, 0, 8, 85, 7000],
+		[2, 0, 8, 85, 7000],
+		[0, 0, 9, 90, 7000],
+		[1, 0, 9, 85, 7000],
+		[2, 0, 9, 85, 7000],
+		[0, 0, 10, 60, 6000],
+		[2, 0, 10, 50, 5500],
+		[0, 0, 45, 45, 5000],
+		[2, 0, 45, 55, 6000],
+		[2, 0, 45, 55, 6000],
 		
 	]
 ));
@@ -321,20 +324,6 @@ function onMouseMove (e) {
 	mousePosition = new Point(e.clientX, e.clientY);
 }
 
-function hexToDecimal (decimal) {
-	return parseInt(decimal, 16);
-}
-
-function getTextColor (cityColor) {
-	var r = hexToDecimal(cityColor.slice(1, 3));
-	var g = hexToDecimal(cityColor.slice(3, 5));
-	var b = hexToDecimal(cityColor.slice(5));
-	var average = (r + g + b) / 3;
-	
-	if (average < 80) return fontLight;
-	else return fontDark;
-}
-
 function draw () {
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -408,7 +397,7 @@ function draw () {
 				else {
 					fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
 					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
-					ctx.fillText(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
+					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
 				}
 				
 				
@@ -452,7 +441,7 @@ function draw () {
 		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
 		ctx.rect(x, y, buttonWidth, buttonHeight);
 		ctx.fillStyle = fontDark;
-		ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
+		drawMessage('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
 		y += buttonHeight + squareSize;
 		
 		// Draw infos
@@ -466,42 +455,41 @@ function draw () {
 		];
 		for (var i = 0; i < infos.length; i++) {
 			fillRect(x, y, squareSize, squareSize, infos[i][0]);
-			ctx.fillText(infos[i][1], x + squareSize *  2, y + lineHeight);
+			drawMessage(infos[i][1], x + squareSize *  2, y + lineHeight);
 			y += squareSize * 2;
 		}
 	}
 	else {
-		var pad = 110;
-		var add = 30;
+		var pad = 150;
 		ctx.fillStyle = fontDark;
-		ctx.fillText('OFFICERS', x, y + lineHeight);
-		ctx.fillText('LDR', x + pad, y + lineHeight);
-		ctx.fillText('WAR', x + pad + add, y + lineHeight);
-		ctx.fillText('INT', x + pad + add * 2, y + lineHeight);
-		ctx.fillText('POL', x + pad + add * 3, y + lineHeight);
-		ctx.fillText('CHR', x + pad + add * 4, y + lineHeight);
+		drawMessage('OFFICERS', x, y + lineHeight);
+		drawMessage('LDR', x + pad, y + lineHeight, "end");
+		drawMessage('WAR', x + pad * 1.2, y + lineHeight, "end");
+		drawMessage('INT', x + pad * 1.4, y + lineHeight, "end");
+		drawMessage('POL', x + pad * 1.6, y + lineHeight, "end");
+		drawMessage('CHR', x + pad * 1.8, y + lineHeight, "end");
 		y += squareSize;
 		for (var i = 0; i < officerList.length; i++) {
 			var officer = officers[officerList[i]];
-			ctx.fillText('- ' + officer.Name, x, y + lineHeight);
-			ctx.fillText(officer.LDR, x + pad, y + lineHeight);
-			ctx.fillText(officer.WAR, x + pad + add, y + lineHeight);
-			ctx.fillText(officer.INT, x + pad + add * 2, y + lineHeight);
-			ctx.fillText(officer.POL, x + pad + add * 3, y + lineHeight);
-			ctx.fillText(officer.CHR, x + pad + add * 4, y + lineHeight);
+			drawMessage('- ' + officer.Name, x, y + lineHeight);
+			drawMessage(officer.LDR, x + pad, y + lineHeight, "end");
+			drawMessage(officer.WAR, x + pad * 1.2, y + lineHeight, "end");
+			drawMessage(officer.INT, x + pad * 1.4, y + lineHeight, "end");
+			drawMessage(officer.POL, x + pad * 1.6, y + lineHeight, "end");
+			drawMessage(officer.CHR, x + pad * 1.8, y + lineHeight, "end");
 			y += squareSize;
 		}
 		
-		x += 300; y = 0;
-		ctx.fillText('UNITS', x, y + lineHeight);
-		ctx.fillText('Strength', x + pad, y + lineHeight);
-		ctx.fillText('Morale', x + pad * 2, y + lineHeight);
+		x += 350; y = 0;
+		drawMessage('UNITS', x, y + lineHeight);
+		drawMessage('Strength', x + pad * 1.1, y + lineHeight, "end");
+		drawMessage('Morale', x + pad * 1.7, y + lineHeight, "end");
 		y += squareSize;
 		for (var i = 0; i < unitList.length; i++) {
 			var unit = units[unitList[i]];
-			ctx.fillText('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
-			ctx.fillText(unit.Strength, x + pad, y + lineHeight);
-			ctx.fillText(unit.Morale, x + pad * 2, y + lineHeight);
+			drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
+			drawMessage(unit.Strength, x + pad * 1.1, y + lineHeight, "end");
+			drawMessage(unit.Morale, x + pad * 1.7, y + lineHeight, "end");
 			y += squareSize;
 		}
 	}

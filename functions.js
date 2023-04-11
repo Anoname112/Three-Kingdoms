@@ -75,25 +75,9 @@ function drawRect (x, y, w, h, s) {
 	ctx.stroke();
 }
 
-function drawMessage (msg, x, y, w, h, align) {
-	var backX = x - (w / 2) - msgBackPadding;
-	var backY = y - (h / 2) - msgBackPadding;
-	var backW = w + (msgBackPadding * 2);
-	var backH = h + (msgBackPadding * 2);
-	
-	ctx.strokeStyle = msgBackColor;
-	ctx.fillStyle = msgBackColor;
-	ctx.beginPath();
-	ctx.roundRect(backX, backY, backW, backH, msgBackRadius);
-	ctx.stroke();
-	ctx.fill();
-	
-	ctx.textBaseline = "middle";
+function drawMessage (msg, x, y, align) {
 	ctx.textAlign = (align == null) ? "start" : align;
-	ctx.font = msgFont;
-	ctx.fillStyle = msgFontColor;
 	ctx.fillText(msg, x, y);
-	ctx.textAlign = "start";
 }
 
 function floor (value, floor) {
@@ -103,3 +87,43 @@ function floor (value, floor) {
 function clamp (value, min, max) {
 	return Math.max(Math.min(value, max), min);
 }
+
+function hexToDecimal (decimal) {
+	return parseInt(decimal, 16);
+}
+
+function getTextColor (cityColor) {
+	var r = hexToDecimal(cityColor.slice(1, 3));
+	var g = hexToDecimal(cityColor.slice(3, 5));
+	var b = hexToDecimal(cityColor.slice(5));
+	var average = (r + g + b) / 3;
+	
+	if (average < 80) return fontLight;
+	else return fontDark;
+}
+
+function calculateAttack (morale, LDR, WAR) {
+	return morale + (0.75 * LDR) + (0.25 * WAR);
+}
+
+function calculateDefense (morale, LDR, INT) {
+	return morale + (0.95 * LDR) + (0.05 * INT);
+}
+
+function calculateStat (morale, officerName) {
+	var LDR = 0;
+	var WAR = 0;
+	var INT = 0;
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Name == officerName) {
+			LDR = officers[i].LDR;
+			WAR = officers[i].WAR;
+			INT = officers[i].INT;
+		}
+	}
+	
+	var atk = calculateAttack(morale, LDR, WAR);
+	var def = calculateDefense(morale, LDR, INT);
+	return 'A: ' + atk + ', D: ' + def;
+}
+
