@@ -4,9 +4,9 @@ var hoverCard;
 
 var intervalId;
 var instant = false;
-var date;
 var mousePosition;
 
+var date;
 var forces = [];
 var officers = [];
 var units = [];
@@ -31,6 +31,7 @@ var scenarios = [];
 scenarios.push(new Scenario(
 	'March 194',
 	'194-03-01', [
+		// Forces
 		// name, ruler, color, cities
 		['Cao Cao Forces', 15, '#0000FF', [8, 9]],				// 0	
 		['Liu Bei Forces', 247, '#00FF00', [10]],				// 1
@@ -52,6 +53,7 @@ scenarios.push(new Scenario(
 		['Zhang Lu Forces', 580, '#5BF55B', [24]],			// 17
 		['Liu Zhang Forces', 272, '#0D0D47', [26, 27, 28]]	// 18
 	], [
+		// Officers
 		// force, name, position
 		[0, 'Cao Cao', 8],
 		[0, 'Xun Yu', 8],
@@ -239,7 +241,7 @@ function reset () {
 function applyScenario (name) {
 	for (var i = 0; i < scenarios.length; i++) {
 		if (scenarios[i].Name == name) {
-			date = scenarios[i].date;
+			date = scenarios[i].Date;
 			for (var j = 0; j < scenarios[i].Forces.length; j++) {
 				forces.push(new Force(scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
 				for (var k = 0; k < scenarios[i].Forces[j][3].length; k++) {
@@ -422,8 +424,7 @@ function draw () {
 		[finalPathColor, 'Found shortest path']
 	];
 	for (var i = 0; i < infos.length; i++) {
-		ctx.fillStyle = infos[i][0];
-		ctx.fillRect(x, y, squareSize, squareSize);
+		fillRect(x, y, squareSize, squareSize, infos[i][0]);
 		ctx.fillText(infos[i][1], x + squareSize *  2, y + lineHeight);
 		y += squareSize * 2;
 	}
