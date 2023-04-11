@@ -162,10 +162,12 @@ var openset;
 var finalPath;
 
 window.onload = function () {
-	document.onclick = onMouseClick;
-	document.onmousemove = onMouseMove;
+	window.oncontextmenu = onContextMenu;
+	window.onresize = onResize;
+	window.onclick = onMouseClick;
+	window.onmousemove = onMouseMove;
 	
-	canvas = document.getElementById('myCanvas');
+	canvas = getElement('myCanvas');
 	ctx = canvas.getContext('2d');
 	
 	canvas.width = window.innerWidth;
@@ -248,6 +250,14 @@ function applyScenario (name) {
 	}
 }
 
+function onContextMenu (e) {
+	e.preventDefault();
+}
+
+function onResize (e) {
+	updateCanvasLocation();
+}
+
 function onMouseClick (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
@@ -306,8 +316,7 @@ function draw () {
 		var x = canvasPadding + explored[i].X * squareSize;
 		var y = canvasPadding + explored[i].Y * squareSize;
 		
-		ctx.fillStyle = exploredColor;
-		ctx.fillRect(x, y, squareSize, squareSize);
+		fillRect(x, y, squareSize, squareSize, exploredColor);
 	}
 	
 	// Draw openset
@@ -315,8 +324,7 @@ function draw () {
 		var x = canvasPadding + openset[i].X * squareSize;
 		var y = canvasPadding + openset[i].Y * squareSize;
 		
-		ctx.fillStyle = opensetColor;
-		ctx.fillRect(x, y, squareSize, squareSize);
+		fillRect(x, y, squareSize, squareSize, opensetColor);
 	}
 	
 	// Draw final path
@@ -325,8 +333,7 @@ function draw () {
 			var x = canvasPadding + finalPath.Points[i].X * squareSize;
 			var y = canvasPadding + finalPath.Points[i].Y * squareSize;
 			
-			ctx.fillStyle = finalPathColor;
-			ctx.fillRect(x, y, squareSize, squareSize);
+			fillRect(x, y, squareSize, squareSize, finalPathColor);
 		}
 	}
 	
@@ -336,11 +343,7 @@ function draw () {
 			var y = canvasPadding + j * squareSize;
 			
 			ctx.rect(x, y, squareSize, squareSize);
-			
-			if (map[i][j] == 1) {
-				ctx.fillStyle = wallColor; 
-				ctx.fillRect(x, y, squareSize, squareSize);
-			}
+			if (map[i][j] == 1) fillRect(x, y, squareSize, squareSize, wallColor);
 		}
 	}
 	
@@ -350,34 +353,20 @@ function draw () {
 			var x = canvasPadding + i * squareSize;
 			var y = canvasPadding + j * squareSize;
 			
-			if (startPoint.X ==  i && startPoint.Y == j) {
-				ctx.fillStyle = startColor; 
-				ctx.fillRect(x, y, squareSize, squareSize);
-			}
-			else if (endPoint.X ==  i && endPoint.Y == j) {
-				ctx.fillStyle = endColor; 
-				ctx.fillRect(x, y, squareSize, squareSize);
-			}
-			/*
-			else if (map[i][j] == 2) {
-				ctx.fillStyle = startColor; 
-				ctx.fillRect(x, y, squareSize, squareSize);
-			}
-			else if (map[i][j] == 3) {
-				ctx.fillStyle = endColor; 
-				ctx.fillRect(x, y, squareSize, squareSize);
-			}
-			*/
-			else if (map[i][j] >= 40) {
+			if (startPoint.X ==  i && startPoint.Y == j) fillRect(x, y, squareSize, squareSize, startColor);
+			else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
+			
+			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
 				
 				if (cities[index].Force == '-') {
-					ctx.fillStyle = cityColor;
-					ctx.fillRect(x + cityPadding, y + cityPadding, squareSize - (2 * cityPadding), squareSize - (2 * cityPadding));
+					var emptyX = x + cityPadding;
+					var emptyY = y + cityPadding;
+					var emptySize = squareSize - (2 * cityPadding);
+					fillRect(emptyX, emptyY, emptySize, emptySize, cityColor);
 				}
 				else {
-					ctx.fillStyle = forces[cities[index].Force].Color;
-					ctx.fillRect(x, y, squareSize, squareSize);
+					fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
 					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
 					ctx.fillText(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
 				}
@@ -387,9 +376,11 @@ function draw () {
 					hoverCard.style.visibility = 'visible';
 					hoverCard.style.top = 'auto';
 					hoverCard.style.bottom = 'auto';
-					hoverCard.style.left = mousePosition.X + 'px';
-					if (mousePosition.Y + 125 > window.innerHeight) hoverCard.style.top = (mousePosition.Y - 125) + 'px';
-					else hoverCard.style.top = mousePosition.Y + 'px';
+					var hoverX = mousePosition.X + 10;
+					var hoverY = mousePosition.Y - 0;
+					hoverCard.style.left = hoverX + 'px';
+					if (hoverY + 125 > window.innerHeight) hoverCard.style.top = (hoverY - 125) + 'px';
+					else hoverCard.style.top = hoverY + 'px';
 					var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
 					
 					var forceName = '-';
@@ -415,10 +406,7 @@ function draw () {
 	// Draw instant button
 	var x = canvasPadding * 2 + mapWidth * squareSize;
 	var y = canvasPadding;
-	if (instant) {
-		ctx.fillStyle = buttonColor;
-		ctx.fillRect(x, y, buttonWidth, buttonHeight);
-	}
+	if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
 	ctx.rect(x, y, buttonWidth, buttonHeight);
 	ctx.fillStyle = fontDark;
 	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
