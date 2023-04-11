@@ -491,10 +491,15 @@ function draw () {
 		}
 		
 		x += 300; y = 0;
-		ctx.fillText('Units:', x, y + lineHeight);
+		ctx.fillText('UNITS', x, y + lineHeight);
+		ctx.fillText('Strength', x + pad, y + lineHeight);
+		ctx.fillText('Morale', x + pad * 2, y + lineHeight);
 		y += squareSize;
 		for (var i = 0; i < unitList.length; i++) {
-			ctx.fillText('- ' + unitTypes[units[unitList[i]].Type].Name, x, y + lineHeight);
+			var unit = units[unitList[i]];
+			ctx.fillText('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
+			ctx.fillText(unit.Strength, x + pad, y + lineHeight);
+			ctx.fillText(unit.Morale, x + pad * 2, y + lineHeight);
 			y += squareSize;
 		}
 	}
