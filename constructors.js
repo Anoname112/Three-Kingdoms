@@ -55,12 +55,12 @@ function City (name, force, money, food, farm, trade, tech, defense, cfarm, ctra
 	this.Speciality = speciality;
 }
 
-function Unit (type, exp, morale, force, position, objective, officer) {
+function Unit (type, force, position, morale, strength, objective, officer) {
 	this.Type = type;
-	this.Exp = exp;
-	this.Morale = morale; 
 	this.Force = force;
 	this.Position = position;
+	this.Morale = morale; 
+	this.Strength = strength;
 	this.Objective = objective;
 	this.Officer = officer;
 }

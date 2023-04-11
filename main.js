@@ -29,15 +29,15 @@ unitTypes.push(new UnitType('Archer', 'bow', 60, 70, 3, 3, ['horse', 1.3]));
 */
 var scenarios = [];
 scenarios.push(new Scenario(
-	'March 194',
+	'Warlords',
 	'194-03-01', [
 		// Forces
 		// name, ruler, color, cities
-		['Cao Cao Forces', 15, '#0000FF', [8, 9]],				// 0	
-		['Liu Bei Forces', 247, '#00FF00', [10]],				// 1
-		['Sun Ce Forces', 382, '#FF0000', [45]],				// 2
-		['Lu Bu Forces', 277, '#666666', [7]],					// 3
-		['Tao Qian Forces', 415, '#AAFFAA', [11]],				// 4
+		['Cao Cao Forces', 15, '#0000FF', [8, 9]],			// 0	
+		['Liu Bei Forces', 247, '#00FF00', [10]],			// 1
+		['Sun Ce Forces', 382, '#FF0000', [45]],			// 2
+		['Lu Bu Forces', 277, '#666666', [7]],				// 3
+		['Tao Qian Forces', 415, '#AAFFAA', [11]],			// 4
 		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],		// 5
 		['Kong Rong Forces', 217, '#AAFFAA', [18]],			// 6
 		['Yuan Shao Forces', 551, '#FFFF00', [15, 19, 20]],	// 7
@@ -97,7 +97,20 @@ scenarios.push(new Scenario(
 		[17, 'Zhang Lu', 24],
 		[18, 'Liu Zhang', 26],
 		[18, 'Fa Zheng', 28]
-	], []
+	], [
+		// Units
+		// type, force, position, morale, strength
+		[0, 0, 8, 90, 8000],
+		[0, 0, 8, 90, 8000],
+		[0, 0, 8, 90, 8000],
+		[1, 0, 8, 85, 8000],
+		[2, 0, 8, 85, 8000],
+		[0, 0, 9, 90, 8000],
+		[1, 0, 9, 85, 8000],
+		[1, 0, 9, 85, 8000],
+		[2, 0, 9, 85, 8000]
+		
+	]
 ));
 
 var cities = [];
@@ -213,7 +226,7 @@ window.onload = function () {
 }
 
 function reset () {
-	applyScenario('March 194');
+	applyScenario('Warlords');
 	
 	paths = [];
 	explored = [];
@@ -242,11 +255,28 @@ function applyScenario (name) {
 	for (var i = 0; i < scenarios.length; i++) {
 		if (scenarios[i].Name == name) {
 			date = scenarios[i].Date;
+			// Forces & Cities
 			for (var j = 0; j < scenarios[i].Forces.length; j++) {
 				forces.push(new Force(scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
 				for (var k = 0; k < scenarios[i].Forces[j][3].length; k++) {
 					cities[scenarios[i].Forces[j][3][k]].Force = forces.length - 1;
 				}
+			}
+			
+			// Officers
+			for (var j = 0; j < scenarios[i].Officers.length; j++) {
+				var officerName = scenarios[i].Officers[j][1];
+				for (var k = 0; k < officers.length; k++) {
+					if (officers[k].Name == officerName) {
+						officers[k].Force = scenarios[i].Officers[j][0];
+						officers[k].Position = scenarios[i].Officers[j][2];
+					}
+				}
+			}
+			
+			// Units type, force, position, morale, strength
+			for (var j = 0; j < scenarios[i].Units.length; j++) {
+				units.push(new Unit(scenarios[i].Units[j][0], scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-'));
 			}
 		}
 	}
@@ -257,7 +287,7 @@ function onContextMenu (e) {
 }
 
 function onResize (e) {
-	updateCanvasLocation();
+	//updateCanvasLocation();
 }
 
 function onMouseClick (e) {
@@ -350,6 +380,11 @@ function draw () {
 	}
 	
 	// Draw map
+	var forceName = '-';
+	var forceRulerName = '-';
+	var cFarm, Farm, cTrade, Trade, cTech, Tech, cDefense, Defense, cOrder, Order = 0;
+	var officerList = [];
+	var unitList = [];
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
@@ -360,8 +395,9 @@ function draw () {
 			
 			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
-				
+				var yPad = 160;
 				if (cities[index].Force == '-') {
+					yPad = 110;
 					var emptyX = x + cityPadding;
 					var emptyY = y + cityPadding;
 					var emptySize = squareSize - (2 * cityPadding);
@@ -375,21 +411,20 @@ function draw () {
 				
 				
 				if (mousePosition.X >= x && mousePosition.X < x + squareSize && mousePosition.Y >= y && mousePosition.Y < y + squareSize) {
+					// Hovering a city
 					hoverCard.style.visibility = 'visible';
 					hoverCard.style.top = 'auto';
 					hoverCard.style.bottom = 'auto';
 					var hoverX = mousePosition.X + 10;
 					var hoverY = mousePosition.Y - 0;
 					hoverCard.style.left = hoverX + 'px';
-					if (hoverY + 125 > window.innerHeight) hoverCard.style.top = (hoverY - 125) + 'px';
+					if (hoverY + yPad > window.innerHeight) hoverCard.style.top = (hoverY - yPad) + 'px';
 					else hoverCard.style.top = hoverY + 'px';
 					var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
 					
-					var forceName = '-';
-					var forceRulerName = '';
 					if (cities[index].Force != '-') {
-						var forceName = forces[cities[index].Force].Name;
-						var forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+						forceName = forces[cities[index].Force].Name;
+						forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
 						string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
 						string += '<b>' + forceName + '</b><br />';
 					}
@@ -400,33 +435,68 @@ function draw () {
 						'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
 						'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
 					hoverCard.innerHTML = string;
+					
+					for (var k = 0; k < officers.length; k++) if (officers[k].Position == index) officerList.push(k);
+					for (var k = 0; k < units.length; k++) if (units[k].Position == index) unitList.push(k);
 				}
 			}
 		}
 	}
 	
-	// Draw instant button
 	var x = canvasPadding * 2 + mapWidth * squareSize;
-	var y = canvasPadding;
-	if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
-	ctx.rect(x, y, buttonWidth, buttonHeight);
-	ctx.fillStyle = fontDark;
-	ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
-	y += buttonHeight + squareSize;
-	
-	// Draw infos
-	var infos = [
-		[startColor, 'Start square'],
-		[endColor, 'End square (click to change the end square)'],
-		[wallColor, 'Wall'],
-		[exploredColor, 'Explored squares'],
-		[opensetColor, 'Unexplored neighbours'],
-		[finalPathColor, 'Found shortest path']
-	];
-	for (var i = 0; i < infos.length; i++) {
-		fillRect(x, y, squareSize, squareSize, infos[i][0]);
-		ctx.fillText(infos[i][1], x + squareSize *  2, y + lineHeight);
-		y += squareSize * 2;
+	var y = canvasPadding;	
+	if (hoverCard.style.visibility == 'hidden') {
+		// Draw instant button
+		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
+		ctx.rect(x, y, buttonWidth, buttonHeight);
+		ctx.fillStyle = fontDark;
+		ctx.fillText('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
+		y += buttonHeight + squareSize;
+		
+		// Draw infos
+		var infos = [
+			[startColor, 'Start square'],
+			[endColor, 'End square (click to change the end square)'],
+			[wallColor, 'Wall'],
+			[exploredColor, 'Explored squares'],
+			[opensetColor, 'Unexplored neighbours'],
+			[finalPathColor, 'Found shortest path']
+		];
+		for (var i = 0; i < infos.length; i++) {
+			fillRect(x, y, squareSize, squareSize, infos[i][0]);
+			ctx.fillText(infos[i][1], x + squareSize *  2, y + lineHeight);
+			y += squareSize * 2;
+		}
+	}
+	else {
+		var pad = 110;
+		var add = 30;
+		ctx.fillStyle = fontDark;
+		ctx.fillText('OFFICERS', x, y + lineHeight);
+		ctx.fillText('LDR', x + pad, y + lineHeight);
+		ctx.fillText('WAR', x + pad + add, y + lineHeight);
+		ctx.fillText('INT', x + pad + add * 2, y + lineHeight);
+		ctx.fillText('POL', x + pad + add * 3, y + lineHeight);
+		ctx.fillText('CHR', x + pad + add * 4, y + lineHeight);
+		y += squareSize;
+		for (var i = 0; i < officerList.length; i++) {
+			var officer = officers[officerList[i]];
+			ctx.fillText('- ' + officer.Name, x, y + lineHeight);
+			ctx.fillText(officer.LDR, x + pad, y + lineHeight);
+			ctx.fillText(officer.WAR, x + pad + add, y + lineHeight);
+			ctx.fillText(officer.INT, x + pad + add * 2, y + lineHeight);
+			ctx.fillText(officer.POL, x + pad + add * 3, y + lineHeight);
+			ctx.fillText(officer.CHR, x + pad + add * 4, y + lineHeight);
+			y += squareSize;
+		}
+		
+		x += 300; y = 0;
+		ctx.fillText('Units:', x, y + lineHeight);
+		y += squareSize;
+		for (var i = 0; i < unitList.length; i++) {
+			ctx.fillText('- ' + unitTypes[units[unitList[i]].Type].Name, x, y + lineHeight);
+			y += squareSize;
+		}
 	}
 	
 	ctx.stroke();
