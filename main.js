@@ -254,6 +254,8 @@ function reset () {
 function applyScenario (name) {
 	for (var i = 0; i < scenarios.length; i++) {
 		if (scenarios[i].Name == name) {
+			forces = [];
+			units = [];
 			date = scenarios[i].Date;
 			// Forces & Cities
 			for (var j = 0; j < scenarios[i].Forces.length; j++) {
