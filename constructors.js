@@ -24,6 +24,12 @@ function Officer (name, force, position, leadership, war, intelligence, politic,
 	this.CHR = charisma;
 }
 
+function Ability (name, desc, cost) {
+	this.Name = name;
+	this.Desc = desc;
+	this.cost = cost;
+}
+
 function Scenario (name, date, forces, officers, units) {
 	this.Name = name;
 	this.Date = date;
