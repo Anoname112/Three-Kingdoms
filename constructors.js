@@ -65,12 +65,12 @@ function Unit (type, force, position, morale, strength, objective, officer) {
 	this.Officer = officer;
 }
 
-function UnitType (name, type, attack, defense, speed, range, effective) {
+function UnitType (name, type, attack, defense, speed, range, effectiveness) {
 	this.Name = name;
 	this.Type = type;
 	this.Attack = attack;
 	this.Defense = defense;
 	this.Speed = speed;
 	this.Range = range;
-	this.Effective = effective;
+	this.Effectiveness = effectiveness;	// [Spearmen, Horsemen, Archer]
 }
