@@ -103,7 +103,7 @@ function getTextColor (cityColor) {
 }
 
 function calculateAttack (LDR, WAR) {
-	return (0.75 * LDR) + (0.25 * WAR);
+	return (0.775 * LDR) + (0.225 * WAR);
 }
 
 function calculateDefense (LDR, INT) {
@@ -126,5 +126,5 @@ function calculateStats (officerName) {
 }
 
 function calculateDamage (morale, attack, defense) {
-	return morale * attack / defense;
+	return 50 + (morale / 2) + (morale * attack / defense);
 }
