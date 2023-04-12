@@ -126,5 +126,5 @@ function calculateStats (officerName) {
 }
 
 function calculateDamage (morale, attack, defense) {
-	return morale * attack / defense * 2;
+	return morale * attack / defense;
 }
