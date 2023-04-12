@@ -99,20 +99,19 @@ scenarios.push(new Scenario(
 		[18, 'Fa Zheng', 28]
 	], [
 		// Units
-		// type, force, position, morale, strength
-		[0, 0, 8, 90, 7000],
-		[0, 0, 8, 90, 7000],
-		[1, 0, 8, 85, 7000],
-		[2, 0, 8, 85, 7000],
-		[0, 0, 9, 90, 7000],
-		[1, 0, 9, 85, 7000],
-		[2, 0, 9, 85, 7000],
-		[0, 0, 10, 60, 6000],
-		[2, 0, 10, 50, 5500],
-		[0, 0, 45, 45, 5000],
-		[2, 0, 45, 55, 6000],
-		[2, 0, 45, 55, 6000],
-		
+		// type, force, city, position, morale, strength
+		[0, 0, 8, getCityPosition(8), 90, 7000],
+		[0, 0, 8, getCityPosition(8), 90, 7000],
+		[1, 0, 8, getCityPosition(8), 85, 7000],
+		[2, 0, 8, getCityPosition(8), 85, 7000],
+		[0, 0, 9, getCityPosition(9), 90, 7000],
+		[1, 0, 9, getCityPosition(9), 85, 7000],
+		[2, 0, 9, getCityPosition(9), 85, 7000],
+		[0, 0, 10, getCityPosition(10), 60, 6000],
+		[2, 0, 10, getCityPosition(10), 50, 5500],
+		[0, 0, 45, getCityPosition(45), 45, 5000],
+		[2, 0, 45, getCityPosition(45), 55, 6000],
+		[2, 0, 45, getCityPosition(45), 55, 6000]
 	]
 ));
 
@@ -207,6 +206,7 @@ window.onload = function () {
 		officers.push(new Officer(
 			baseOfficers[i]['name'],
 			'-',
+			'-',
 			new Point(0, 0),
 			baseOfficers[i]['ldr'],
 			baseOfficers[i]['war'],
@@ -274,14 +274,15 @@ function applyScenario (name) {
 				for (var k = 0; k < officers.length; k++) {
 					if (officers[k].Name == officerName) {
 						officers[k].Force = scenarios[i].Officers[j][0];
-						officers[k].Position = scenarios[i].Officers[j][2];
+						officers[k].City = scenarios[i].Officers[j][2];
+						officers[k].Position = getCityPosition(scenarios[i].Officers[j][2]);
 					}
 				}
 			}
 			
-			// Units type, force, position, morale, strength
+			// Units
 			for (var j = 0; j < scenarios[i].Units.length; j++) {
-				units.push(new Unit(scenarios[i].Units[j][0], scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-'));
+				units.push(new Unit(scenarios[i].Units[j][0], scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], scenarios[i].Units[j][5], '-', '-'));
 			}
 		}
 	}
@@ -427,8 +428,8 @@ function draw () {
 						'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
 					hoverCard.innerHTML = string;
 					
-					for (var k = 0; k < officers.length; k++) if (officers[k].Position == index) officerList.push(k);
-					for (var k = 0; k < units.length; k++) if (units[k].Position == index) unitList.push(k);
+					for (var k = 0; k < officers.length; k++) if (officers[k].City == index) officerList.push(k);
+					for (var k = 0; k < units.length; k++) if (units[k].City == index) unitList.push(k);
 				}
 			}
 		}

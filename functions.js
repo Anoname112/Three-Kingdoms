@@ -102,6 +102,18 @@ function getTextColor (cityColor) {
 	else return fontDark;
 }
 
+function getCityPosition (cityIndex) {
+	var mapValue = cityIndex + 40;
+	var x = 0;
+	var y = 0;
+	for (var i = 0; i < map.length; i++) {
+		for (var j = 0; j < map[i].length; j++) {
+			if (mapValue == map[i][j]) return new Point(i, j);
+		}
+	}
+	return new Point(0, 0);
+}
+
 function getStats (officerName) {
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Name == officerName) {

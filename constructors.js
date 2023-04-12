@@ -13,9 +13,10 @@ function Path (points) {
 	}
 }
 
-function Officer (name, force, position, leadership, war, intelligence, politic, charisma) {
+function Officer (name, force, city, position, leadership, war, intelligence, politic, charisma) {
 	this.Name = name;
 	this.Force = force;
+	this.City = city;
 	this.Position = position;
 	this.LDR = leadership;
 	this.WAR = war;
@@ -61,9 +62,10 @@ function City (name, force, money, food, farm, trade, tech, defense, cfarm, ctra
 	this.Speciality = speciality;
 }
 
-function Unit (type, force, position, morale, strength, objective, officer) {
+function Unit (type, force, city, position, morale, strength, objective, officer) {
 	this.Type = type;
 	this.Force = force;
+	this.City = city;
 	this.Position = position;
 	this.Morale = morale; 
 	this.Strength = strength;
