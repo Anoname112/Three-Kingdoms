@@ -25,10 +25,12 @@ function Officer (name, force, city, position, leadership, war, intelligence, po
 	this.CHR = charisma;
 }
 
-function Ability (name, desc, cost) {
+function Ability (name, desc, cost, allyeffect, enemyeffect) {
 	this.Name = name;
 	this.Desc = desc;
-	this.cost = cost;
+	this.Cost = cost;
+	this.AllyEffect = allyeffect;
+	this.EnemyEffect = enemyeffect;
 }
 
 function Scenario (name, date, forces, officers, units) {

@@ -167,6 +167,10 @@ cities[47] = new City('Jian An', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[48] = new City('Nan Hai', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[49] = new City('Jiao Zhi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 
+var abilities = [];		// 4: morale, 5: strength, 
+abilities[0] = new Ability('True Leader', '', 7, [[4, 20]], [[4, 20]]);
+abilities[1] = new Ability('Benevolence', '', 7, [[5, 1000]], []);
+
 var squareSize;
 var buttonWidth;
 var buttonHeight;
@@ -300,6 +304,9 @@ function onMouseClick (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
 	
+	
+	
+	/*
 	// Instant button
 	var instantX = canvasPadding * 2 + mapWidth * squareSize;
 	var instantY = canvasPadding;
@@ -319,6 +326,7 @@ function onMouseClick (e) {
 			reset();
 		}
 	}
+	*/
 }
 
 function onMouseMove (e) {
@@ -335,6 +343,7 @@ function draw () {
 	// Begin drawing
 	ctx.beginPath();
 	
+	/*
 	// Draw explored
 	for (var i = 0; i < explored.length; i++) {
 		var x = canvasPadding + explored[i].X * squareSize;
@@ -360,6 +369,7 @@ function draw () {
 			fillRect(x, y, squareSize, squareSize, finalPathColor);
 		}
 	}
+	*/
 	
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
@@ -381,10 +391,10 @@ function draw () {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
 			var y = canvasPadding + j * squareSize;
-			
+			/*
 			if (startPoint.X ==  i && startPoint.Y == j) fillRect(x, y, squareSize, squareSize, startColor);
 			else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
-			
+			*/
 			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
 				var yPad = 160;
@@ -438,6 +448,7 @@ function draw () {
 	var x = canvasPadding * 2 + mapWidth * squareSize;
 	var y = canvasPadding;	
 	if (hoverCard.style.visibility == 'hidden') {
+		/*
 		// Draw instant button
 		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
 		ctx.rect(x, y, buttonWidth, buttonHeight);
@@ -459,6 +470,7 @@ function draw () {
 			drawMessage(infos[i][1], x + squareSize *  2, y + lineHeight);
 			y += squareSize * 2;
 		}
+		*/
 	}
 	else {
 		var pad = 150;
