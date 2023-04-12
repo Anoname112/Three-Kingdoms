@@ -125,7 +125,7 @@ function calculateAttack (LDR, WAR) {
 }
 
 function calculateDefense (LDR, INT) {
-	return (0.95 * LDR) + (0.05 * INT);
+	return (0.945 * LDR) + (0.055 * INT);
 }
 
 function calculateDamage (morale, attack, defense) {
