@@ -371,17 +371,22 @@ function draw () {
 	}
 	*/
 	
+	// Draw map
+	var x = canvasPadding;
+	var y = canvasPadding;
+	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
 			var y = canvasPadding + j * squareSize;
 			
-			ctx.rect(x, y, squareSize, squareSize);
-			if (map[i][j] == 1) fillRect(x, y, squareSize, squareSize, wallColor);
+			if (map[i][j] != 1) {
+				drawRect(x, y, squareSize, squareSize, cityColor);
+				fillRect(x, y, squareSize, squareSize, roadColor);
+			}
 		}
 	}
 	
-	// Draw map
 	var forceName = '-';
 	var forceRulerName = '-';
 	var cFarm, Farm, cTrade, Trade, cTech, Tech, cDefense, Defense, cOrder, Order = 0;
