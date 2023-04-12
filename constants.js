@@ -65,5 +65,6 @@ const opensetColor = '#CCCC22';
 const endColor = '#FF2222';
 const finalPathColor = '#2222CC';
 
+// Images
 const images = [];
 const mapImage = newImg("map.png");

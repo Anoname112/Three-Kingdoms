@@ -3,10 +3,23 @@ var ctx;
 var hoverCard;
 
 var intervalId;
-var instant = false;
+var gState;		// 0: New/load game, 1: Playing, 2: Win, 3: Lose
 var mousePosition;
+var squareSize;
+var buttonWidth;
+var buttonHeight;
+
+var instant = true;
+var startPoint;
+var endPoint;
+var paths;
+var explored;
+var openset;
+var finalPath;
 
 var date;
+var player;
+var playerForce;
 var forces = [];
 var officers = [];
 var units = [];
@@ -171,17 +184,6 @@ var abilities = [];		// 4: morale, 5: strength,
 abilities[0] = new Ability('True Leader', '', 7, [[4, 20]], [[4, 20]]);
 abilities[1] = new Ability('Benevolence', '', 7, [[5, 1000]], []);
 
-var squareSize;
-var buttonWidth;
-var buttonHeight;
-
-var startPoint = new Point(4, 10);
-var endPoint = new Point(5, 10);
-var paths;
-var explored;
-var openset;
-var finalPath;
-
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
 	window.onresize = onResize;
@@ -235,27 +237,15 @@ window.onload = function () {
 function reset () {
 	applyScenario('Warlords');
 	
-	paths = [];
-	explored = [];
-	openset = [];
-	finalPath = null;
+	startPoint = new Point(0, 0);
+	endPoint = new Point(0, 0);
 	mousePosition = new Point(0, 0);
 	
-	// Initiate start point and openset
-	paths.push(new Path([startPoint]));
-	explored.push(startPoint);
-	var neighbours = getNeighbours(startPoint);
-	for (var i = 0; i < neighbours.length; i++) {
-		if (!isExplored(neighbours[i]) && !inOpenset(neighbours[i]) && map[neighbours[i].X][neighbours[i].Y] != 1) {
-			openset.push(neighbours[i]);
-		}
-	}
+	player = 15;
+	playerForce = officers[player].Force;
+	gState = 1;
 	
-	if (instant) {
-		while (finalPath == null && paths.length > 0) expand();
-		draw();
-	}
-	else intervalId  = setInterval(timerTick, timerInterval);
+	intervalId  = setInterval(timerTick, timerInterval);
 }
 
 function applyScenario (name) {
@@ -304,7 +294,15 @@ function onMouseClick (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
 	
-	
+	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+		var indexX = parseInt((eX - canvasPadding) / squareSize);
+		var indexY = parseInt((eY - canvasPadding) / squareSize);
+		
+		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
+			initPathfinding(officers[player].Position, new Point(indexX, indexY));
+			startPathfinding();
+		}
+	}
 	
 	/*
 	// Instant button
@@ -343,6 +341,22 @@ function draw () {
 	// Begin drawing
 	ctx.beginPath();
 	
+	// Draw map
+	var x = canvasPadding;
+	var y = canvasPadding;
+	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
+	for (var i = 0; i < map.length; i++) {
+		for (var j = 0; j < map[i].length; j++) {
+			var x = canvasPadding + i * squareSize;
+			var y = canvasPadding + j * squareSize;
+			
+			if (map[i][j] != 1) {
+				drawRect(x, y, squareSize, squareSize, cityColor);
+				fillRect(x, y, squareSize, squareSize, roadColor);
+			}
+		}
+	}
+	
 	/*
 	// Draw explored
 	for (var i = 0; i < explored.length; i++) {
@@ -359,31 +373,14 @@ function draw () {
 		
 		fillRect(x, y, squareSize, squareSize, opensetColor);
 	}
+	*/
 	
 	// Draw final path
 	if (finalPath != null) {
 		for (var i = 0; i < finalPath.Points.length; i++) {
 			var x = canvasPadding + finalPath.Points[i].X * squareSize;
 			var y = canvasPadding + finalPath.Points[i].Y * squareSize;
-			
 			fillRect(x, y, squareSize, squareSize, finalPathColor);
-		}
-	}
-	*/
-	
-	// Draw map
-	var x = canvasPadding;
-	var y = canvasPadding;
-	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
-	for (var i = 0; i < map.length; i++) {
-		for (var j = 0; j < map[i].length; j++) {
-			var x = canvasPadding + i * squareSize;
-			var y = canvasPadding + j * squareSize;
-			
-			if (map[i][j] != 1) {
-				drawRect(x, y, squareSize, squareSize, cityColor);
-				fillRect(x, y, squareSize, squareSize, roadColor);
-			}
 		}
 	}
 	
@@ -516,6 +513,7 @@ function draw () {
 }
 
 function timerTick () {
-	if (finalPath == null && paths.length > 0) expand();
+	// Movement
+	
 	draw();
 }

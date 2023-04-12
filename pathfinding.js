@@ -1,3 +1,29 @@
+function initPathfinding (start, end) {
+	startPoint = start;
+	endPoint = end;
+	
+	paths = [];
+	explored = [];
+	openset = [];
+	finalPath = null;
+	
+	// Initiate start point and openset
+	paths.push(new Path([startPoint]));
+	explored.push(startPoint);
+	var neighbours = getNeighbours(startPoint);
+	for (var i = 0; i < neighbours.length; i++) {
+		if (!isExplored(neighbours[i]) && !inOpenset(neighbours[i]) && map[neighbours[i].X][neighbours[i].Y] != 1) {
+			openset.push(neighbours[i]);
+		}
+	}
+}
+
+function startPathfinding () {
+	if (instant) {
+		while (finalPath == null && paths.length > 0) expand();
+	}
+}
+
 function getNeighbours (point) {
 	var neighbours = [];
 	
