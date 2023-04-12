@@ -102,27 +102,30 @@ function getTextColor (cityColor) {
 	else return fontDark;
 }
 
+function getStats (officerName) {
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Name == officerName) {
+			return [officers[i].LDR, officers[i].WAR, officers[i].INT, officers[i].POL, officers[i].CHR];
+		}
+	}
+	return [];
+}
+
+function calculateStats (officerName) {
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Name == officerName) {
+			return [calculateAttack(officers[i].LDR, officers[i].WAR), calculateDefense(officers[i].LDR, officers[i].INT)];
+		}
+	}
+	return [];
+}
+
 function calculateAttack (LDR, WAR) {
 	return (0.775 * LDR) + (0.225 * WAR);
 }
 
 function calculateDefense (LDR, INT) {
 	return (0.95 * LDR) + (0.05 * INT);
-}
-
-function calculateStats (officerName) {
-	var LDR = 0;
-	var WAR = 0;
-	var INT = 0;
-	for (var i = 0; i < officers.length; i++) {
-		if (officers[i].Name == officerName) {
-			LDR = officers[i].LDR;
-			WAR = officers[i].WAR;
-			INT = officers[i].INT;
-		}
-	}
-	
-	return [calculateAttack(LDR, WAR), calculateDefense(LDR, INT)];
 }
 
 function calculateDamage (morale, attack, defense) {
