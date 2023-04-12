@@ -128,6 +128,7 @@ function calculateDefense (LDR, INT) {
 	return (0.925 * LDR) + (0.075 * INT);
 }
 
-function calculateDamage (morale, attack, defense) {
-	return 50 + (morale / 2) + (morale * attack / defense);
+function calculateDamage (morale, attack, defense, effectiveness) {
+	var e = effectiveness ? effectiveness : 1.0;
+	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
