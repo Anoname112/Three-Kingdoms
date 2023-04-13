@@ -48,7 +48,7 @@ const mapHeight = map[0].length;
 
 const canvasPadding = 0;
 const canvasFont = (isMobile || isPortrait) ? '8px Consolas' : '14px Consolas';
-const cityPadding = 2;
+const cityPadding = 3;
 const buttonPadding = 6;
 
 // Hover card
