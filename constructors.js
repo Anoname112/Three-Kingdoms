@@ -13,7 +13,7 @@ function Path (points) {
 	}
 }
 
-function Officer (name, force, city, position, leadership, war, intelligence, politic, charisma) {
+function Officer (name, force, city, position, leadership, war, intelligence, politic, charisma, objective, progress) {
 	this.Name = name;
 	this.Force = force;
 	this.City = city;
@@ -23,6 +23,8 @@ function Officer (name, force, city, position, leadership, war, intelligence, po
 	this.INT = intelligence;
 	this.POL = politic;
 	this.CHR = charisma;
+	this.Objective = objective;
+	this.Progress = progress;
 }
 
 function Ability (name, desc, cost, allyeffect, enemyeffect) {

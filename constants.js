@@ -47,7 +47,8 @@ const mapWidth = map.length;
 const mapHeight = map[0].length;
 
 const canvasPadding = 0;
-const canvasFont = (isMobile || isPortrait) ? '8px Consolas' : '14px Consolas';
+const canvasFontSize = (isMobile || isPortrait) ? 8 : 14;
+const canvasFont = canvasFontSize + 'px "Consolas"';
 const cityPadding = 3;
 const buttonPadding = 6;
 
@@ -57,10 +58,10 @@ const hoverEmptyLine = 110;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
 
-// Button
-
 // Message
 const infoPad = 150;
+const infoFontSize = (isMobile || isPortrait) ? 8 : 14;
+const infoFont = canvasFontSize + 'px "Segoe UI"';
 const lineHeight = (isMobile || isPortrait) ? 7 : 14;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';

@@ -195,6 +195,10 @@ window.onload = function () {
 	hoverCard.classList.add('hoverCard');
 	document.body.appendChild(hoverCard);
 	
+	menuCard = document.createElement('div');
+	menuCard.classList.add('menuCard');
+	document.body.appendChild(menuCard);
+	
 	// Prepare canvas
 	var fill = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
@@ -242,6 +246,9 @@ function reset () {
 	player = 15;
 	playerForce = officers[player].Force;
 	gState = 1;
+	
+	//hoverCard.style.visibility = 'hidden';
+	//menuCard.style.visibility = 'hidden';
 	
 	intervalId  = setInterval(timerTick, timerInterval);
 }
@@ -300,6 +307,17 @@ function onMouseClick (e) {
 		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
 			initPathfinding();
 			startPathfinding(officers[player].Position, new Point(indexX, indexY));
+		}
+		
+		// Cities
+		if (map[indexX][indexY] >= 40) {
+			var index = map[indexX][indexY] - 40;
+			if (cities[index].Force == playerForce) {
+				
+			}
+			else {
+				
+			}
 		}
 	}
 	
@@ -464,23 +482,24 @@ function draw () {
 	// Draw infos
 	var x = infoX;
 	var y = infoY;
+	ctx.font = infoFont;
 	if (hoverCard.style.visibility == 'visible') {
 		ctx.fillStyle = fontDark;
 		drawMessage('OFFICERS', x, y + lineHeight);
 		drawMessage('LDR', x + infoPad, y + lineHeight, "end");
-		drawMessage('WAR', x + infoPad * 1.2, y + lineHeight, "end");
-		drawMessage('INT', x + infoPad * 1.4, y + lineHeight, "end");
-		drawMessage('POL', x + infoPad * 1.6, y + lineHeight, "end");
-		drawMessage('CHR', x + infoPad * 1.8, y + lineHeight, "end");
+		drawMessage('WAR', x + infoPad * 1.28, y + lineHeight, "end");
+		drawMessage('INT', x + infoPad * 1.5, y + lineHeight, "end");
+		drawMessage('POL', x + infoPad * 1.75, y + lineHeight, "end");
+		drawMessage('CHR', x + infoPad * 2, y + lineHeight, "end");
 		y += squareSize;
 		for (var i = 0; i < officerList.length; i++) {
 			var officer = officers[officerList[i]];
 			drawMessage('- ' + officer.Name, x, y + lineHeight);
 			drawMessage(officer.LDR, x + infoPad, y + lineHeight, "end");
-			drawMessage(officer.WAR, x + infoPad * 1.2, y + lineHeight, "end");
-			drawMessage(officer.INT, x + infoPad * 1.4, y + lineHeight, "end");
-			drawMessage(officer.POL, x + infoPad * 1.6, y + lineHeight, "end");
-			drawMessage(officer.CHR, x + infoPad * 1.8, y + lineHeight, "end");
+			drawMessage(officer.WAR, x + infoPad * 1.28, y + lineHeight, "end");
+			drawMessage(officer.INT, x + infoPad * 1.5, y + lineHeight, "end");
+			drawMessage(officer.POL, x + infoPad * 1.75, y + lineHeight, "end");
+			drawMessage(officer.CHR, x + infoPad * 2, y + lineHeight, "end");
 			y += squareSize;
 		}
 		

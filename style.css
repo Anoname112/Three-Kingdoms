@@ -41,12 +41,23 @@ body {
 	padding: 0;
 	border: 0;
 	border-collapse: collapse;
-	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+	font-family: "Segoe UI", "Verdana", "Consolas", "Roboto Mono", "Courier New", "Courier";
 	font-size: 13px;
 }
 
 .cityStats tr td {
 	padding: 0;
+}
+
+.menuCard {
+	position: fixed;
+	border: 1px solid #000000;
+	border-radius: 5px;
+	background-color: #DDDDDD;
+	font-family: "Segoe UI", "Tahoma", "Trebuchet MS", "Arial", "Helvetica";
+	visibility: hidden;
+	cursor: none;
+	overflow: hidden;
 }
 
 .right {
