@@ -384,7 +384,7 @@ function draw () {
 	// Draw background map
 	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
 	// Draw roads
-	ctx.globalAlpha = 0.5;
+	ctx.globalAlpha = 0.4;
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
