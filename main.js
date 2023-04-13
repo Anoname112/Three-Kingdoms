@@ -379,10 +379,12 @@ function draw () {
 	// Begin drawing
 	ctx.beginPath();
 	
-	// Draw map
 	var x = canvasPadding;
 	var y = canvasPadding;
+	// Draw background map
 	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
+	// Draw roads
+	ctx.globalAlpha = 0.5;
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
@@ -394,6 +396,7 @@ function draw () {
 			}
 		}
 	}
+	ctx.globalAlpha = 1.0;
 	
 	/*
 	// Draw explored
@@ -436,6 +439,7 @@ function draw () {
 			else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
 			*/
 			if (map[i][j] >= 40) {
+				// Draw cities
 				var index = map[i][j] - 40;
 				if (cities[index].Force == '-') {
 					var emptyX = x + cityPadding;
@@ -457,6 +461,7 @@ function draw () {
 		}
 	}
 	
+	// Draw infos
 	var x = infoX;
 	var y = infoY;
 	if (hoverCard.style.visibility == 'visible') {
