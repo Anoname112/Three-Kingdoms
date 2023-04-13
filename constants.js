@@ -58,6 +58,8 @@ const hoverEmptyLine = 110;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
 
+const cardMargin = 10;
+
 // Message
 const infoPad = 150;
 const infoFontSize = (isMobile || isPortrait) ? 8 : 14;

@@ -7,7 +7,7 @@ body {
 	position: fixed;
 }
 
-.hoverCard {
+.hoverCard, .menuCard, .marchCard, .devCard, .unitCard {
 	position: fixed;
 	border: 1px solid #000000;
 	border-radius: 5px;
@@ -16,11 +16,13 @@ body {
 	visibility: hidden;
 	cursor: default;
 	overflow: hidden;
+	opacity: 0.95;
 }
 
-.cityName {
+.cityName, .title {
 	padding: 5px;
 	font-size: 15px;
+	font-weight: bold;
 	color: #FFFFFF;
 }
 
@@ -61,17 +63,6 @@ body {
 	padding: 0;
 }
 
-.menuCard {
-	position: fixed;
-	border: 1px solid #000000;
-	border-radius: 5px;
-	background-color: #DDDDDD;
-	font-family: "Segoe UI", "Tahoma", "Trebuchet MS", "Arial", "Helvetica";
-	visibility: hidden;
-	cursor: default;
-	overflow: hidden;
-}
-
 .menuContent {
 	padding: 5px;
 	font-size: 13px;
@@ -80,17 +71,6 @@ body {
 .menuContent input {
 	display: block;
 	width: 100px;
-}
-
-.marchCard {
-	position: fixed;
-	border: 1px solid #000000;
-	border-radius: 5px;
-	background-color: #DDDDDD;
-	font-family: "Segoe UI", "Tahoma", "Trebuchet MS", "Arial", "Helvetica";
-	visibility: hidden;
-	cursor: default;
-	overflow: hidden;
 }
 
 .right {

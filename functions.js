@@ -114,6 +114,38 @@ function getCityPosition (cityIndex) {
 	return new Point(0, 0);
 }
 
+function getCityViableOfficers (cityIndex) {
+	var viableOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].City == cityIndex && officers[i].Objective == '-') viableOfficers.push(i);
+	}
+	return viableOfficers;
+}
+
+function getForceViableOfficers (forceIndex) {
+	var viableOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Force == forceIndex && officers[i].Objective == '-') viableOfficers.push(i);
+	}
+	return viableOfficers;
+}
+
+function getEnemyForces (forceIndex) {
+	var enemyForces = [];
+	for (var i = 0; i < forces.length; i++) {
+		if (i != forceIndex) enemyForces.push(i);
+	}
+	return enemyForces;
+}
+
+function getEnemyCities (forceIndex) {
+	var enemyCities = [];
+	for (var i = 0; i < cities.length; i++) {
+		if (cities[i].Force != forceIndex && cities[i].Force != '-') enemyCities.push(i);
+	}
+	return enemyCities;
+}
+
 function getStats (officerName) {
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Name == officerName) {
@@ -145,15 +177,54 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
-function menuClose () {
+function closeMenu () {
 	menuCard.style.visibility = 'hidden';
 	menuCard.innerHTML = '';
 }
 
 function openMarchCard (cityIndex) {
-	menuClose();
+	closeMenu();
+	
+	var city = cities[cityIndex];
+	var source = null;
+	var target = null;
+	var fromHTML = '';
+	var targetHTML = '';
+	marchCard.style.visibility = 'visible';
+	if (city.Force == playerForce) {
+		source = cityIndex;
+		target = getEnemyCities();
+		
+		var string = `<div class="title allyColor">March</div>
+			<div><input type="button" value="Cancel" onclick="closeMarchCard()"></div>`;
+		marchCard.innerHTML = string;
+	}
+	else {
+		target = cityIndex;
+		
+		// find possible sources
+	}
 }
 
-function openDevCard (cityIndex) {
-	menuClose();
+function closeMarchCard () {
+	marchCard.style.visibility = 'hidden';
+	marchCard.innerHTML = '';
+}
+
+function openDevCard (cityIndex, objective) {
+	closeMenu();
+	
+	var viableOfficers = getCityViableOfficers(cityIndex);
+	if (viableOfficers.length > 0) {
+		
+	}
+}
+
+function openUnitCard (cityIndex, objective) {
+	closeMenu();
+	
+	var viableOfficers = getCityViableOfficers(cityIndex);
+	if (viableOfficers.length > 0) {
+		
+	}
 }

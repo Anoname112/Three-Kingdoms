@@ -202,6 +202,14 @@ window.onload = function () {
 	marchCard.classList.add('marchCard');
 	document.body.appendChild(marchCard);
 	
+	devCard = document.createElement('div');
+	devCard.classList.add('devCard');
+	document.body.appendChild(devCard);
+	
+	unitCard = document.createElement('div');
+	unitCard.classList.add('unitCard');
+	document.body.appendChild(unitCard);
+	
 	// Prepare canvas
 	var fill = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
@@ -211,6 +219,11 @@ window.onload = function () {
 	infoX = canvasPadding * 2 + mapWidth * squareSize;
 	infoY = canvasPadding;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
+	
+	marchCard.style.left = (canvasPadding + cardMargin) + 'px';
+	marchCard.style.top = (canvasPadding + cardMargin) + 'px';
+	marchCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
@@ -223,7 +236,9 @@ window.onload = function () {
 			baseOfficers[i]['war'],
 			baseOfficers[i]['int'],
 			baseOfficers[i]['pol'],
-			baseOfficers[i]['chr']
+			baseOfficers[i]['chr'],
+			'-',
+			'-'
 		));
 	}
 	
@@ -315,24 +330,35 @@ function onMouseClick (e) {
 			
 			hoverCard.style.visibility = 'hidden';
 			
-			var buttons = '<input type="button" value="March" onclick="openMarchCard(' + index + ')">';
+			var buttons = '';
 			var backColor = 'enemyColor';
 			if (cities[index].Force == '-') {
 				backColor = 'neutralColor';
-				buttons += '<input type="button" value="Cancel" onclick="menuClose()">';
+				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
+				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			else if (cities[index].Force == playerForce) {
 				backColor = 'allyColor';
-				buttons += '<input type="button" value="Development" onclick="openDevCard(' + index + ')"><input type="button" value="Cancel" onclick="menuClose()">';
+				var disabled = (getCityViableOfficers(index).length > 0) ? '' : ' disabled';
+				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+					<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + disabled + `>
+					<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + disabled + `>
+					<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + disabled + `>
+					<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + disabled + `>
+					<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + disabled + `>
+					<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + disabled + `>
+					<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + disabled + `>
+					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			else {
 				backColor = 'enemyColor';
-				buttons += '<input type="button" value="Cancel" onclick="menuClose()">';
+				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
+				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			
-			var string = `<div class="cityName ` + backColor + `">
-					<b>` + cities[index].Name + `</b>
-				</div>
+			var string = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
 				<div class="menuContent">` +
 					buttons +
 				`</div>`;
@@ -399,7 +425,7 @@ function onMouseMove (e) {
 			hoverCard.style.left = hoverX + 'px';
 			if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
 			else hoverCard.style.top = hoverY + 'px';
-			var string = '<div class="cityName ' + backColor + '"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
+			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
 			
 			if (cities[index].Force != '-') {
 				forceName = forces[cities[index].Force].Name;
