@@ -182,14 +182,13 @@ abilities[1] = new Ability('Benevolence', '', 7, [[5, 1000]], []);
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
 	window.onresize = onResize;
-	window.onclick = onMouseClick;
-	window.onmousemove = onMouseMove;
 	
 	canvas = getElement('myCanvas');
-	ctx = canvas.getContext('2d');
-	
+	canvas.onclick = onMouseClick;
+	canvas.onmousemove = onMouseMove;
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+	ctx = canvas.getContext('2d');
 	
 	hoverCard = document.createElement('div');
 	hoverCard.classList.add('hoverCard');
@@ -198,6 +197,10 @@ window.onload = function () {
 	menuCard = document.createElement('div');
 	menuCard.classList.add('menuCard');
 	document.body.appendChild(menuCard);
+	
+	marchCard = document.createElement('div');
+	marchCard.classList.add('marchCard');
+	document.body.appendChild(marchCard);
 	
 	// Prepare canvas
 	var fill = window.innerHeight;
@@ -246,9 +249,6 @@ function reset () {
 	player = 15;
 	playerForce = officers[player].Force;
 	gState = 1;
-	
-	//hoverCard.style.visibility = 'hidden';
-	//menuCard.style.visibility = 'hidden';
 	
 	intervalId  = setInterval(timerTick, timerInterval);
 }
@@ -312,12 +312,35 @@ function onMouseClick (e) {
 		// Cities
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
-			if (cities[index].Force == playerForce) {
-				
+			
+			hoverCard.style.visibility = 'hidden';
+			
+			var buttons = '<input type="button" value="March" onclick="openMarchCard(' + index + ')">';
+			var backColor = 'enemyColor';
+			if (cities[index].Force == '-') {
+				backColor = 'neutralColor';
+				buttons += '<input type="button" value="Cancel" onclick="menuClose()">';
+			}
+			else if (cities[index].Force == playerForce) {
+				backColor = 'allyColor';
+				buttons += '<input type="button" value="Development" onclick="openDevCard(' + index + ')"><input type="button" value="Cancel" onclick="menuClose()">';
 			}
 			else {
-				
+				backColor = 'enemyColor';
+				buttons += '<input type="button" value="Cancel" onclick="menuClose()">';
 			}
+			
+			var string = `<div class="cityName ` + backColor + `">
+					<b>` + cities[index].Name + `</b>
+				</div>
+				<div class="menuContent">` +
+					buttons +
+				`</div>`;
+			menuCard.innerHTML = string;
+			
+			menuCard.style.visibility = 'visible';
+			menuCard.style.left = eX + 'px';
+			menuCard.style.top = eY + 'px';
 		}
 	}
 	
@@ -359,7 +382,14 @@ function onMouseMove (e) {
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
 			var hoverLine = hoverOccupiedLine;
-			if (cities[index].Force == '-') hoverLine = hoverEmptyLine;
+			var backColor = 'enemyColor';
+			if (cities[index].Force == '-') {
+				hoverLine = hoverEmptyLine;
+				backColor = 'neutralColor';
+			}
+			else if (cities[index].Force == playerForce) {
+				backColor = 'allyColor';
+			}
 			
 			hoverCard.style.visibility = 'visible';
 			hoverCard.style.top = 'auto';
@@ -369,7 +399,7 @@ function onMouseMove (e) {
 			hoverCard.style.left = hoverX + 'px';
 			if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
 			else hoverCard.style.top = hoverY + 'px';
-			var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
+			var string = '<div class="cityName ' + backColor + '"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
 			
 			if (cities[index].Force != '-') {
 				forceName = forces[cities[index].Force].Name;

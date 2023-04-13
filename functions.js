@@ -144,3 +144,16 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	var e = effectiveness ? effectiveness : 1.0;
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
+
+function menuClose () {
+	menuCard.style.visibility = 'hidden';
+	menuCard.innerHTML = '';
+}
+
+function openMarchCard (cityIndex) {
+	menuClose();
+}
+
+function openDevCard (cityIndex) {
+	menuClose();
+}
