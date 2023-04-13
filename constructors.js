@@ -3,6 +3,31 @@ function Point (x, y) {
 	this.Y = y;
 }
 
+Point.prototype.length = function () {
+	return Math.sqrt(this.X * this.X + this.Y * this.Y);
+};
+
+Point.prototype.normalize = function () {
+	var length = this.length();
+	return new Point(this.X / length, this.Y / length);
+}
+
+Point.prototype.add = function (point) {
+	return new Point(this.X + point.X, this.Y + point.Y);
+}
+
+Point.prototype.subtract = function (point) {
+	return new Point(this.X - point.X, this.Y - point.Y);
+}
+
+Point.prototype.scale = function (scale) {
+	return new Point(this.X * scale, this.Y * scale);
+}
+
+Point.Zero = function () {
+	return new Point(0, 0);
+}
+
 function Path (points) {
 	this.Points = points;
 	this.Cost = function () {
