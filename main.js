@@ -296,6 +296,7 @@ function onMouseClick (e) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
 		
+		// Pathfinding start from player
 		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
 			initPathfinding();
 			startPathfinding(officers[player].Position, new Point(indexX, indexY));
@@ -304,8 +305,8 @@ function onMouseClick (e) {
 	
 	/*
 	// Instant button
-	var instantX = canvasPadding * 2 + mapWidth * squareSize;
-	var instantY = canvasPadding;
+	var instantX = infoX;
+	var instantY = infoY;
 	if (eX >= instantX && eX < instantX + buttonWidth && eY >= instantY && eY < instantY + buttonHeight) {
 		instant = !instant;
 		reset();
