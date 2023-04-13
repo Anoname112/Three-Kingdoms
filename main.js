@@ -8,6 +8,9 @@ var mousePosition;
 var squareSize;
 var buttonWidth;
 var buttonHeight;
+var infoX;
+var infoY;
+var infoXHalf;
 
 var date;
 var player;
@@ -198,6 +201,9 @@ window.onload = function () {
 	squareSize = fill / map.length;
 	buttonWidth = 3.5 * squareSize;
 	buttonHeight = 1.5 * squareSize;
+	infoX = canvasPadding * 2 + mapWidth * squareSize;
+	infoY = canvasPadding;
+	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
@@ -320,14 +326,53 @@ function onMouseClick (e) {
 }
 
 function onMouseMove (e) {
-	mousePosition = new Point(e.clientX, e.clientY);
+	var eX = e.clientX;
+	var eY = e.clientY;
+	mousePosition = new Point(eX, eY);
+	
+	hoverCard.style.visibility = 'hidden';
+	
+	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+		var indexX = parseInt((eX - canvasPadding) / squareSize);
+		var indexY = parseInt((eY - canvasPadding) / squareSize);
+		
+		// Hovering a city
+		if (map[indexX][indexY] >= 40) {
+			var index = map[indexX][indexY] - 40;
+			var hoverLine = hoverOccupiedLine;
+			if (cities[index].Force == '-') hoverLine = hoverEmptyLine;
+			
+			hoverCard.style.visibility = 'visible';
+			hoverCard.style.top = 'auto';
+			hoverCard.style.bottom = 'auto';
+			var hoverX = mousePosition.X + hoverMarginX;
+			var hoverY = mousePosition.Y + hoverMarginY;
+			hoverCard.style.left = hoverX + 'px';
+			if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
+			else hoverCard.style.top = hoverY + 'px';
+			var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
+			
+			if (cities[index].Force != '-') {
+				forceName = forces[cities[index].Force].Name;
+				forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+				string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
+				string += '<b>' + forceName + '</b><br />';
+			}
+			
+			string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
+				'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
+				'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
+				'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
+				'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
+			hoverCard.innerHTML = string;
+		}
+	}
 }
 
 function draw () {
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
-	hoverCard.style.visibility = 'hidden';
 	ctx.font = canvasFont;
 	
 	// Begin drawing
@@ -391,9 +436,7 @@ function draw () {
 			*/
 			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
-				var yPad = 160;
 				if (cities[index].Force == '-') {
-					yPad = 110;
 					var emptyX = x + cityPadding;
 					var emptyY = y + cityPadding;
 					var emptySize = squareSize - (2 * cityPadding);
@@ -405,33 +448,7 @@ function draw () {
 					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
 				}
 				
-				
 				if (mousePosition.X >= x && mousePosition.X < x + squareSize && mousePosition.Y >= y && mousePosition.Y < y + squareSize) {
-					// Hovering a city
-					hoverCard.style.visibility = 'visible';
-					hoverCard.style.top = 'auto';
-					hoverCard.style.bottom = 'auto';
-					var hoverX = mousePosition.X + 10;
-					var hoverY = mousePosition.Y - 0;
-					hoverCard.style.left = hoverX + 'px';
-					if (hoverY + yPad > window.innerHeight) hoverCard.style.top = (hoverY - yPad) + 'px';
-					else hoverCard.style.top = hoverY + 'px';
-					var string = '<div class="cityName"><b>' + cities[index].Name + '</b></div><div class="cityInfo">';
-					
-					if (cities[index].Force != '-') {
-						forceName = forces[cities[index].Force].Name;
-						forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
-						string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-						string += '<b>' + forceName + '</b><br />';
-					}
-					
-					string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
-						'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
-						'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
-						'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
-						'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
-					hoverCard.innerHTML = string;
-					
 					for (var k = 0; k < officers.length; k++) if (officers[k].City == index) officerList.push(k);
 					for (var k = 0; k < units.length; k++) if (units[k].City == index) unitList.push(k);
 				}
@@ -439,9 +456,43 @@ function draw () {
 		}
 	}
 	
-	var x = canvasPadding * 2 + mapWidth * squareSize;
-	var y = canvasPadding;	
-	if (hoverCard.style.visibility == 'hidden') {
+	var x = infoX;
+	var y = infoY;
+	if (hoverCard.style.visibility == 'visible') {
+		ctx.fillStyle = fontDark;
+		drawMessage('OFFICERS', x, y + lineHeight);
+		drawMessage('LDR', x + infoPad, y + lineHeight, "end");
+		drawMessage('WAR', x + infoPad * 1.2, y + lineHeight, "end");
+		drawMessage('INT', x + infoPad * 1.4, y + lineHeight, "end");
+		drawMessage('POL', x + infoPad * 1.6, y + lineHeight, "end");
+		drawMessage('CHR', x + infoPad * 1.8, y + lineHeight, "end");
+		y += squareSize;
+		for (var i = 0; i < officerList.length; i++) {
+			var officer = officers[officerList[i]];
+			drawMessage('- ' + officer.Name, x, y + lineHeight);
+			drawMessage(officer.LDR, x + infoPad, y + lineHeight, "end");
+			drawMessage(officer.WAR, x + infoPad * 1.2, y + lineHeight, "end");
+			drawMessage(officer.INT, x + infoPad * 1.4, y + lineHeight, "end");
+			drawMessage(officer.POL, x + infoPad * 1.6, y + lineHeight, "end");
+			drawMessage(officer.CHR, x + infoPad * 1.8, y + lineHeight, "end");
+			y += squareSize;
+		}
+		
+		x = infoXHalf;
+		y = infoY;
+		drawMessage('UNITS', x, y + lineHeight);
+		drawMessage('Strength', x + infoPad * 1.1, y + lineHeight, "end");
+		drawMessage('Morale', x + infoPad * 1.7, y + lineHeight, "end");
+		y += squareSize;
+		for (var i = 0; i < unitList.length; i++) {
+			var unit = units[unitList[i]];
+			drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
+			drawMessage(unit.Strength, x + infoPad * 1.1, y + lineHeight, "end");
+			drawMessage(unit.Morale, x + infoPad * 1.7, y + lineHeight, "end");
+			y += squareSize;
+		}
+	}
+	else {
 		/*
 		// Draw instant button
 		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
@@ -465,40 +516,6 @@ function draw () {
 			y += squareSize * 2;
 		}
 		*/
-	}
-	else {
-		var pad = 150;
-		ctx.fillStyle = fontDark;
-		drawMessage('OFFICERS', x, y + lineHeight);
-		drawMessage('LDR', x + pad, y + lineHeight, "end");
-		drawMessage('WAR', x + pad * 1.2, y + lineHeight, "end");
-		drawMessage('INT', x + pad * 1.4, y + lineHeight, "end");
-		drawMessage('POL', x + pad * 1.6, y + lineHeight, "end");
-		drawMessage('CHR', x + pad * 1.8, y + lineHeight, "end");
-		y += squareSize;
-		for (var i = 0; i < officerList.length; i++) {
-			var officer = officers[officerList[i]];
-			drawMessage('- ' + officer.Name, x, y + lineHeight);
-			drawMessage(officer.LDR, x + pad, y + lineHeight, "end");
-			drawMessage(officer.WAR, x + pad * 1.2, y + lineHeight, "end");
-			drawMessage(officer.INT, x + pad * 1.4, y + lineHeight, "end");
-			drawMessage(officer.POL, x + pad * 1.6, y + lineHeight, "end");
-			drawMessage(officer.CHR, x + pad * 1.8, y + lineHeight, "end");
-			y += squareSize;
-		}
-		
-		x += 350; y = 0;
-		drawMessage('UNITS', x, y + lineHeight);
-		drawMessage('Strength', x + pad * 1.1, y + lineHeight, "end");
-		drawMessage('Morale', x + pad * 1.7, y + lineHeight, "end");
-		y += squareSize;
-		for (var i = 0; i < unitList.length; i++) {
-			var unit = units[unitList[i]];
-			drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
-			drawMessage(unit.Strength, x + pad * 1.1, y + lineHeight, "end");
-			drawMessage(unit.Morale, x + pad * 1.7, y + lineHeight, "end");
-			y += squareSize;
-		}
 	}
 	
 	ctx.stroke();

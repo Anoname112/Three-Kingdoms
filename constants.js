@@ -50,6 +50,17 @@ const canvasPadding = 0;
 const canvasFont = (isMobile || isPortrait) ? '8px Consolas' : '14px Consolas';
 const cityPadding = 2;
 const buttonPadding = 6;
+
+// Hover card
+const hoverOccupiedLine = 160;
+const hoverEmptyLine = 110;
+const hoverMarginX = 10;
+const hoverMarginY = 0;
+
+// Button
+
+// Message
+const infoPad = 150;
 const lineHeight = (isMobile || isPortrait) ? 7 : 14;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
