@@ -1,11 +1,23 @@
+var instant = true;
+var startPoint;
+var endPoint;
+var paths;
+var explored;
+var openset;
+var finalPath;
+
 function initPathfinding (start, end) {
-	startPoint = start;
-	endPoint = end;
-	
+	startPoint = new Point (0, 0);
+	endPoint = new Point (0, 0);
 	paths = [];
 	explored = [];
 	openset = [];
 	finalPath = null;
+}
+
+function startPathfinding (start, end) {
+	startPoint = start;
+	endPoint = end;
 	
 	// Initiate start point and openset
 	paths.push(new Path([startPoint]));
@@ -16,12 +28,15 @@ function initPathfinding (start, end) {
 			openset.push(neighbours[i]);
 		}
 	}
+	
+	pathfinding();
 }
 
-function startPathfinding () {
+function pathfinding () {
 	if (instant) {
 		while (finalPath == null && paths.length > 0) expand();
 	}
+	else expand();
 }
 
 function getNeighbours (point) {

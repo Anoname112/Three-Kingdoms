@@ -3,19 +3,11 @@ var ctx;
 var hoverCard;
 
 var intervalId;
-var gState;		// 0: New/load game, 1: Playing, 2: Win, 3: Lose
+var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var mousePosition;
 var squareSize;
 var buttonWidth;
 var buttonHeight;
-
-var instant = true;
-var startPoint;
-var endPoint;
-var paths;
-var explored;
-var openset;
-var finalPath;
 
 var date;
 var player;
@@ -299,8 +291,8 @@ function onMouseClick (e) {
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
 		
 		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
-			initPathfinding(officers[player].Position, new Point(indexX, indexY));
-			startPathfinding();
+			initPathfinding();
+			startPathfinding(officers[player].Position, new Point(indexX, indexY));
 		}
 	}
 	
