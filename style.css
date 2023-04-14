@@ -11,9 +11,13 @@ body {
 	width: 130px;
 }
 
-#relevantStats {
+#relevantStats, #assistedStats {
 	vertical-align: middle;
 	height: 41px;
+}
+
+#assistDiv {
+	visibility: hidden;
 }
 
 .hoverCard, .menuCard, .marchCard, .devCard, .unitCard {
@@ -90,6 +94,7 @@ body {
 .stats th, .stats td {
 	padding: 2px;
 	border: 1px solid #AAAAAA;
+	width: 50px;
 	text-align: right;
 }
 

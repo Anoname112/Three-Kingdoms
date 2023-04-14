@@ -45,6 +45,7 @@ const timerInterval = 10;
 const scaling = 1;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
+const assistPercentage = 5;
 
 const canvasPadding = 0;
 const canvasFontSize = (isMobile || isPortrait) ? 8 : 14;
@@ -53,10 +54,15 @@ const cityPadding = 3;
 const buttonPadding = 6;
 
 // Hover card
-const hoverOccupiedLine = 160;
-const hoverEmptyLine = 110;
+const hoverOccupiedLine = 170;
+const hoverEmptyLine = 125;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
+
+// Menu card
+const menuAllyLine = 230;
+const menuEnemyLine = 83;
+const menuEmptyLine = 83;
 
 const cardMargin = 10;
 

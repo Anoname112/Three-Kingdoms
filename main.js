@@ -234,11 +234,11 @@ window.onload = function () {
 			'-',
 			'-',
 			new Point.Zero(),
-			baseOfficers[i]['ldr'],
-			baseOfficers[i]['war'],
-			baseOfficers[i]['int'],
-			baseOfficers[i]['pol'],
-			baseOfficers[i]['chr'],
+			parseInt(baseOfficers[i]['ldr']),
+			parseInt(baseOfficers[i]['war']),
+			parseInt(baseOfficers[i]['int']),
+			parseInt(baseOfficers[i]['pol']),
+			parseInt(baseOfficers[i]['chr']),
 			'-',
 			'-'
 		));
@@ -309,7 +309,7 @@ function onContextMenu (e) {
 }
 
 function onResize (e) {
-	//updateCanvasLocation();
+	updateCanvasSize();
 }
 
 function onMouseClick (e) {
@@ -330,19 +330,22 @@ function onMouseClick (e) {
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
 			var city = cities[index];
+			var backColor = 'enemyColor';
+			var menuLine = menuEnemyLine;
 			
 			hoverCard.style.visibility = 'hidden';
 			
 			var buttons = '';
-			var backColor = 'enemyColor';
 			if (city.Force == '-') {
 				backColor = 'neutralColor';
+				menuLine = menuEmptyLine;
 				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
 				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			else if (city.Force == playerForce) {
 				backColor = 'allyColor';
+				menuLine = menuAllyLine;
 				var viableOfficers = getCityViableOfficers(index);
 				var viableUnits = getCityViableUnits(index);
 				var unitCount = getCityUnitCount(index);
@@ -374,7 +377,6 @@ function onMouseClick (e) {
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			else {
-				backColor = 'enemyColor';
 				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
 				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
@@ -386,7 +388,8 @@ function onMouseClick (e) {
 			
 			menuCard.style.visibility = 'visible';
 			menuCard.style.left = eX + 'px';
-			menuCard.style.top = eY + 'px';
+			if (eY + menuLine > window.innerHeight) menuCard.style.top = (eY - menuLine) + 'px';
+			else menuCard.style.top = eY + 'px';
 		}
 	}
 	
@@ -438,8 +441,6 @@ function onMouseMove (e) {
 			}
 			
 			hoverCard.style.visibility = 'visible';
-			hoverCard.style.top = 'auto';
-			hoverCard.style.bottom = 'auto';
 			var hoverX = mousePosition.X + hoverMarginX;
 			var hoverY = mousePosition.Y + hoverMarginY;
 			hoverCard.style.left = hoverX + 'px';
