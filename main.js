@@ -329,28 +329,48 @@ function onMouseClick (e) {
 		// Cities
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
+			var city = cities[index];
 			
 			hoverCard.style.visibility = 'hidden';
 			
 			var buttons = '';
 			var backColor = 'enemyColor';
-			if (cities[index].Force == '-') {
+			if (city.Force == '-') {
 				backColor = 'neutralColor';
 				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
 				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
-			else if (cities[index].Force == playerForce) {
+			else if (city.Force == playerForce) {
 				backColor = 'allyColor';
-				var disabled = (getCityViableOfficers(index).length > 0) ? '' : ' disabled';
-				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
-					<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + disabled + `>
-					<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + disabled + `>
-					<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + disabled + `>
-					<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + disabled + `>
-					<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + disabled + `>
-					<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + disabled + `>
-					<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + disabled + `>
+				var viableOfficers = getCityViableOfficers(index);
+				var viableUnits = getCityViableUnits(index);
+				var unitCount = getCityUnitCount(index);
+				
+				var recuritable = false;
+				var drillable = false;
+				for (var i = 0; i < viableUnits.length; i++) {
+					if (units[viableUnits[i]].Strength < 10000) recuritable = true;
+					if (units[viableUnits[i]].Morale < 100) drillable = true;
+				}
+				
+				var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 ? '' : ' disabled';
+				var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm ? '' : ' disabled';
+				var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade ? '' : ' disabled';
+				var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech ? '' : ' disabled';
+				var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense ? '' : ' disabled';
+				var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 ? '' : ' disabled';
+				var recuritDisabled = viableOfficers.length > 0 && (recuritable || unitCount < 10) ? '' : ' disabled';
+				var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
+				
+				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + marchDisabled + `>
+					<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + farmDisabled + `>
+					<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + tradeDisabled + `>
+					<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + techDisabled + `>
+					<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + defenseDisabled + `>
+					<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + orderDisabled + `>
+					<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + recuritDisabled + `>
+					<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + drillDisabled + `>
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			else {
@@ -360,10 +380,8 @@ function onMouseClick (e) {
 					<input type="button" value="Cancel" onclick="closeMenu()">`;
 			}
 			
-			var string = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
-				<div class="menuContent">` +
-					buttons +
-				`</div>`;
+			var string = `<div class="cityName ` + backColor + `">` + city.Name + `</div>
+				<div class="menuContent">` + buttons + `</div>`;
 			menuCard.innerHTML = string;
 			
 			menuCard.style.visibility = 'visible';

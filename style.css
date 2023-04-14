@@ -7,6 +7,15 @@ body {
 	position: fixed;
 }
 
+#commander {
+	width: 130px;
+}
+
+#relevantStats {
+	vertical-align: middle;
+	height: 41px;
+}
+
 .hoverCard, .menuCard, .marchCard, .devCard, .unitCard {
 	position: fixed;
 	border: 1px solid #000000;
@@ -63,7 +72,7 @@ body {
 	padding: 0;
 }
 
-.menuContent {
+.menuContent, .marchContent {
 	padding: 5px;
 	font-size: 13px;
 }
@@ -71,6 +80,35 @@ body {
 .menuContent input {
 	display: block;
 	width: 100px;
+}
+
+.stats {
+	border-collapse: collapse;
+	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+}
+
+.stats th, .stats td {
+	padding: 2px;
+	border: 1px solid #AAAAAA;
+	text-align: right;
+}
+
+.checkboxes {
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
+}
+
+.checkboxes label {
+	display: block;
+}
+
+.checkboxes label:hover {
+	background-color: #1E90FF;
+	color: #FFFFFF;
+}
+
+.checkboxes label input, .checkboxes label span {
+	vertical-align: top;
 }
 
 .right {

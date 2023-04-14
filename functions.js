@@ -114,6 +114,12 @@ function getCityPosition (cityIndex) {
 	return new Point(0, 0);
 }
 
+function getCityUnitCount (cityIndex) {
+	var count = null;
+	for (var i = 0; i < units.length; i++) if (units[i].City == cityIndex) count++;
+	return count;
+}
+
 function getCityViableOfficers (cityIndex) {
 	var viableOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
@@ -130,6 +136,14 @@ function getForceViableOfficers (forceIndex) {
 	return viableOfficers;
 }
 
+function getCityViableUnits (cityIndex) {
+	var viableUnits = [];
+	for (var i = 0; i < units.length; i++) {
+		if (units[i].City == cityIndex && units[i].Objective == '-') viableUnits.push(i);
+	}
+	return viableUnits;
+}
+
 function getEnemyForces (forceIndex) {
 	var enemyForces = [];
 	for (var i = 0; i < forces.length; i++) {
@@ -138,12 +152,38 @@ function getEnemyForces (forceIndex) {
 	return enemyForces;
 }
 
-function getEnemyCities (forceIndex) {
-	var enemyCities = [];
+function getCities (forceIndex, alliance, sort) {
+	var resultCities = [];
 	for (var i = 0; i < cities.length; i++) {
-		if (cities[i].Force != forceIndex && cities[i].Force != '-') enemyCities.push(i);
+		if (alliance == 'enemy' && cities[i].Force != forceIndex && cities[i].Force != '-') resultCities.push(i);
+		else if (alliance == 'nonForce' && cities[i].Force != forceIndex) resultCities.push(i);
 	}
-	return enemyCities;
+	
+	if (sort) {
+		// Get enemy distances with the sort source
+		var distances = [];
+		for (var i = 0; i < resultCities.length; i++) {
+			distances.push((getCityPosition(resultCities[i]).subtract(getCityPosition(sort[0]))).length());
+		}
+		
+		if (sort[1] == 'near') {
+			for (var i = 0; i < distances.length; i++) {
+				for (var j = i + 1; j < distances.length; j++) {
+					if (distances[i] > distances[j]) {
+						var temp = resultCities[i];
+						resultCities[i] = resultCities[j];
+						resultCities[j] = temp;
+						
+						temp = distances[i];
+						distances[i] = distances[j];
+						distances[j] = temp;
+					}
+				}
+			}
+		}
+	}
+	
+	return resultCities;
 }
 
 function getStats (officerName) {
@@ -182,21 +222,91 @@ function closeMenu () {
 	menuCard.innerHTML = '';
 }
 
+function commanderChanged () {
+	getElement('relevantStats').innerHTML = '';
+	getElement('assistDiv').innerHTML = '';
+	
+	var commander = getElement('commander') ? getElement('commander').value : '';
+	var stats = getStats(commander);
+	if (stats.length > 0) {
+		var LDR = stats[0];
+		var WAR = stats[1];
+		var INT = stats[2];
+		getElement('relevantStats').innerHTML = `<table class="stats">
+				<tr><th>LDR</th><th>WAR</th><th>INT</th><th>Attack</th><th>Defense</th></tr>
+				<tr>
+					<td>` + LDR + `</td>
+					<td>` + WAR + `</td>
+					<td>` + INT + `</td>
+					<td>` + calculateAttack(LDR, WAR).toFixed(2) + `</td>
+					<td>` + calculateDefense(LDR, INT).toFixed(2) + `</td></tr>
+			</table>`;
+		getElement('assistDiv').innerHTML = '';
+	}
+}
+
 function openMarchCard (cityIndex) {
 	closeMenu();
 	
 	var city = cities[cityIndex];
 	var source = null;
 	var target = null;
+	var viableOfficers = [];
+	var viableUnits = [];
 	var fromHTML = '';
 	var targetHTML = '';
 	marchCard.style.visibility = 'visible';
 	if (city.Force == playerForce) {
 		source = cityIndex;
-		target = getEnemyCities();
+		targets = getCities(city.Force, 'nonForce', [cityIndex, 'near']);
+		var targetsHTML = '';
+		for (var i = 0; i < targets.length; i++) {
+			targetsHTML += '<option value="' + cities[targets[i]].Name + '">'
+		}
 		
-		var string = `<div class="title allyColor">March</div>
-			<div><input type="button" value="Cancel" onclick="closeMarchCard()"></div>`;
+		viableOfficers = getCityViableOfficers(cityIndex);
+		var officersHTML = '';
+		for (var i = 0; i < viableOfficers.length; i++) {
+			officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">'
+		}
+		
+		viableUnits = getCityViableUnits(cityIndex);
+		var unitsHTML = '';
+		for (var i = 0; i < viableUnits.length; i++) {
+			var unit = units[viableUnits[i]];
+			unitsHTML += `<label for="` + viableUnits[i] + `">
+					<input type="checkbox" id="` + viableUnits[i] + `">
+					<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
+				</label>`;
+		}
+		
+		var string = `<datalist id="targetList">` + targetsHTML + `</datalist><datalist id="officerList">` + officersHTML + `</datalist>
+			<div class="title allyColor">March</div>
+			<div class="marchContent">
+				<table>
+					<tr>
+						<td>Source: <input type="text" id="source" value="` + cities[source].Name + `" readonly></td>
+						<td>Target: <input type="text" id="target" list="targetList"></td>
+					</tr>
+					<tr>
+						<td>Commander: <input type="text" id="commander" list="officerList" onkeyup="commanderChanged()" oninput="commanderChanged()"></td>
+						<td><div id="relevantStats"></div></td>
+					</tr>
+					<tr>
+						<td>
+							Units: (type | strength | morale)<br />
+							<div class="checkboxes">` + unitsHTML + `</div>
+						</td>
+					</tr>
+					<tr>
+						<td><div id="assistDiv"></div></td>
+					</tr>
+					<tr>
+						<td><input type="button" value="March" onclick=""> <input type="button" value="Cancel" onclick="closeMarchCard()"></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>`;
 		marchCard.innerHTML = string;
 	}
 	else {
