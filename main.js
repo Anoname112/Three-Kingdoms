@@ -11,6 +11,7 @@ var buttonHeight;
 var infoX;
 var infoY;
 var infoXHalf;
+var infoYHalf;
 
 var date;
 var player;
@@ -216,9 +217,10 @@ window.onload = function () {
 	squareSize = fill / map.length;
 	buttonWidth = 3.5 * squareSize;
 	buttonHeight = 1.5 * squareSize;
-	infoX = canvasPadding * 2 + mapWidth * squareSize;
-	infoY = canvasPadding;
+	infoX = (isPortrait || isMobile) ? canvasPadding : canvasPadding * 2 + mapWidth * squareSize;
+	infoY = (isPortrait || isMobile) ? canvasPadding * 2 + mapHeight * squareSize : canvasPadding;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
+	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
 	marchCard.style.left = (canvasPadding + cardMargin) + 'px';
 	marchCard.style.top = (canvasPadding + cardMargin) + 'px';
@@ -231,7 +233,7 @@ window.onload = function () {
 			baseOfficers[i]['name'],
 			'-',
 			'-',
-			new Point(0, 0),
+			new Point.Zero(),
 			baseOfficers[i]['ldr'],
 			baseOfficers[i]['war'],
 			baseOfficers[i]['int'],
@@ -257,9 +259,9 @@ window.onload = function () {
 function reset () {
 	applyScenario('Warlords');
 	
-	startPoint = new Point(0, 0);
-	endPoint = new Point(0, 0);
-	mousePosition = new Point(0, 0);
+	startPoint = new Point.Zero();
+	endPoint = new Point.Zero();
+	mousePosition = new Point.Zero();
 	
 	player = 15;
 	playerForce = officers[player].Force;
@@ -539,7 +541,7 @@ function draw () {
 	var x = infoX;
 	var y = infoY;
 	ctx.font = infoFont;
-	if (hoverCard.style.visibility == 'visible') {
+	if (hoverCard.style.visibility == 'visible' || menuCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible') {
 		ctx.fillStyle = fontDark;
 		drawMessage('OFFICERS', x, y + lineHeight);
 		drawMessage('LDR', x + infoPad, y + lineHeight, "end");
@@ -559,8 +561,8 @@ function draw () {
 			y += squareSize;
 		}
 		
-		x = infoXHalf;
-		y = infoY;
+		x = infoX;
+		y = infoYHalf;
 		drawMessage('UNITS', x, y + lineHeight);
 		drawMessage('Strength', x + infoPad * 1.1, y + lineHeight, "end");
 		drawMessage('Morale', x + infoPad * 1.7, y + lineHeight, "end");

@@ -82,3 +82,9 @@ const finalPathColor = '#2222CC';
 // Images
 const images = [];
 const mapImage = newImg("resources/map.png");
+const spearmenStand = newImg("resources/spearmenStand.png");
+const horsemenStand = newImg("resources/horsemenStand.png");
+const archerStand = newImg("resources/archerStand.png");
+const spearmenAttack = newImg("resources/spearmenAttack.png");
+const horsemenAttack = newImg("resources/horsemenAttack.png");
+const archerAttack = newImg("resources/archerAttack.png");
