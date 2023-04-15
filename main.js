@@ -427,8 +427,35 @@ function onMouseMove (e) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
 		
-		// Hovering a city
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective[0] == 'March') {
+				var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+				var w = squareSize - unitPad * 2;
+				var h = squareSize - unitPad * 2;
+				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
+					var hoverLine = hoverOccupiedLine;
+					var backColor = 'enemyColor';
+					if (officers[i].Force == playerForce) backColor = 'allyColor';
+					
+					hoverCard.style.visibility = 'visible';
+					var hoverX = eX + hoverMarginX;
+					var hoverY = eY + hoverMarginY;
+					hoverCard.style.left = hoverX + 'px';
+					if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
+					else hoverCard.style.top = hoverY + 'px';
+					
+					var string = `<div class="forceName ` + backColor + `">` + forces[officers[i].Force].Name + `</div>
+						<div class="unitInfo">Commander: ` + officers[i].Name + `</div>`;
+					
+					hoverCard.innerHTML = string;
+					return;
+				}
+			}
+		}
+		
 		if (map[indexX][indexY] >= 40) {
+			// Hovering a city
 			var index = map[indexX][indexY] - 40;
 			var hoverLine = hoverOccupiedLine;
 			var backColor = 'enemyColor';
@@ -441,13 +468,13 @@ function onMouseMove (e) {
 			}
 			
 			hoverCard.style.visibility = 'visible';
-			var hoverX = mousePosition.X + hoverMarginX;
-			var hoverY = mousePosition.Y + hoverMarginY;
+			var hoverX = eX + hoverMarginX;
+			var hoverY = eY + hoverMarginY;
 			hoverCard.style.left = hoverX + 'px';
 			if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
 			else hoverCard.style.top = hoverY + 'px';
-			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
 			
+			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
 			if (cities[index].Force != '-') {
 				forceName = forces[cities[index].Force].Name;
 				forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
@@ -553,9 +580,17 @@ function draw () {
 					for (var k = 0; k < units.length; k++) if (units[k].City == index) unitList.push(k);
 				}
 			}
-			
-			// Draw deployed units
-			///
+		}
+	}
+	
+	// Draw deployed units
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Objective[0] == 'March') {
+			var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
+			var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+			var w = squareSize - unitPad * 2;
+			var h = squareSize - unitPad * 2;
+			drawImage(unitImage, x, y, w, h);
 		}
 	}
 	

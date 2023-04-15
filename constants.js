@@ -52,6 +52,7 @@ const canvasFontSize = (isMobile || isPortrait) ? 8 : 14;
 const canvasFont = canvasFontSize + 'px "Consolas"';
 const cityPadding = 3;
 const buttonPadding = 6;
+const unitPad = 3;
 
 // Hover card
 const hoverOccupiedLine = 170;
@@ -88,5 +89,6 @@ const finalPathColor = '#2222CC';
 // Images
 const images = [];
 const mapImage = newImg("resources/map.png");
+const unitImage = newImg("resources/unit.png");
 const scene1Image = newImg("resources/scene1.png");
 const scene2Image = newImg("resources/scene2.png");

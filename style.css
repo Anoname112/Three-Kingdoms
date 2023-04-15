@@ -40,7 +40,7 @@ body {
 	opacity: 0.95;
 }
 
-.cityName, .title {
+.forceName, .cityName, .title {
 	padding: 5px;
 	font-size: 15px;
 	font-weight: bold;
@@ -61,7 +61,7 @@ body {
 	background-color: #888888;
 }
 
-.cityInfo {
+.cityInfo, .unitInfo {
 	padding: 5px;
 	font-size: 13px;
 }
