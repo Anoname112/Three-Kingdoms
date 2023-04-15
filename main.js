@@ -455,7 +455,7 @@ function onMouseMove (e) {
 }
 
 function playClick (e) {
-	console.log('c');
+	
 }
 
 function draw () {
