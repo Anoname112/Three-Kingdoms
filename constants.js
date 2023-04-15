@@ -88,5 +88,5 @@ const finalPathColor = '#2222CC';
 // Images
 const images = [];
 const mapImage = newImg("resources/map.png");
-const scene1 = newImg("resources/scene1.png");
-const scene2 = newImg("resources/scene2.png");
+const scene1Image = newImg("resources/scene1.png");
+const scene2Image = newImg("resources/scene2.png");
