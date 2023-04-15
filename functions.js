@@ -192,6 +192,14 @@ function getForceViableUnits (forceIndex) {
 	return viableUnits;
 }
 
+function getForceMarchableCities (forceIndex) {
+	var marchable = [];
+	for (var i = 0; i < cities.length; i++) {
+		if (cities[i].Force == forceIndex && getCityViableOfficers(i).length > 0 && getCityViableUnits(i).length > 0) marchable.push(i);
+	}
+	return marchable;
+}
+
 function getEnemyForces (forceIndex) {
 	var enemyForces = [];
 	for (var i = 0; i < forces.length; i++) {
@@ -271,14 +279,7 @@ function openCityCard (mapValue) {
 	hoverCard.style.visibility = 'hidden';
 	
 	var buttons = '';
-	if (city.Force == '-') {
-		backColor = 'neutralColor';
-		cityLine = cityEmptyLine;
-		var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
-			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
-	}
-	else if (city.Force == playerForce) {
+	if (city.Force == playerForce) {
 		backColor = 'allyColor';
 		cityLine = cityAllyLine;
 		var viableOfficers = getCityViableOfficers(index);
@@ -311,8 +312,15 @@ function openCityCard (mapValue) {
 			<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + drillDisabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
+	else if (city.Force == '-') {
+		backColor = 'neutralColor';
+		cityLine = cityEmptyLine;
+		var disabled = (getForceMarchableCities(playerForce).length > 0) ? '' : ' disabled';
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+	}
 	else {
-		var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
+		var disabled = (getForceMarchableCities(playerForce).length > 0) ? '' : ' disabled';
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
@@ -462,108 +470,95 @@ function openMarchCard (cityIndex) {
 	var city = cities[cityIndex];
 	var source = null;
 	var target = null;
-	var fromHTML = '';
-	var targetHTML = '';
+	
+	var officersHTML = '';
+	var sourceTargetDiv = '';
+	var commanderDiv = '';
+	var unitsDiv = '';
+	
+	var string = '';
 	marchCard.style.visibility = 'visible';
 	if (city.Force == playerForce) {
 		source = cityIndex;
-		targets = getCities(city.Force, 'nonForce', [source, 'near']);
+		var targets = getCities(city.Force, 'nonForce', [source, 'near']);
 		var targetsHTML = '';
 		for (var i = 0; i < targets.length; i++) {
 			targetsHTML += '<option value="' + cities[targets[i]].Name + '">'
 		}
 		
 		var viableOfficers = getCityViableOfficers(source);
-		var officersHTML = '';
 		for (var i = 0; i < viableOfficers.length; i++) {
 			officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">'
 		}
+		officersHTML = '<div id="officerListDiv"><datalist id="officerList">' + officersHTML + '</datalist></div>';
 		
+		sourceTargetDiv = `<td>Source: <input type="text" id="source" value="` + cities[source].Name + `" readonly></td>
+			<td>Target: <input type="text" id="target" list="targetList"></td>`;
+		
+		commanderDiv = `<div id="commanderDiv">
+				Commander: <input type="text" id="commander" list="officerList" oninput="commanderChanged(` + source + `)">
+			</div>`;
+		 
 		var viableUnits = getCityViableUnits(source);
-		var unitsHTML = '';
 		for (var i = 0; i < viableUnits.length; i++) {
 			var unit = units[viableUnits[i]];
-			unitsHTML += `<label for="unit` + viableUnits[i] + `">
+			unitsDiv += `<label for="unit` + viableUnits[i] + `">
 					<input type="checkbox" id="unit` + viableUnits[i] + `">
 					<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
 				</label>`;
 		}
-		
-		var string = `<div id="officerListDiv"><datalist id="officerList">` + officersHTML + `</datalist></div><datalist id="targetList">` + targetsHTML + `</datalist>
-			<div class="title allyColor">March</div>
-			<div class="marchContent">
-				<table>
-					<tr>
-						<td>Source: <input type="text" id="source" value="` + cities[source].Name + `" readonly></td>
-						<td>Target: <input type="text" id="target" list="targetList"></td>
-					</tr>
-					<tr>
-						<td>
-							<div id="commanderDiv">
-								Commander: <input type="text" id="commander" list="officerList" oninput="commanderChanged(` + source + `)">
-							</div>
-						</td>
-						<td><div id="relevantStats"></div></td>
-					</tr>
-					<tr>
-						<td>
-							<div id="unitsDiv">
-								Units: (type | strength | morale)<br />
-								<div class="checkboxes">` + unitsHTML + `</div>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td><div id="assistDiv" class="checkboxes"></div></td>
-						<td><div id="assistedStats"></div></td>
-					</tr>
-					<tr>
-						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
-						<td></td>
-					</tr>
-				</table>
+		unitsDiv = `<div id="unitsDiv">
+				Units: (type | strength | morale)<br />
+				<div class="checkboxes">` + unitsDiv + `</div>
 			</div>`;
-		marchCard.innerHTML = string;
+		
+		string = `<datalist id="targetList">` + targetsHTML + `</datalist>`;
 	}
 	else {
 		target = cityIndex;
-		sources = getCities(playerForce, 'force', [target, 'near']);
+		var marchableCities = getForceMarchableCities(playerForce);
+		var nearestCities = getCities(playerForce, 'force', [target, 'near']);
 		var sourcesHTML = '';
-		for (var i = 0; i < sources.length; i++) {
-			sourcesHTML += '<option value="' + cities[sources[i]].Name + '">'
+		for (var i = 0; i < nearestCities.length; i++) {
+			if (marchableCities.includes(nearestCities[i])) sourcesHTML += '<option value="' + cities[nearestCities[i]].Name + '">';
 		}
 		
-		var string = `<div id="officerListDiv"></div><datalist id="sourceList">` + sourcesHTML + `</datalist>
-			<div class="title allyColor">March</div>
-			<div class="marchContent">
-				<table>
-					<tr>
-						<td>Source: <input type="text" id="source" list="sourceList" oninput="sourceChanged()"></td>
-						<td>Target: <input type="text" id="target" value="` + cities[target].Name + `" readonly></td>
-					</tr>
-					<tr>
-						<td>
-							<div id="commanderDiv"></div>
-						</td>
-						<td><div id="relevantStats"></div></td>
-					</tr>
-					<tr>
-						<td>
-							<div id="unitsDiv"></div>
-						</td>
-					</tr>
-					<tr>
-						<td><div id="assistDiv" class="checkboxes"></div></td>
-						<td><div id="assistedStats"></div></td>
-					</tr>
-					<tr>
-						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
-						<td></td>
-					</tr>
-				</table>
-			</div>`;
-		marchCard.innerHTML = string;
+		officersHTML = '<div id="officerListDiv"></div>';
+		
+		sourceTargetDiv = `<td>Source: <input type="text" id="source" list="sourceList" oninput="sourceChanged()"></td>
+			<td>Target: <input type="text" id="target" value="` + cities[target].Name + `" readonly></td>`;
+			
+		commanderDiv = `<div id="commanderDiv"></div>`;
+		
+		unitsDiv = `<div id="unitsDiv"></div>`;
+		
+		string = `<datalist id="sourceList">` + sourcesHTML + `</datalist>`;
 	}
+	
+	string = officersHTML + string + 
+		`<div class="title allyColor">March</div>
+		<div class="marchContent">
+			<table>
+				<tr>` + sourceTargetDiv + `</tr>
+				<tr>
+					<td>` + commanderDiv + `</td>
+					<td><div id="relevantStats"></div></td>
+				</tr>
+				<tr>
+					<td>` + unitsDiv + `</td>
+				</tr>
+				<tr>
+					<td><div id="assistDiv" class="checkboxes"></div></td>
+					<td><div id="assistedStats"></div></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>`;
+	
+	marchCard.innerHTML = string;
 }
 
 // Dev card

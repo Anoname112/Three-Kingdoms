@@ -455,7 +455,12 @@ function onMouseMove (e) {
 }
 
 function playClick (e) {
+	// development progress
+	// animate unit, then battle
 	
+	// increase date
+	// tax income, harvest
+	// food consumption (of units before excluding new recurit)
 }
 
 function draw () {

@@ -108,6 +108,7 @@ body {
 	border: 1px solid #AAAAAA;
 	width: 32px;
 	text-align: center;
+	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
 }
 
 .stats td {
