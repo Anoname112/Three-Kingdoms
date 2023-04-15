@@ -24,11 +24,15 @@ body {
 	height: 41px;
 }
 
+#unitsDiv {
+	
+}
+
 #assistDiv {
 	visibility: hidden;
 }
 
-.hoverCard, .menuCard, .marchCard, .devCard, .unitCard {
+.hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .deployedCard {
 	position: fixed;
 	border: 1px solid #000000;
 	border-radius: 5px;
@@ -84,12 +88,12 @@ body {
 	padding: 0;
 }
 
-.menuContent, .marchContent {
+.cityContent, .marchContent {
 	padding: 5px;
 	font-size: 13px;
 }
 
-.menuContent input {
+.cityContent input {
 	display: block;
 	width: 100px;
 }

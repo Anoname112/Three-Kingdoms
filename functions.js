@@ -107,24 +107,6 @@ function getCityIndexByName (cityName) {
 	return null;
 }
 
-function getCityPosition (cityIndex) {
-	var mapValue = cityIndex + 40;
-	var x = 0;
-	var y = 0;
-	for (var i = 0; i < map.length; i++) {
-		for (var j = 0; j < map[i].length; j++) {
-			if (mapValue == map[i][j]) return new Point(i, j);
-		}
-	}
-	return new Point(0, 0);
-}
-
-function getCityUnitCount (cityIndex) {
-	var count = null;
-	for (var i = 0; i < units.length; i++) if (units[i].City == cityIndex) count++;
-	return count;
-}
-
 function getCities (forceIndex, alliance, sort) {
 	var resultCities = [];
 	for (var i = 0; i < cities.length; i++) {
@@ -158,6 +140,24 @@ function getCities (forceIndex, alliance, sort) {
 	}
 	
 	return resultCities;
+}
+
+function getCityPosition (cityIndex) {
+	var mapValue = cityIndex + 40;
+	var x = 0;
+	var y = 0;
+	for (var i = 0; i < map.length; i++) {
+		for (var j = 0; j < map[i].length; j++) {
+			if (mapValue == map[i][j]) return new Point(i, j);
+		}
+	}
+	return new Point(0, 0);
+}
+
+function getCityUnitCount (cityIndex) {
+	var count = null;
+	for (var i = 0; i < units.length; i++) if (units[i].City == cityIndex) count++;
+	return count;
 }
 
 function getCityViableOfficers (cityIndex) {
@@ -248,11 +248,6 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
-function closeMenu () {
-	menuCard.style.visibility = 'hidden';
-	menuCard.innerHTML = '';
-}
-
 function createStatsTable (elementId, LDR, WAR, INT) {
 	getElement(elementId).innerHTML = `<table class="stats">
 			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>ATK</th><th>DEF</th></tr>
@@ -266,6 +261,109 @@ function createStatsTable (elementId, LDR, WAR, INT) {
 		</table>`;
 }
 
+// City card
+function openCityCard (mapValue) {
+	var index = mapValue - 40;
+	var city = cities[index];
+	var backColor = 'enemyColor';
+	var cityLine = cityEnemyLine;
+	
+	hoverCard.style.visibility = 'hidden';
+	
+	var buttons = '';
+	if (city.Force == '-') {
+		backColor = 'neutralColor';
+		cityLine = cityEmptyLine;
+		var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+	}
+	else if (city.Force == playerForce) {
+		backColor = 'allyColor';
+		cityLine = cityAllyLine;
+		var viableOfficers = getCityViableOfficers(index);
+		var viableUnits = getCityViableUnits(index);
+		var unitCount = getCityUnitCount(index);
+		
+		var recuritable = false;
+		var drillable = false;
+		for (var i = 0; i < viableUnits.length; i++) {
+			if (units[viableUnits[i]].Strength < 10000) recuritable = true;
+			if (units[viableUnits[i]].Morale < 100) drillable = true;
+		}
+		
+		var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 ? '' : ' disabled';
+		var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm ? '' : ' disabled';
+		var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade ? '' : ' disabled';
+		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech ? '' : ' disabled';
+		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense ? '' : ' disabled';
+		var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 ? '' : ' disabled';
+		var recuritDisabled = viableOfficers.length > 0 && (recuritable || unitCount < 10) ? '' : ' disabled';
+		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
+		
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + marchDisabled + `>
+			<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + farmDisabled + `>
+			<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + tradeDisabled + `>
+			<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + techDisabled + `>
+			<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + defenseDisabled + `>
+			<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + orderDisabled + `>
+			<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + recuritDisabled + `>
+			<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + drillDisabled + `>
+			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+	}
+	else {
+		var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+	}
+	
+	var string = `<div class="cityName ` + backColor + `">` + city.Name + `</div>
+		<div class="cityContent">` + buttons + `</div>`;
+	cityCard.innerHTML = string;
+	
+	cityCard.style.visibility = 'visible';
+	cityCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + cityLine > window.innerHeight) cityCard.style.top = (mousePosition.Y - cityLine) + 'px';
+	else cityCard.style.top = mousePosition.Y + 'px';
+}
+
+// March card
+function march () {
+	// Check target and source (should be player force)
+	var source = getElement('source') ? getElement('source').value : '';
+	var target = getElement('target') ? getElement('target').value : '';
+	source = getCityIndexByName(source);
+	target = getCityIndexByName(target);
+	if (Number.isInteger(source) && Number.isInteger(target) && getCities(playerForce, 'force').includes(source)) {
+		// Check commander
+		var commander = getElement('commander') ? getElement('commander').value : '';
+		commander = getOfficerIndexByName(commander);
+		if (Number.isInteger(commander)) {
+			// Check deploy units
+			var deployUnits = [];
+			for (var i = 0; i < units.length; i++) {
+				if (getElement('unit' + i) && getElement('unit' + i).checked) deployUnits.push(i);
+			}
+			if (deployUnits.length > 0) {
+				// Check assist officers
+				var assistOfficers = [];
+				for (var i = 0; i < officers.length; i++) {
+					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
+				}
+				
+				// Assign objectives
+				officers[commander].Objective = ['March', target];
+				for (var i = 0; i < deployUnits.length; i++) units[deployUnits[i]].Objective = ['March', commander];
+				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
+				
+				closeCard(marchCard);
+				return;
+			}
+		}
+	}
+}
+
+// March card
 function assistedStats () {
 	getElement('assistedStats').innerHTML = '';
 	
@@ -288,6 +386,7 @@ function assistedStats () {
 	}
 }
 
+// March card
 function commanderChanged (source) {
 	getElement('relevantStats').innerHTML = '';
 	getElement('assistDiv').innerHTML = '';
@@ -318,6 +417,7 @@ function commanderChanged (source) {
 	}
 }
 
+// March card
 function sourceChanged () {
 	getElement('officerListDiv').innerHTML = '';
 	getElement('commanderDiv').innerHTML = '';
@@ -353,8 +453,9 @@ function sourceChanged () {
 	}
 }
 
+// March card
 function openMarchCard (cityIndex) {
-	closeMenu();
+	closeCard(cityCard);
 	
 	var city = cities[cityIndex];
 	var source = null;
@@ -415,7 +516,7 @@ function openMarchCard (cityIndex) {
 						<td><div id="assistedStats"></div></td>
 					</tr>
 					<tr>
-						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeMarchCard()"></td>
+						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
 						<td></td>
 					</tr>
 				</table>
@@ -454,7 +555,7 @@ function openMarchCard (cityIndex) {
 						<td><div id="assistedStats"></div></td>
 					</tr>
 					<tr>
-						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeMarchCard()"></td>
+						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
 						<td></td>
 					</tr>
 				</table>
@@ -463,48 +564,9 @@ function openMarchCard (cityIndex) {
 	}
 }
 
-function closeMarchCard () {
-	marchCard.style.visibility = 'hidden';
-	marchCard.innerHTML = '';
-}
-
-function march () {
-	// Check target and source (should be player force)
-	var source = getElement('source') ? getElement('source').value : '';
-	var target = getElement('target') ? getElement('target').value : '';
-	source = getCityIndexByName(source);
-	target = getCityIndexByName(target);
-	if (Number.isInteger(source) && Number.isInteger(target) && getCities(playerForce, 'force').includes(source)) {
-		// Check commander
-		var commander = getElement('commander') ? getElement('commander').value : '';
-		commander = getOfficerIndexByName(commander);
-		if (Number.isInteger(commander)) {
-			// Check deploy units
-			var deployUnits = [];
-			for (var i = 0; i < units.length; i++) {
-				if (getElement('unit' + i) && getElement('unit' + i).checked) deployUnits.push(i);
-			}
-			if (deployUnits.length > 0) {
-				// Check assist officers
-				var assistOfficers = [];
-				for (var i = 0; i < officers.length; i++) {
-					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
-				}
-				
-				// Assign objectives
-				officers[commander].Objective = ['March', target];
-				for (var i = 0; i < deployUnits.length; i++) units[deployUnits[i]].Objective = ['March', commander];
-				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
-				
-				closeMarchCard();
-				return;
-			}
-		}
-	}
-}
-
+// Dev card
 function openDevCard (cityIndex, objective) {
-	closeMenu();
+	closeCard(cityCard);
 	
 	var viableOfficers = getCityViableOfficers(cityIndex);
 	if (viableOfficers.length > 0) {
@@ -512,11 +574,17 @@ function openDevCard (cityIndex, objective) {
 	}
 }
 
+// Unit card
 function openUnitCard (cityIndex, objective) {
-	closeMenu();
+	closeCard(cityCard);
 	
 	var viableOfficers = getCityViableOfficers(cityIndex);
 	if (viableOfficers.length > 0) {
 		
 	}
+}
+
+function closeCard (card) {
+	card.style.visibility = 'hidden';
+	card.innerHTML = '';
 }

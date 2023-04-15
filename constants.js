@@ -60,10 +60,10 @@ const hoverEmptyLine = 125;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
 
-// Menu card
-const menuAllyLine = 230;
-const menuEnemyLine = 83;
-const menuEmptyLine = 83;
+// City card
+const cityAllyLine = 230;
+const cityEnemyLine = 83;
+const cityEmptyLine = 83;
 
 const cardMargin = 10;
 

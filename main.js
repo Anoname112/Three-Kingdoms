@@ -195,9 +195,13 @@ window.onload = function () {
 	hoverCard.classList.add('hoverCard');
 	document.body.appendChild(hoverCard);
 	
-	menuCard = document.createElement('div');
-	menuCard.classList.add('menuCard');
-	document.body.appendChild(menuCard);
+	selectCard = document.createElement('div');
+	selectCard.classList.add('selectCard');
+	document.body.appendChild(selectCard);
+	
+	cityCard = document.createElement('div');
+	cityCard.classList.add('cityCard');
+	document.body.appendChild(cityCard);
 	
 	marchCard = document.createElement('div');
 	marchCard.classList.add('marchCard');
@@ -210,6 +214,10 @@ window.onload = function () {
 	unitCard = document.createElement('div');
 	unitCard.classList.add('unitCard');
 	document.body.appendChild(unitCard);
+	
+	deployedCard = document.createElement('div');
+	deployedCard.classList.add('deployedCard');
+	document.body.appendChild(deployedCard);
 	
 	// Prepare canvas
 	var fill = window.innerHeight;
@@ -315,6 +323,7 @@ function onResize (e) {
 function onMouseClick (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
+	mousePosition = new Point(eX, eY);
 	
 	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
@@ -326,70 +335,9 @@ function onMouseClick (e) {
 			startPathfinding(officers[player].Position, new Point(indexX, indexY));
 		}
 		
-		// Open cities menu
+		// Open city card
 		if (map[indexX][indexY] >= 40) {
-			var index = map[indexX][indexY] - 40;
-			var city = cities[index];
-			var backColor = 'enemyColor';
-			var menuLine = menuEnemyLine;
-			
-			hoverCard.style.visibility = 'hidden';
-			
-			var buttons = '';
-			if (city.Force == '-') {
-				backColor = 'neutralColor';
-				menuLine = menuEmptyLine;
-				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
-				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
-					<input type="button" value="Cancel" onclick="closeMenu()">`;
-			}
-			else if (city.Force == playerForce) {
-				backColor = 'allyColor';
-				menuLine = menuAllyLine;
-				var viableOfficers = getCityViableOfficers(index);
-				var viableUnits = getCityViableUnits(index);
-				var unitCount = getCityUnitCount(index);
-				
-				var recuritable = false;
-				var drillable = false;
-				for (var i = 0; i < viableUnits.length; i++) {
-					if (units[viableUnits[i]].Strength < 10000) recuritable = true;
-					if (units[viableUnits[i]].Morale < 100) drillable = true;
-				}
-				
-				var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 ? '' : ' disabled';
-				var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm ? '' : ' disabled';
-				var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade ? '' : ' disabled';
-				var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech ? '' : ' disabled';
-				var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense ? '' : ' disabled';
-				var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 ? '' : ' disabled';
-				var recuritDisabled = viableOfficers.length > 0 && (recuritable || unitCount < 10) ? '' : ' disabled';
-				var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
-				
-				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + marchDisabled + `>
-					<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + farmDisabled + `>
-					<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + tradeDisabled + `>
-					<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + techDisabled + `>
-					<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + defenseDisabled + `>
-					<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + orderDisabled + `>
-					<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + recuritDisabled + `>
-					<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + drillDisabled + `>
-					<input type="button" value="Cancel" onclick="closeMenu()">`;
-			}
-			else {
-				var disabled = (getForceViableOfficers(playerForce).length > 0) ? '' : ' disabled';
-				buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
-					<input type="button" value="Cancel" onclick="closeMenu()">`;
-			}
-			
-			var string = `<div class="cityName ` + backColor + `">` + city.Name + `</div>
-				<div class="menuContent">` + buttons + `</div>`;
-			menuCard.innerHTML = string;
-			
-			menuCard.style.visibility = 'visible';
-			menuCard.style.left = eX + 'px';
-			if (eY + menuLine > window.innerHeight) menuCard.style.top = (eY - menuLine) + 'px';
-			else menuCard.style.top = eY + 'px';
+			openCityCard(map[indexX][indexY]);
 		}
 	}
 	
@@ -427,6 +375,7 @@ function onMouseMove (e) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
 		
+		// Hovering a unit
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
 				var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
@@ -446,7 +395,11 @@ function onMouseMove (e) {
 					else hoverCard.style.top = hoverY + 'px';
 					
 					var string = `<div class="forceName ` + backColor + `">` + forces[officers[i].Force].Name + `</div>
-						<div class="unitInfo">Commander: ` + officers[i].Name + `</div>`;
+						<div class="unitInfo">
+							<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
+							Commander: ` + officers[i].Name + `<br />
+							Target: ` + cities[officers[i].Objective[1]].Name + `
+						</div>`;
 					
 					hoverCard.innerHTML = string;
 					return;
@@ -454,8 +407,8 @@ function onMouseMove (e) {
 			}
 		}
 		
+		// Hovering a city
 		if (map[indexX][indexY] >= 40) {
-			// Hovering a city
 			var index = map[indexX][indexY] - 40;
 			var hoverLine = hoverOccupiedLine;
 			var backColor = 'enemyColor';
@@ -598,7 +551,7 @@ function draw () {
 	var x = infoX;
 	var y = infoY;
 	ctx.font = infoFont;
-	if (hoverCard.style.visibility == 'visible' || menuCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible' ||
+	if (hoverCard.style.visibility == 'visible' || cityCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible' ||
 		devCard.style.visibility == 'visible' || unitCard.style.visibility == 'visible') {
 		ctx.fillStyle = fontDark;
 		drawMessage('OFFICERS', x, y + lineHeight);
