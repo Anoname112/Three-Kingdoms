@@ -54,6 +54,10 @@ const cityPadding = 3;
 const buttonPadding = 6;
 const unitPad = 3;
 
+// Control
+const controlPadding = 10;
+const controlSize = 80;
+
 // Hover card
 const hoverOccupiedLine = 170;
 const hoverEmptyLine = 125;

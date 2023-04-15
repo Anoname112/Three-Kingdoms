@@ -235,6 +235,14 @@ window.onload = function () {
 	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	
+	playSvg = getElement("playSvg");
+	playSvg.onclick = playClick;
+	playSvg.style.position = "fixed";
+	playSvg.style.top = controlPadding;
+	playSvg.style.right = controlPadding;
+	playSvg.style.width = controlSize;
+	playSvg.style.height = controlSize;
+	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
 		officers.push(new Officer(
@@ -328,12 +336,13 @@ function onMouseClick (e) {
 	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
-		
+		/*
 		// Pathfinding start from player
 		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
 			initPathfinding();
 			startPathfinding(officers[player].Position, new Point(indexX, indexY));
 		}
+		*/
 		
 		// Open city card
 		if (map[indexX][indexY] >= 40) {
@@ -445,6 +454,10 @@ function onMouseMove (e) {
 	}
 }
 
+function playClick (e) {
+	console.log('c');
+}
+
 function draw () {
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -489,7 +502,6 @@ function draw () {
 		
 		fillRect(x, y, squareSize, squareSize, opensetColor);
 	}
-	*/
 	
 	// Draw final path
 	if (finalPath != null) {
@@ -499,6 +511,7 @@ function draw () {
 			fillRect(x, y, squareSize, squareSize, finalPathColor);
 		}
 	}
+	*/
 	
 	var forceName = '-';
 	var forceRulerName = '-';
@@ -543,6 +556,14 @@ function draw () {
 			var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
 			var w = squareSize - unitPad * 2;
 			var h = squareSize - unitPad * 2;
+			if (mousePosition.X >= x && mousePosition.X < x + w && mousePosition.Y >= y && mousePosition.Y < y + h) {
+				var path = officers[i].Objective[2];
+				for (var j = 0; j < path.Points.length; j++) {
+					var pathX = canvasPadding + path.Points[j].X * squareSize + unitPad;
+					var pathY = canvasPadding + path.Points[j].Y * squareSize + unitPad;
+					fillRect(pathX, pathY, w, h, finalPathColor);
+				}
+			}
 			drawImage(unitImage, x, y, w, h);
 		}
 	}

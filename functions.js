@@ -352,7 +352,9 @@ function march () {
 				}
 				
 				// Assign objectives
-				officers[commander].Objective = ['March', target];
+				initPathfinding();
+				startPathfinding(officers[commander].Position, getCityPosition(target));
+				officers[commander].Objective = ['March', target, finalPath];
 				for (var i = 0; i < deployUnits.length; i++) units[deployUnits[i]].Objective = ['March', commander];
 				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
 				

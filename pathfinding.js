@@ -6,7 +6,7 @@ var explored;
 var openset;
 var finalPath;
 
-function initPathfinding (start, end) {
+function initPathfinding () {
 	startPoint = new Point (0, 0);
 	endPoint = new Point (0, 0);
 	paths = [];
