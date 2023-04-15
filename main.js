@@ -326,7 +326,7 @@ function onMouseClick (e) {
 			startPathfinding(officers[player].Position, new Point(indexX, indexY));
 		}
 		
-		// Cities
+		// Open cities menu
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
 			var city = cities[index];

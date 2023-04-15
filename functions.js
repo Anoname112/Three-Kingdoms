@@ -243,7 +243,7 @@ function closeMenu () {
 
 function createStatsTable (elementId, LDR, WAR, INT) {
 	getElement(elementId).innerHTML = `<table class="stats">
-			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>Attack</th><th>Defense</th></tr>
+			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>ATK</th><th>DEF</th></tr>
 			<tr>
 				<td>` + LDR.toFixed(1) + `</td>
 				<td>` + WAR.toFixed(1) + `</td>

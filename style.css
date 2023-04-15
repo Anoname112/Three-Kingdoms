@@ -7,6 +7,14 @@ body {
 	position: fixed;
 }
 
+#source, #target {
+	width: 130px;
+}
+
+#commanderDiv {
+	
+}
+
 #commander {
 	width: 130px;
 }
@@ -88,13 +96,20 @@ body {
 
 .stats {
 	border-collapse: collapse;
-	font-family: "Consolas", "Roboto Mono", "Courier New", "Courier";
+	font-family: "Segoe UI", "Consolas", "Roboto Mono", "Courier New", "Courier";
 }
 
-.stats th, .stats td {
+.stats th {
 	padding: 2px;
 	border: 1px solid #AAAAAA;
-	width: 50px;
+	width: 32px;
+	text-align: center;
+}
+
+.stats td {
+	padding: 2px;
+	border: 1px solid #AAAAAA;
+	width: 32px;
 	text-align: right;
 }
 
