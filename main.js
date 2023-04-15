@@ -222,10 +222,10 @@ window.onload = function () {
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
-	marchCard.style.left = (canvasPadding + cardMargin) + 'px';
-	marchCard.style.top = (canvasPadding + cardMargin) + 'px';
-	marchCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
-	marchCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.left = devCard.style.left = unitCard.style.left = (canvasPadding + cardMargin) + 'px';
+	marchCard.style.top = devCard.style.top = unitCard.style.top = (canvasPadding + cardMargin) + 'px';
+	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
@@ -553,6 +553,9 @@ function draw () {
 					for (var k = 0; k < units.length; k++) if (units[k].City == index) unitList.push(k);
 				}
 			}
+			
+			// Draw deployed units
+			///
 		}
 	}
 	
@@ -560,7 +563,8 @@ function draw () {
 	var x = infoX;
 	var y = infoY;
 	ctx.font = infoFont;
-	if (hoverCard.style.visibility == 'visible' || menuCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible') {
+	if (hoverCard.style.visibility == 'visible' || menuCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible' ||
+		devCard.style.visibility == 'visible' || unitCard.style.visibility == 'visible') {
 		ctx.fillStyle = fontDark;
 		drawMessage('OFFICERS', x, y + lineHeight);
 		drawMessage('LDR', x + infoPad, y + lineHeight, "end");
@@ -568,15 +572,18 @@ function draw () {
 		drawMessage('INT', x + infoPad * 1.5, y + lineHeight, "end");
 		drawMessage('POL', x + infoPad * 1.75, y + lineHeight, "end");
 		drawMessage('CHR', x + infoPad * 2, y + lineHeight, "end");
+		drawMessage('Objective', x + infoPad * 2.5, y + lineHeight, "end");
 		y += squareSize;
 		for (var i = 0; i < officerList.length; i++) {
 			var officer = officers[officerList[i]];
+			var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
 			drawMessage('- ' + officer.Name, x, y + lineHeight);
 			drawMessage(officer.LDR, x + infoPad, y + lineHeight, "end");
 			drawMessage(officer.WAR, x + infoPad * 1.28, y + lineHeight, "end");
 			drawMessage(officer.INT, x + infoPad * 1.5, y + lineHeight, "end");
 			drawMessage(officer.POL, x + infoPad * 1.75, y + lineHeight, "end");
 			drawMessage(officer.CHR, x + infoPad * 2, y + lineHeight, "end");
+			drawMessage(objective, x + infoPad * 2.5, y + lineHeight, "end");
 			y += squareSize;
 		}
 		
@@ -585,12 +592,15 @@ function draw () {
 		drawMessage('UNITS', x, y + lineHeight);
 		drawMessage('Strength', x + infoPad * 1.1, y + lineHeight, "end");
 		drawMessage('Morale', x + infoPad * 1.7, y + lineHeight, "end");
+		drawMessage('Objective', x + infoPad * 2.3, y + lineHeight, "end");
 		y += squareSize;
 		for (var i = 0; i < unitList.length; i++) {
 			var unit = units[unitList[i]];
+			var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
 			drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
 			drawMessage(unit.Strength, x + infoPad * 1.1, y + lineHeight, "end");
 			drawMessage(unit.Morale, x + infoPad * 1.7, y + lineHeight, "end");
+			drawMessage(objective, x + infoPad * 2.3, y + lineHeight, "end");
 			y += squareSize;
 		}
 	}

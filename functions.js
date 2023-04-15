@@ -214,6 +214,18 @@ function getStats (officerName) {
 	return [];
 }
 
+function getAssistedStats (officerIndex) {
+	var stats = getStats(officers[officerIndex].Name);
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == officerIndex) {
+			stats[0] += assistPercentage / 100 * officers[i].LDR;
+			stats[1] += assistPercentage / 100 * officers[i].WAR;
+			stats[2] += assistPercentage / 100 * officers[i].INT;
+		}
+	}
+	return stats;
+}
+
 function calculateStats (officerName) {
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Name == officerName) {
@@ -249,7 +261,8 @@ function createStatsTable (elementId, LDR, WAR, INT) {
 				<td>` + WAR.toFixed(1) + `</td>
 				<td>` + INT.toFixed(1) + `</td>
 				<td>` + calculateAttack(LDR, WAR).toFixed(1) + `</td>
-				<td>` + calculateDefense(LDR, INT).toFixed(1) + `</td></tr>
+				<td>` + calculateDefense(LDR, INT).toFixed(1) + `</td>
+			</tr>
 		</table>`;
 }
 
@@ -316,7 +329,7 @@ function sourceChanged () {
 	
 	var source = getElement('source') ? getElement('source').value : '';
 	source = getCityIndexByName(source);
-	if (source != null) {
+	if (Number.isInteger(source)) {
 		var viableOfficers = getCityViableOfficers(source);
 		var officersHTML = '';
 		for (var i = 0; i < viableOfficers.length; i++) {
@@ -456,14 +469,38 @@ function closeMarchCard () {
 }
 
 function march () {
-	// check source (should be player force), target valid name
-	// check commander valid name
-	// check have units and valid units
-	// check valid assist
-	
-	// assign objectives
-	
-	closeMarchCard();
+	// Check target and source (should be player force)
+	var source = getElement('source') ? getElement('source').value : '';
+	var target = getElement('target') ? getElement('target').value : '';
+	source = getCityIndexByName(source);
+	target = getCityIndexByName(target);
+	if (Number.isInteger(source) && Number.isInteger(target) && getCities(playerForce, 'force').includes(source)) {
+		// Check commander
+		var commander = getElement('commander') ? getElement('commander').value : '';
+		commander = getOfficerIndexByName(commander);
+		if (Number.isInteger(commander)) {
+			// Check deploy units
+			var deployUnits = [];
+			for (var i = 0; i < units.length; i++) {
+				if (getElement('unit' + i) && getElement('unit' + i).checked) deployUnits.push(i);
+			}
+			if (deployUnits.length > 0) {
+				// Check assist officers
+				var assistOfficers = [];
+				for (var i = 0; i < officers.length; i++) {
+					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
+				}
+				
+				// Assign objectives
+				officers[commander].Objective = ['March', target];
+				for (var i = 0; i < deployUnits.length; i++) units[deployUnits[i]].Objective = ['March', commander];
+				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
+				
+				closeMarchCard();
+				return;
+			}
+		}
+	}
 }
 
 function openDevCard (cityIndex, objective) {
