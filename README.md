@@ -1,4 +1,11 @@
 # Three-Kingdoms
+Notes:
+- centering initial letter on cities
+- update info after actions (march)
+- march progress
+- dismiss
+- player card, dev card, unit card
+
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
 <br /><br />
 Screenshot:
