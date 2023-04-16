@@ -1,0 +1,132 @@
+/* onMouseClick ();
+// Pathfinding start from player
+if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
+	initPathfinding();
+	startPathfinding(officers[player].Position, new Point(indexX, indexY));
+}
+*/
+
+/* onMouseClick ();
+// Instant button
+var instantX = infoX;
+var instantY = infoY;
+if (eX >= instantX && eX < instantX + buttonWidth && eY >= instantY && eY < instantY + buttonHeight) {
+	instant = !instant;
+	reset();
+}
+
+// End point
+if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+	var indexX = parseInt((eX - canvasPadding) / squareSize);
+	var indexY = parseInt((eY - canvasPadding) / squareSize);
+	
+	if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
+		endPoint.X = indexX;
+		endPoint.Y = indexY;
+		reset();
+	}
+}
+*/
+
+/* draw ();
+// Draw explored
+for (var i = 0; i < explored.length; i++) {
+	var x = canvasPadding + explored[i].X * squareSize;
+	var y = canvasPadding + explored[i].Y * squareSize;
+	
+	fillRect(x, y, squareSize, squareSize, exploredColor);
+}
+
+// Draw openset
+for (var i = 0; i < openset.length; i++) {
+	var x = canvasPadding + openset[i].X * squareSize;
+	var y = canvasPadding + openset[i].Y * squareSize;
+	
+	fillRect(x, y, squareSize, squareSize, opensetColor);
+}
+
+// Draw final path
+if (finalPath != null) {
+	for (var i = 0; i < finalPath.Points.length; i++) {
+		var x = canvasPadding + finalPath.Points[i].X * squareSize;
+		var y = canvasPadding + finalPath.Points[i].Y * squareSize;
+		fillRect(x, y, squareSize, squareSize, finalPathColor);
+	}
+}
+*/
+
+/* draw ();
+if (startPoint.X ==  i && startPoint.Y == j) fillRect(x, y, squareSize, squareSize, startColor);
+else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
+*/
+
+/* draw ();
+// Draw infos
+var x = infoX;
+var y = infoY;
+ctx.font = infoFont;
+if (hoverCard.style.visibility == 'visible' || cityCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible' ||
+	devCard.style.visibility == 'visible' || unitCard.style.visibility == 'visible') {
+	ctx.fillStyle = fontDark;
+	drawMessage('OFFICERS', x, y + lineHeight);
+	drawMessage('LDR', x + infoPad, y + lineHeight, "end");
+	drawMessage('WAR', x + infoPad * 1.28, y + lineHeight, "end");
+	drawMessage('INT', x + infoPad * 1.5, y + lineHeight, "end");
+	drawMessage('POL', x + infoPad * 1.75, y + lineHeight, "end");
+	drawMessage('CHR', x + infoPad * 2, y + lineHeight, "end");
+	drawMessage('Objective', x + infoPad * 2.5, y + lineHeight, "end");
+	y += squareSize;
+	for (var i = 0; i < officerList.length; i++) {
+		var officer = officers[officerList[i]];
+		var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
+		drawMessage('- ' + officer.Name, x, y + lineHeight);
+		drawMessage(officer.LDR, x + infoPad, y + lineHeight, "end");
+		drawMessage(officer.WAR, x + infoPad * 1.28, y + lineHeight, "end");
+		drawMessage(officer.INT, x + infoPad * 1.5, y + lineHeight, "end");
+		drawMessage(officer.POL, x + infoPad * 1.75, y + lineHeight, "end");
+		drawMessage(officer.CHR, x + infoPad * 2, y + lineHeight, "end");
+		drawMessage(objective, x + infoPad * 2.5, y + lineHeight, "end");
+		y += squareSize;
+	}
+	
+	x = infoX;
+	y = infoYHalf;
+	drawMessage('UNITS', x, y + lineHeight);
+	drawMessage('Strength', x + infoPad * 1.1, y + lineHeight, "end");
+	drawMessage('Morale', x + infoPad * 1.7, y + lineHeight, "end");
+	drawMessage('Objective', x + infoPad * 2.3, y + lineHeight, "end");
+	y += squareSize;
+	for (var i = 0; i < unitList.length; i++) {
+		var unit = units[unitList[i]];
+		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
+		drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
+		drawMessage(unit.Strength, x + infoPad * 1.1, y + lineHeight, "end");
+		drawMessage(unit.Morale, x + infoPad * 1.7, y + lineHeight, "end");
+		drawMessage(objective, x + infoPad * 2.3, y + lineHeight, "end");
+		y += squareSize;
+	}
+}
+else {
+	// Draw instant button
+	if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
+	ctx.rect(x, y, buttonWidth, buttonHeight);
+	ctx.fillStyle = fontDark;
+	drawMessage('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
+	y += buttonHeight + squareSize;
+	
+	// Draw infos
+	var infos = [
+		[startColor, 'Start square'],
+		[endColor, 'End square (click to change the end square)'],
+		[wallColor, 'Wall'],
+		[exploredColor, 'Explored squares'],
+		[opensetColor, 'Unexplored neighbours'],
+		[finalPathColor, 'Found shortest path']
+	];
+	for (var i = 0; i < infos.length; i++) {
+		fillRect(x, y, squareSize, squareSize, infos[i][0]);
+		drawMessage(infos[i][1], x + squareSize *  2, y + lineHeight);
+		y += squareSize * 2;
+	}
+}
+*/
