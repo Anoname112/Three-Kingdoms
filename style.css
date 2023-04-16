@@ -100,7 +100,6 @@ body {
 
 .stats {
 	border-collapse: collapse;
-	font-family: "Segoe UI", "Consolas", "Roboto Mono", "Courier New", "Courier";
 }
 
 .stats th {
@@ -116,6 +115,7 @@ body {
 	border: 1px solid #AAAAAA;
 	width: 32px;
 	text-align: right;
+	font-family: "Segoe UI", "Consolas", "Roboto Mono", "Courier New", "Courier";
 }
 
 .checkboxes {

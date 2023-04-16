@@ -160,6 +160,22 @@ function getCityUnitCount (cityIndex) {
 	return count;
 }
 
+function getCityOfficers (cityIndex) {
+	var cityOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].City == cityIndex) cityOfficers.push(i);
+	}
+	return cityOfficers;
+}
+
+function getCityUnits (cityIndex) {
+	var cityUnits = [];
+	for (var i = 0; i < units.length; i++) {
+		if (units[i].City == cityIndex) cityUnits.push(i);
+	}
+	return cityUnits;
+}
+
 function getCityViableOfficers (cityIndex) {
 	var viableOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
@@ -254,6 +270,59 @@ function calculateDefense (LDR, INT) {
 function calculateDamage (morale, attack, defense, effectiveness) {
 	var e = effectiveness ? effectiveness : 1.0;
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
+}
+
+function createOfficersTable (officersIndex) {
+	var officersHTML = '';
+	for (var i = 0; i < officersIndex.length; i++) {
+		var officer = officers[officersIndex[i]];
+		var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
+		officersHTML += `<tr>
+				<td>` + officer.Name + `</td>
+				<td>` + officer.LDR + `</td>
+				<td>` + officer.WAR + `</td>
+				<td>` + officer.INT + `</td>
+				<td>` + officer.POL + `</td>
+				<td>` + officer.CHR + `</td>
+				<td>` + objective + `</td>
+				<td>` + officer.Progress + `</td>
+			</tr>`;
+	}
+	return `<table class="stats">
+		<tr>
+			<th style="width: 100px;">OFFICERS</th>
+			<th>LDR</th>
+			<th>WAR</th>
+			<th>INT</th>
+			<th>POL</th>
+			<th>CHR</th>
+			<th>Objective</th>
+			<th>Progress</th>
+		</tr>` + officersHTML + `</table>`;
+}
+
+function createUnitsTable (unitsIndex) {
+	var unitsHTML = '';
+	for (var i = 0; i < unitsIndex.length; i++) {
+		var unit = units[unitsIndex[i]];
+		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
+		var officer = unit.Officer == '-' ? '-' : officers[unit.Officer].Name;
+		unitsHTML += `<tr>
+				<td>` + unitTypes[unit.Type].Name + `</td>
+				<td>` + unit.Strength + `</td>
+				<td>` + unit.Morale + `</td>
+				<td>` + objective + `</td>
+				<td>` + officer + `</td>
+			</tr>`;
+	}
+	return `<table class="stats">
+		<tr>
+			<th>UNITS</th>
+			<th>Strength</th>
+			<th>Morale</th>
+			<th>Objective</th>
+			<th>Officer</th>
+		</tr>` + unitsHTML + `</table>`;
 }
 
 function createStatsTable (elementId, LDR, WAR, INT) {
@@ -623,7 +692,20 @@ function openDeployedCard (commander, select) {
 
 // Info card
 function openInfoCard (mode, index) {
-	infoCard.innerHTML = mode;
+	if (mode == 'City') {
+		var backColor = 'enemyColor';
+		if (cities[index].Force == '-') backColor = 'neutralColor';
+		else if (cities[index].Force == playerForce) backColor = 'allyColor';
+		
+		var cityOfficers = getCityOfficers(index);
+		var cityUnits = getCityUnits(index);
+		
+		infoCard.innerHTML = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
+			<div class="cityContent">` + createOfficersTable(cityOfficers) + `<br />` + createUnitsTable(cityUnits) + `</div>`
+	}
+	else if (mode == 'Unit') {
+		var commander = index;
+	}
 	
 	infoCard.style.visibility = 'visible';
 }

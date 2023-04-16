@@ -394,8 +394,6 @@ function onMouseClick (e) {
 				}
 			}
 		}
-		console.log(clickedObjects);
-		
 		
 		if (clickedObjects.length > 0) {
 			if (clickedObjects.length == 1) {
