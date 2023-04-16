@@ -1,6 +1,14 @@
 var canvas;
 var ctx;
+var playerCard;
 var hoverCard;
+var selectCard;
+var cityCard;
+var marchCard;
+var devCard;
+var unitCard;
+var deployedCard;
+var infoCard;
 
 var intervalId;
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
@@ -191,6 +199,10 @@ window.onload = function () {
 	canvas.height = window.innerHeight;
 	ctx = canvas.getContext('2d');
 	
+	playerCard = document.createElement('div');
+	playerCard.classList.add('playerCard');
+	document.body.appendChild(playerCard);
+	
 	hoverCard = document.createElement('div');
 	hoverCard.classList.add('hoverCard');
 	document.body.appendChild(hoverCard);
@@ -219,6 +231,10 @@ window.onload = function () {
 	deployedCard.classList.add('deployedCard');
 	document.body.appendChild(deployedCard);
 	
+	infoCard = document.createElement('div');
+	infoCard.classList.add('infoCard');
+	document.body.appendChild(infoCard);
+	
 	// Prepare canvas
 	var fill = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
@@ -235,13 +251,27 @@ window.onload = function () {
 	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
 	
+	playerCard.style.left = (infoX + cardMargin) + 'px';
+	playerCard.style.top = (infoY + cardMargin) + 'px';
+	playerCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
+	playerCard.style.height = ((window.innerHeight - infoY) / 4 - (cardMargin * 2)) + 'px';
+	
+	infoCard.style.left = (infoX + cardMargin) + 'px';
+	infoCard.style.top = (infoY + playerCard.clientHeight + cardMargin * 2) + 'px';
+	infoCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
+	infoCard.style.height = (window.innerHeight - infoY - (cardMargin * 2)) + 'px';
+	
 	playSvg = getElement("playSvg");
 	playSvg.onclick = playClick;
-	playSvg.style.position = "fixed";
+	playSvg.style.position = "absolute";
 	playSvg.style.top = controlPadding;
 	playSvg.style.right = controlPadding;
 	playSvg.style.width = controlSize;
 	playSvg.style.height = controlSize;
+	
+	playerCard.innerHTML = '<div id="playerContent"></div>';
+	playerCard.appendChild(playSvg);
+	playerCard.style.visibility = 'visible';
 	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
@@ -333,6 +363,8 @@ function onMouseClick (e) {
 	var eY = e.clientY;
 	mousePosition = new Point(eX, eY);
 	
+	infoCard.style.visibility = 'hidden';
+	
 	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
@@ -344,9 +376,33 @@ function onMouseClick (e) {
 		}
 		*/
 		
-		// Open city card
+		var clickedObjects = [];
+		// Clicked city
 		if (map[indexX][indexY] >= 40) {
-			openCityCard(map[indexX][indexY]);
+			var index = map[indexX][indexY] - 40;
+			clickedObjects.push([cityCard, index]);
+		}
+		// Clicked units
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective[0] == 'March') {
+				var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+				var w = squareSize - unitPad * 2;
+				var h = squareSize - unitPad * 2;
+				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
+					clickedObjects.push([deployedCard, i]);
+				}
+			}
+		}
+		console.log(clickedObjects);
+		
+		
+		if (clickedObjects.length > 0) {
+			if (clickedObjects.length == 1) {
+				if (clickedObjects[0][0] == cityCard) openCityCard(clickedObjects[0][1]);
+				else if (clickedObjects[0][0] == deployedCard) openDeployedCard(clickedObjects[0][1]);
+			}
+			else openSelectCard(clickedObjects);
 		}
 	}
 	
@@ -379,6 +435,7 @@ function onMouseMove (e) {
 	mousePosition = new Point(eX, eY);
 	
 	hoverCard.style.visibility = 'hidden';
+	infoCard.style.visibility = 'hidden';
 	
 	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
@@ -392,7 +449,6 @@ function onMouseMove (e) {
 				var w = squareSize - unitPad * 2;
 				var h = squareSize - unitPad * 2;
 				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
-					var hoverLine = hoverOccupiedLine;
 					var backColor = 'enemyColor';
 					if (officers[i].Force == playerForce) backColor = 'allyColor';
 					
@@ -400,10 +456,10 @@ function onMouseMove (e) {
 					var hoverX = eX + hoverMarginX;
 					var hoverY = eY + hoverMarginY;
 					hoverCard.style.left = hoverX + 'px';
-					if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
+					if (hoverY + hoverCard.clientHeight > window.innerHeight) hoverCard.style.top = (hoverY - hoverCard.clientHeight) + 'px';
 					else hoverCard.style.top = hoverY + 'px';
 					
-					var string = `<div class="forceName ` + backColor + `">` + forces[officers[i].Force].Name + `</div>
+					var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
 						<div class="unitInfo">
 							<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
 							Commander: ` + officers[i].Name + `<br />
@@ -411,6 +467,8 @@ function onMouseMove (e) {
 						</div>`;
 					
 					hoverCard.innerHTML = string;
+					
+					openInfoCard('Unit', i);
 					return;
 				}
 			}
@@ -419,21 +477,15 @@ function onMouseMove (e) {
 		// Hovering a city
 		if (map[indexX][indexY] >= 40) {
 			var index = map[indexX][indexY] - 40;
-			var hoverLine = hoverOccupiedLine;
 			var backColor = 'enemyColor';
-			if (cities[index].Force == '-') {
-				hoverLine = hoverEmptyLine;
-				backColor = 'neutralColor';
-			}
-			else if (cities[index].Force == playerForce) {
-				backColor = 'allyColor';
-			}
+			if (cities[index].Force == '-') backColor = 'neutralColor';
+			else if (cities[index].Force == playerForce) backColor = 'allyColor';
 			
 			hoverCard.style.visibility = 'visible';
 			var hoverX = eX + hoverMarginX;
 			var hoverY = eY + hoverMarginY;
 			hoverCard.style.left = hoverX + 'px';
-			if (hoverY + hoverLine > window.innerHeight) hoverCard.style.top = (hoverY - hoverLine) + 'px';
+			if (hoverY + hoverCard.clientHeight > window.innerHeight) hoverCard.style.top = (hoverY - hoverCard.clientHeight) + 'px';
 			else hoverCard.style.top = hoverY + 'px';
 			
 			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
@@ -450,6 +502,8 @@ function onMouseMove (e) {
 				'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
 				'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
 			hoverCard.innerHTML = string;
+			
+			openInfoCard('City', index);
 		}
 	}
 }
@@ -457,7 +511,6 @@ function onMouseMove (e) {
 function playClick (e) {
 	// development progress
 	// animate unit, then battle
-	
 	// increase date
 	// tax income, harvest
 	// food consumption (of units before excluding new recurit)
@@ -518,11 +571,7 @@ function draw () {
 	}
 	*/
 	
-	var forceName = '-';
-	var forceRulerName = '-';
-	var cFarm, Farm, cTrade, Trade, cTech, Tech, cDefense, Defense, cOrder, Order = 0;
-	var officerList = [];
-	var unitList = [];
+	// Draw cities
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
@@ -532,7 +581,6 @@ function draw () {
 			else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
 			*/
 			if (map[i][j] >= 40) {
-				// Draw cities
 				var index = map[i][j] - 40;
 				if (cities[index].Force == '-') {
 					var emptyX = x + cityPadding;
@@ -544,11 +592,6 @@ function draw () {
 					fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
 					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
 					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
-				}
-				
-				if (mousePosition.X >= x && mousePosition.X < x + squareSize && mousePosition.Y >= y && mousePosition.Y < y + squareSize) {
-					for (var k = 0; k < officers.length; k++) if (officers[k].City == index) officerList.push(k);
-					for (var k = 0; k < units.length; k++) if (units[k].City == index) unitList.push(k);
 				}
 			}
 		}
@@ -573,6 +616,7 @@ function draw () {
 		}
 	}
 	
+	/*
 	// Draw infos
 	var x = infoX;
 	var y = infoY;
@@ -619,7 +663,6 @@ function draw () {
 		}
 	}
 	else {
-		/*
 		// Draw instant button
 		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
 		ctx.rect(x, y, buttonWidth, buttonHeight);
@@ -641,8 +684,8 @@ function draw () {
 			drawMessage(infos[i][1], x + squareSize *  2, y + lineHeight);
 			y += squareSize * 2;
 		}
-		*/
 	}
+	*/
 	
 	ctx.stroke();
 }

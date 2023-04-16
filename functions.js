@@ -269,22 +269,43 @@ function createStatsTable (elementId, LDR, WAR, INT) {
 		</table>`;
 }
 
+// Select card
+function openSelectCard (clickedObjects) {
+	var buttons = '';
+	for (var i = 0; i < clickedObjects.length; i++) {
+		if (clickedObjects[i][0] == cityCard) {
+			var cityName = cities[clickedObjects[i][1]].Name;
+			buttons += '<input type="button" value="' + cityName + '" onclick="openCityCard(' + clickedObjects[i][1] + ', true)">';
+		}
+		else if (clickedObjects[i][0] == deployedCard) {
+			var commanderName = officers[clickedObjects[i][1]].Name;
+			buttons += '<input type="button" value="' + commanderName + '" onclick="openDeployedCard(' + clickedObjects[i][1] + ', true)">';
+		}
+	}
+	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard)"></div>`;
+	
+	selectCard.style.visibility = 'visible';
+	selectCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + selectCard.clientHeight > window.innerHeight / 2) selectCard.style.top = (mousePosition.Y - selectCard.clientHeight) + 'px';
+	else selectCard.style.top = mousePosition.Y + 'px';
+}
+
 // City card
-function openCityCard (mapValue) {
-	var index = mapValue - 40;
-	var city = cities[index];
+function openCityCard (cityIndex, select) {
+	if (select) closeCard(selectCard);
+	openInfoCard ('City', cityIndex);
+	
+	var city = cities[cityIndex];
 	var backColor = 'enemyColor';
-	var cityLine = cityEnemyLine;
 	
 	hoverCard.style.visibility = 'hidden';
 	
 	var buttons = '';
 	if (city.Force == playerForce) {
 		backColor = 'allyColor';
-		cityLine = cityAllyLine;
-		var viableOfficers = getCityViableOfficers(index);
-		var viableUnits = getCityViableUnits(index);
-		var unitCount = getCityUnitCount(index);
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		var viableUnits = getCityViableUnits(cityIndex);
+		var unitCount = getCityUnitCount(cityIndex);
 		
 		var recuritable = false;
 		var drillable = false;
@@ -302,26 +323,25 @@ function openCityCard (mapValue) {
 		var recuritDisabled = viableOfficers.length > 0 && (recuritable || unitCount < 10) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + marchDisabled + `>
-			<input type="button" value="Farm" onclick="openDevCard(` + index + `, 'Farm')"` + farmDisabled + `>
-			<input type="button" value="Trade" onclick="openDevCard(` + index + `, 'Trade')"` + tradeDisabled + `>
-			<input type="button" value="Tech" onclick="openDevCard(` + index + `, 'Tech')"` + techDisabled + `>
-			<input type="button" value="Defense" onclick="openDevCard(` + index + `, 'Defense')"` + defenseDisabled + `>
-			<input type="button" value="Order" onclick="openDevCard(` + index + `, 'Order')"` + orderDisabled + `>
-			<input type="button" value="Recurit" onclick="openUnitCard(` + index + `, 'Recurit')"` + recuritDisabled + `>
-			<input type="button" value="Drill" onclick="openUnitCard(` + index + `, 'Drill')"` + drillDisabled + `>
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>
+			<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm')"` + farmDisabled + `>
+			<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade')"` + tradeDisabled + `>
+			<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech')"` + techDisabled + `>
+			<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense')"` + defenseDisabled + `>
+			<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order')"` + orderDisabled + `>
+			<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
+			<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
 	else if (city.Force == '-') {
 		backColor = 'neutralColor';
-		cityLine = cityEmptyLine;
 		var disabled = (getForceMarchableCities(playerForce).length > 0) ? '' : ' disabled';
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + disabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
 	else {
 		var disabled = (getForceMarchableCities(playerForce).length > 0) ? '' : ' disabled';
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + index + `)"` + disabled + `>
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + disabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
 	
@@ -331,7 +351,7 @@ function openCityCard (mapValue) {
 	
 	cityCard.style.visibility = 'visible';
 	cityCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + cityLine > window.innerHeight) cityCard.style.top = (mousePosition.Y - cityLine) + 'px';
+	if (mousePosition.Y + cityCard.clientHeight > window.innerHeight) cityCard.style.top = (mousePosition.Y - cityCard.clientHeight) + 'px';
 	else cityCard.style.top = mousePosition.Y + 'px';
 }
 
@@ -579,6 +599,33 @@ function openUnitCard (cityIndex, objective) {
 	if (viableOfficers.length > 0) {
 		
 	}
+}
+
+// Deployed card
+function openDeployedCard (commander, select) {
+	if (select) closeCard(selectCard);
+	openInfoCard ('Unit', commander);
+	
+	var backColor = (officers[commander].Force == playerForce) ? 'allyColor' : 'enemyColor';
+	
+	hoverCard.style.visibility = 'hidden';
+	
+	var buttons = `<input type="button" value="Dismiss" onclick="">
+		<input type="button" value="Cancel" onclick="closeCard(deployedCard)">`;
+	deployedCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[commander].Name + ` Unit</div>
+		<div class="selectContent">` + buttons + `</div>`;
+	
+	deployedCard.style.visibility = 'visible';
+	deployedCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + deployedCard.clientHeight > window.innerHeight / 2) deployedCard.style.top = (mousePosition.Y - deployedCard.clientHeight) + 'px';
+	else deployedCard.style.top = mousePosition.Y + 'px';
+}
+
+// Info card
+function openInfoCard (mode, index) {
+	infoCard.innerHTML = mode;
+	
+	infoCard.style.visibility = 'visible';
 }
 
 function closeCard (card) {
