@@ -290,7 +290,7 @@ function createOfficersTable (officersIndex) {
 	}
 	return `<table class="stats">
 		<tr>
-			<th style="width: 100px;">OFFICERS</th>
+			<th>OFFICERS</th>
 			<th>LDR</th>
 			<th>WAR</th>
 			<th>INT</th>
@@ -354,8 +354,9 @@ function openSelectCard (clickedObjects) {
 	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard)"></div>`;
 	
 	selectCard.style.visibility = 'visible';
-	selectCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + selectCard.clientHeight > window.innerHeight / 2) selectCard.style.top = (mousePosition.Y - selectCard.clientHeight) + 'px';
+	if (mousePosition.X + selectCard.clientWidth > mapSize) selectCard.style.left = (mousePosition.X - selectCard.clientWidth) + 'px';
+	else selectCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + selectCard.clientHeight > mapSize) selectCard.style.top = (mousePosition.Y - selectCard.clientHeight) + 'px';
 	else selectCard.style.top = mousePosition.Y + 'px';
 }
 
@@ -419,8 +420,9 @@ function openCityCard (cityIndex, select) {
 	cityCard.innerHTML = string;
 	
 	cityCard.style.visibility = 'visible';
-	cityCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + cityCard.clientHeight > window.innerHeight) cityCard.style.top = (mousePosition.Y - cityCard.clientHeight) + 'px';
+	if (mousePosition.X + cityCard.clientWidth > mapSize) cityCard.style.left = (mousePosition.X - cityCard.clientWidth) + 'px';
+	else cityCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + cityCard.clientHeight > mapSize) cityCard.style.top = (mousePosition.Y - cityCard.clientHeight) + 'px';
 	else cityCard.style.top = mousePosition.Y + 'px';
 }
 
@@ -452,7 +454,10 @@ function march () {
 				initPathfinding();
 				startPathfinding(officers[commander].Position, getCityPosition(target));
 				officers[commander].Objective = ['March', target, finalPath];
-				for (var i = 0; i < deployUnits.length; i++) units[deployUnits[i]].Objective = ['March', commander];
+				for (var i = 0; i < deployUnits.length; i++) {
+					units[deployUnits[i]].Objective = ['March', commander];
+					units[deployUnits[i]].Officer = commander;
+				}
 				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
 				
 				closeCard(marchCard);
@@ -685,8 +690,9 @@ function openDeployedCard (commander, select) {
 		<div class="selectContent">` + buttons + `</div>`;
 	
 	deployedCard.style.visibility = 'visible';
-	deployedCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + deployedCard.clientHeight > window.innerHeight / 2) deployedCard.style.top = (mousePosition.Y - deployedCard.clientHeight) + 'px';
+	if (mousePosition.X + deployedCard.clientWidth > mapSize) deployedCard.style.left = (mousePosition.X - deployedCard.clientWidth) + 'px';
+	else deployedCard.style.left = mousePosition.X + 'px';
+	if (mousePosition.Y + deployedCard.clientHeight > mapSize) deployedCard.style.top = (mousePosition.Y - deployedCard.clientHeight) + 'px';
 	else deployedCard.style.top = mousePosition.Y + 'px';
 }
 
@@ -701,10 +707,26 @@ function openInfoCard (mode, index) {
 		var cityUnits = getCityUnits(index);
 		
 		infoCard.innerHTML = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
-			<div class="cityContent">` + createOfficersTable(cityOfficers) + `<br />` + createUnitsTable(cityUnits) + `</div>`
+			<div class="cityContent">` + createOfficersTable(cityOfficers) + `<br />` + createUnitsTable(cityUnits) + `</div>`;
 	}
 	else if (mode == 'Unit') {
-		var commander = index;
+		var backColor = 'enemyColor';
+		if (officers[index].Force == playerForce) backColor = 'allyColor';
+		
+		// March units
+		var marchUnits = [];
+		for (var i = 0; i < units.length; i++) {
+			if (units[i].Officer == index) marchUnits.push(i);
+		}
+		
+		// Assist officers
+		var assistOfficers = [];
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective != '-' && officers[i].Objective[1] == index) assistOfficers.push(i);
+		}
+		
+		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
+			<div class="deployedContent">` + createUnitsTable(marchUnits) + `<br />` + createOfficersTable(assistOfficers) + `</div>`;
 	}
 	
 	infoCard.style.visibility = 'visible';

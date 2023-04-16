@@ -62,8 +62,6 @@ const controlSize = 80;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
 
-// City card
-
 const cardMargin = 10;
 
 // Message

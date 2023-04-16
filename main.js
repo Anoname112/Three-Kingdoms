@@ -14,6 +14,7 @@ var intervalId;
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var mousePosition;
 var squareSize;
+var mapSize;
 var buttonWidth;
 var buttonHeight;
 var infoX;
@@ -236,20 +237,20 @@ window.onload = function () {
 	document.body.appendChild(infoCard);
 	
 	// Prepare canvas
-	var fill = window.innerHeight;
-	if (window.innerWidth < window.innerHeight) fill = window.innerWidth;
-	squareSize = fill / map.length;
+	mapSize = window.innerHeight;
+	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
+	squareSize = mapSize / map.length;
 	buttonWidth = 3.5 * squareSize;
 	buttonHeight = 1.5 * squareSize;
-	infoX = (isPortrait || isMobile) ? canvasPadding : canvasPadding * 2 + mapWidth * squareSize;
-	infoY = (isPortrait || isMobile) ? canvasPadding * 2 + mapHeight * squareSize : canvasPadding;
+	infoX = (isPortrait || isMobile) ? canvasPadding : canvasPadding * 2 + mapSize;
+	infoY = (isPortrait || isMobile) ? canvasPadding * 2 + mapSize : canvasPadding;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
 	marchCard.style.left = devCard.style.left = unitCard.style.left = (canvasPadding + cardMargin) + 'px';
 	marchCard.style.top = devCard.style.top = unitCard.style.top = (canvasPadding + cardMargin) + 'px';
-	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapWidth * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
-	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapHeight * squareSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapSize - (canvasPadding + cardMargin) * 2) + 'px';
 	
 	playerCard.style.left = (infoX + cardMargin) + 'px';
 	playerCard.style.top = (infoY + cardMargin) + 'px';
@@ -363,18 +364,11 @@ function onMouseClick (e) {
 	var eY = e.clientY;
 	mousePosition = new Point(eX, eY);
 	
-	infoCard.style.visibility = 'hidden';
+	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+	if (eX >= canvasPadding && eX < canvasPadding + mapSize && eY >= canvasPadding && eY < canvasPadding + mapSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
-		/*
-		// Pathfinding start from player
-		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
-			initPathfinding();
-			startPathfinding(officers[player].Position, new Point(indexX, indexY));
-		}
-		*/
 		
 		var clickedObjects = [];
 		// Clicked city
@@ -403,28 +397,6 @@ function onMouseClick (e) {
 			else openSelectCard(clickedObjects);
 		}
 	}
-	
-	/*
-	// Instant button
-	var instantX = infoX;
-	var instantY = infoY;
-	if (eX >= instantX && eX < instantX + buttonWidth && eY >= instantY && eY < instantY + buttonHeight) {
-		instant = !instant;
-		reset();
-	}
-	
-	// End point
-	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
-		var indexX = parseInt((eX - canvasPadding) / squareSize);
-		var indexY = parseInt((eY - canvasPadding) / squareSize);
-		
-		if (map[indexX][indexY] != 1 && !(startPoint.X == indexX && startPoint.Y == indexY)) {
-			endPoint.X = indexX;
-			endPoint.Y = indexY;
-			reset();
-		}
-	}
-	*/
 }
 
 function onMouseMove (e) {
@@ -433,9 +405,9 @@ function onMouseMove (e) {
 	mousePosition = new Point(eX, eY);
 	
 	hoverCard.style.visibility = 'hidden';
-	infoCard.style.visibility = 'hidden';
+	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPadding && eX < canvasPadding + mapWidth * squareSize && eY >= canvasPadding && eY < canvasPadding + mapHeight * squareSize) {
+	if (eX >= canvasPadding && eX < canvasPadding + mapSize && eY >= canvasPadding && eY < canvasPadding + mapSize) {
 		var indexX = parseInt((eX - canvasPadding) / squareSize);
 		var indexY = parseInt((eY - canvasPadding) / squareSize);
 		
@@ -453,17 +425,18 @@ function onMouseMove (e) {
 					hoverCard.style.visibility = 'visible';
 					var hoverX = eX + hoverMarginX;
 					var hoverY = eY + hoverMarginY;
-					hoverCard.style.left = hoverX + 'px';
-					if (hoverY + hoverCard.clientHeight > window.innerHeight) hoverCard.style.top = (hoverY - hoverCard.clientHeight) + 'px';
+					if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+					else hoverCard.style.left = hoverX + 'px';
+					if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
 					else hoverCard.style.top = hoverY + 'px';
 					
 					var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
 						<div class="unitInfo">
 							<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
+							<b>` + forces[officers[i].Force].Name + `</b><br />
 							Commander: ` + officers[i].Name + `<br />
 							Target: ` + cities[officers[i].Objective[1]].Name + `
 						</div>`;
-					
 					hoverCard.innerHTML = string;
 					
 					openInfoCard('Unit', i);
@@ -482,8 +455,9 @@ function onMouseMove (e) {
 			hoverCard.style.visibility = 'visible';
 			var hoverX = eX + hoverMarginX;
 			var hoverY = eY + hoverMarginY;
-			hoverCard.style.left = hoverX + 'px';
-			if (hoverY + hoverCard.clientHeight > window.innerHeight) hoverCard.style.top = (hoverY - hoverCard.clientHeight) + 'px';
+			if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+			else hoverCard.style.left = hoverX + 'px';
+			if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
 			else hoverCard.style.top = hoverY + 'px';
 			
 			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
@@ -507,11 +481,11 @@ function onMouseMove (e) {
 }
 
 function playClick (e) {
-	// development progress
-	// animate unit, then battle
-	// increase date
-	// tax income, harvest
-	// food consumption (of units before excluding new recurit)
+	// Development and training progress
+	// Animate unit, then battle
+	// Increase date
+	// Tax income and harvest
+	// Food consumption (of units before excluding new recurit)
 }
 
 function draw () {
@@ -542,42 +516,12 @@ function draw () {
 	}
 	ctx.globalAlpha = 1.0;
 	
-	/*
-	// Draw explored
-	for (var i = 0; i < explored.length; i++) {
-		var x = canvasPadding + explored[i].X * squareSize;
-		var y = canvasPadding + explored[i].Y * squareSize;
-		
-		fillRect(x, y, squareSize, squareSize, exploredColor);
-	}
-	
-	// Draw openset
-	for (var i = 0; i < openset.length; i++) {
-		var x = canvasPadding + openset[i].X * squareSize;
-		var y = canvasPadding + openset[i].Y * squareSize;
-		
-		fillRect(x, y, squareSize, squareSize, opensetColor);
-	}
-	
-	// Draw final path
-	if (finalPath != null) {
-		for (var i = 0; i < finalPath.Points.length; i++) {
-			var x = canvasPadding + finalPath.Points[i].X * squareSize;
-			var y = canvasPadding + finalPath.Points[i].Y * squareSize;
-			fillRect(x, y, squareSize, squareSize, finalPathColor);
-		}
-	}
-	*/
-	
 	// Draw cities
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
 			var x = canvasPadding + i * squareSize;
 			var y = canvasPadding + j * squareSize;
-			/*
-			if (startPoint.X ==  i && startPoint.Y == j) fillRect(x, y, squareSize, squareSize, startColor);
-			else if (endPoint.X ==  i && endPoint.Y == j) fillRect(x, y, squareSize, squareSize, endColor);
-			*/
+			
 			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
 				if (cities[index].Force == '-') {
@@ -613,77 +557,6 @@ function draw () {
 			drawImage(unitImage, x, y, w, h);
 		}
 	}
-	
-	/*
-	// Draw infos
-	var x = infoX;
-	var y = infoY;
-	ctx.font = infoFont;
-	if (hoverCard.style.visibility == 'visible' || cityCard.style.visibility == 'visible' || marchCard.style.visibility == 'visible' ||
-		devCard.style.visibility == 'visible' || unitCard.style.visibility == 'visible') {
-		ctx.fillStyle = fontDark;
-		drawMessage('OFFICERS', x, y + lineHeight);
-		drawMessage('LDR', x + infoPad, y + lineHeight, "end");
-		drawMessage('WAR', x + infoPad * 1.28, y + lineHeight, "end");
-		drawMessage('INT', x + infoPad * 1.5, y + lineHeight, "end");
-		drawMessage('POL', x + infoPad * 1.75, y + lineHeight, "end");
-		drawMessage('CHR', x + infoPad * 2, y + lineHeight, "end");
-		drawMessage('Objective', x + infoPad * 2.5, y + lineHeight, "end");
-		y += squareSize;
-		for (var i = 0; i < officerList.length; i++) {
-			var officer = officers[officerList[i]];
-			var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
-			drawMessage('- ' + officer.Name, x, y + lineHeight);
-			drawMessage(officer.LDR, x + infoPad, y + lineHeight, "end");
-			drawMessage(officer.WAR, x + infoPad * 1.28, y + lineHeight, "end");
-			drawMessage(officer.INT, x + infoPad * 1.5, y + lineHeight, "end");
-			drawMessage(officer.POL, x + infoPad * 1.75, y + lineHeight, "end");
-			drawMessage(officer.CHR, x + infoPad * 2, y + lineHeight, "end");
-			drawMessage(objective, x + infoPad * 2.5, y + lineHeight, "end");
-			y += squareSize;
-		}
-		
-		x = infoX;
-		y = infoYHalf;
-		drawMessage('UNITS', x, y + lineHeight);
-		drawMessage('Strength', x + infoPad * 1.1, y + lineHeight, "end");
-		drawMessage('Morale', x + infoPad * 1.7, y + lineHeight, "end");
-		drawMessage('Objective', x + infoPad * 2.3, y + lineHeight, "end");
-		y += squareSize;
-		for (var i = 0; i < unitList.length; i++) {
-			var unit = units[unitList[i]];
-			var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
-			drawMessage('- ' + unitTypes[unit.Type].Name, x, y + lineHeight);
-			drawMessage(unit.Strength, x + infoPad * 1.1, y + lineHeight, "end");
-			drawMessage(unit.Morale, x + infoPad * 1.7, y + lineHeight, "end");
-			drawMessage(objective, x + infoPad * 2.3, y + lineHeight, "end");
-			y += squareSize;
-		}
-	}
-	else {
-		// Draw instant button
-		if (instant) fillRect(x, y, squareSize,squareSize, buttonColor);
-		ctx.rect(x, y, buttonWidth, buttonHeight);
-		ctx.fillStyle = fontDark;
-		drawMessage('Instant', x + buttonPadding, y + buttonPadding + lineHeight);
-		y += buttonHeight + squareSize;
-		
-		// Draw infos
-		var infos = [
-			[startColor, 'Start square'],
-			[endColor, 'End square (click to change the end square)'],
-			[wallColor, 'Wall'],
-			[exploredColor, 'Explored squares'],
-			[opensetColor, 'Unexplored neighbours'],
-			[finalPathColor, 'Found shortest path']
-		];
-		for (var i = 0; i < infos.length; i++) {
-			fillRect(x, y, squareSize, squareSize, infos[i][0]);
-			drawMessage(infos[i][1], x + squareSize *  2, y + lineHeight);
-			y += squareSize * 2;
-		}
-	}
-	*/
 	
 	ctx.stroke();
 }
