@@ -259,7 +259,7 @@ window.onload = function () {
 	infoCard.style.left = (infoX + cardMargin) + 'px';
 	infoCard.style.top = (infoY + playerCard.clientHeight + cardMargin * 2) + 'px';
 	infoCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
-	infoCard.style.height = (window.innerHeight - infoY - (cardMargin * 2)) + 'px';
+	infoCard.style.height = (window.innerHeight - infoY - playerCard.clientHeight - (cardMargin * 3)) + 'px';
 	
 	playSvg = getElement("playSvg");
 	playSvg.onclick = playClick;
