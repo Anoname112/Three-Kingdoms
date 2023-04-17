@@ -272,7 +272,6 @@ window.onload = function () {
 	
 	playerCard.innerHTML = '<div id="playerContent"></div>';
 	playerCard.appendChild(playSvg);
-	playerCard.style.visibility = 'visible';
 	
 	// Prepare officers
 	for (var i = 0; i < baseOfficers.length; i++) {
@@ -312,6 +311,8 @@ function reset () {
 	
 	player = 15;
 	playerForce = officers[player].Force;
+	openPlayerCard();
+	
 	gState = 1;
 	
 	intervalId  = setInterval(timerTick, timerInterval);

@@ -11,6 +11,11 @@ body {
 	position: fixed;
 }
 
+#playSvg {
+	border-radius: 1000px;
+	background-color: rgb(0, 0, 0, 0.3);
+}
+
 #source, #target {
 	width: 130px;
 }
@@ -70,14 +75,33 @@ body {
 	background-color: #888888;
 }
 
-.cityInfo, .unitInfo {
-	padding: 5px;
-	font-size: 13px;
-}
-
 .smallPortrait {
 	height: 30px;
 	border-radius: 15px;
+}
+
+.bigPortrait {
+	height: 60px;
+	border-radius: 30px;
+}
+
+.timeSpace {
+	padding: 5px;
+	font-size: 15px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.forceSquare {
+	display: inline-block;
+	padding: 4px;
+	border: 2px solid #555555;
+	border-radius: 2px;
+}
+
+.cityInfo, .unitInfo {
+	padding: 5px;
+	font-size: 13px;
 }
 
 .cityStats {
@@ -93,7 +117,7 @@ body {
 	padding: 0;
 }
 
-.selectContent, .cityContent, .marchContent, .deployedContent {
+.playerContent, .selectContent, .cityContent, .marchContent, .deployedContent {
 	padding: 5px;
 	font-size: 13px;
 }

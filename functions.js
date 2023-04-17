@@ -339,6 +339,23 @@ function createStatsTable (elementId, LDR, WAR, INT) {
 		</table>`;
 }
 
+// Player card
+function openPlayerCard () {
+	var playerContent = getElement('playerContent');
+	
+	playerContent.innerHTML = `<div class="timeSpace allyColor">` +
+			date + `&nbsp;
+			<div class="forceSquare" style="background-color: ` + forces[playerForce].Color + `;"></div>&nbsp;` +
+			cities[officers[player].City].Name + `
+		</div>
+		<div class="playerContent">` + 
+			officers[player].Name + `<br />
+			<img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg">
+		</div>`;
+	
+	playerCard.style.visibility = 'visible';
+}
+
 // Select card
 function openSelectCard (clickedObjects) {
 	var buttons = '';
