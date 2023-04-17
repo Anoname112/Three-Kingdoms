@@ -55,8 +55,7 @@ const buttonPadding = 6;
 const unitPad = 3;
 
 // Control
-const controlPadding = 5;
-const controlSize = 80;
+const controlPadding = 10;
 
 // Hover card
 const hoverMarginX = 10;

@@ -267,8 +267,8 @@ window.onload = function () {
 	playSvg.style.position = "absolute";
 	playSvg.style.top = controlPadding;
 	playSvg.style.right = controlPadding;
-	playSvg.style.width = controlSize;
-	playSvg.style.height = controlSize;
+	playSvg.style.width = playerCard.clientHeight - controlPadding * 2;
+	playSvg.style.height = playerCard.clientHeight - controlPadding * 2;
 	
 	playerCard.innerHTML = '<div id="playerContent"></div>';
 	playerCard.appendChild(playSvg);
