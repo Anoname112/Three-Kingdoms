@@ -455,6 +455,7 @@ function march () {
 				initPathfinding();
 				startPathfinding(officers[commander].Position, getCityPosition(target));
 				officers[commander].Objective = ['March', target, finalPath];
+				officers[commander].Progress = 0;
 				for (var i = 0; i < deployUnits.length; i++) {
 					units[deployUnits[i]].Objective = ['March', commander];
 					units[deployUnits[i]].Officer = commander;
