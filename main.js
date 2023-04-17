@@ -242,15 +242,15 @@ window.onload = function () {
 	squareSize = mapSize / map.length;
 	buttonWidth = 3.5 * squareSize;
 	buttonHeight = 1.5 * squareSize;
-	infoX = (isPortrait || isMobile) ? canvasPadding : canvasPadding * 2 + mapSize;
-	infoY = (isPortrait || isMobile) ? canvasPadding * 2 + mapSize : canvasPadding;
+	infoX = isPortrait ? canvasPad : canvasPad * 2 + mapSize;
+	infoY = isPortrait ? canvasPad * 2 + mapSize : canvasPad;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
-	marchCard.style.left = devCard.style.left = unitCard.style.left = (canvasPadding + cardMargin) + 'px';
-	marchCard.style.top = devCard.style.top = unitCard.style.top = (canvasPadding + cardMargin) + 'px';
-	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapSize - (canvasPadding + cardMargin) * 2) + 'px';
-	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapSize - (canvasPadding + cardMargin) * 2) + 'px';
+	marchCard.style.left = devCard.style.left = unitCard.style.left = (canvasPad + cardMargin) + 'px';
+	marchCard.style.top = devCard.style.top = unitCard.style.top = (canvasPad + cardMargin) + 'px';
+	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
+	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
 	
 	playerCard.style.left = (infoX + cardMargin) + 'px';
 	playerCard.style.top = (infoY + cardMargin) + 'px';
@@ -265,10 +265,10 @@ window.onload = function () {
 	playSvg = getElement("playSvg");
 	playSvg.onclick = playClick;
 	playSvg.style.position = "absolute";
-	playSvg.style.top = controlPadding;
-	playSvg.style.right = controlPadding;
-	playSvg.style.width = playerCard.clientHeight - controlPadding * 2;
-	playSvg.style.height = playerCard.clientHeight - controlPadding * 2;
+	playSvg.style.top = controlPad;
+	playSvg.style.right = controlPad;
+	playSvg.style.width = playerCard.clientHeight - controlPad * 2;
+	playSvg.style.height = playerCard.clientHeight - controlPad * 2;
 	
 	playerCard.innerHTML = '<div id="playerContent"></div>';
 	playerCard.appendChild(playSvg);
@@ -366,9 +366,9 @@ function onMouseClick (e) {
 	
 	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPadding && eX < canvasPadding + mapSize && eY >= canvasPadding && eY < canvasPadding + mapSize) {
-		var indexX = parseInt((eX - canvasPadding) / squareSize);
-		var indexY = parseInt((eY - canvasPadding) / squareSize);
+	if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
+		var indexX = parseInt((eX - canvasPad) / squareSize);
+		var indexY = parseInt((eY - canvasPad) / squareSize);
 		
 		var clickedObjects = [];
 		// Clicked city
@@ -379,8 +379,8 @@ function onMouseClick (e) {
 		// Clicked units
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
-				var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
-				var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 				var w = squareSize - unitPad * 2;
 				var h = squareSize - unitPad * 2;
 				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
@@ -407,15 +407,15 @@ function onMouseMove (e) {
 	hoverCard.style.visibility = 'hidden';
 	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPadding && eX < canvasPadding + mapSize && eY >= canvasPadding && eY < canvasPadding + mapSize) {
-		var indexX = parseInt((eX - canvasPadding) / squareSize);
-		var indexY = parseInt((eY - canvasPadding) / squareSize);
+	if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
+		var indexX = parseInt((eX - canvasPad) / squareSize);
+		var indexY = parseInt((eY - canvasPad) / squareSize);
 		
 		// Hovering a unit
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
-				var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
-				var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 				var w = squareSize - unitPad * 2;
 				var h = squareSize - unitPad * 2;
 				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
@@ -497,16 +497,16 @@ function draw () {
 	// Begin drawing
 	ctx.beginPath();
 	
-	var x = canvasPadding;
-	var y = canvasPadding;
+	var x = canvasPad;
+	var y = canvasPad;
 	// Draw background map
 	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
 	// Draw roads
 	ctx.globalAlpha = 0.5;
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
-			var x = canvasPadding + i * squareSize;
-			var y = canvasPadding + j * squareSize;
+			var x = canvasPad + i * squareSize;
+			var y = canvasPad + j * squareSize;
 			
 			if (map[i][j] != 1) {
 				drawRect(x, y, squareSize, squareSize, cityColor);
@@ -519,21 +519,21 @@ function draw () {
 	// Draw cities
 	for (var i = 0; i < map.length; i++) {
 		for (var j = 0; j < map[i].length; j++) {
-			var x = canvasPadding + i * squareSize;
-			var y = canvasPadding + j * squareSize;
+			var x = canvasPad + i * squareSize;
+			var y = canvasPad + j * squareSize;
 			
 			if (map[i][j] >= 40) {
 				var index = map[i][j] - 40;
 				if (cities[index].Force == '-') {
-					var emptyX = x + cityPadding;
-					var emptyY = y + cityPadding;
-					var emptySize = squareSize - (2 * cityPadding);
+					var emptyX = x + cityPad;
+					var emptyY = y + cityPad;
+					var emptySize = squareSize - (2 * cityPad);
 					fillRect(emptyX, emptyY, emptySize, emptySize, cityColor);
 				}
 				else {
 					fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
 					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
-					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 4, y + lineHeight);
+					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
 				}
 			}
 		}
@@ -542,15 +542,15 @@ function draw () {
 	// Draw deployed units
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Objective[0] == 'March') {
-			var x = canvasPadding + officers[i].Position.X * squareSize + unitPad;
-			var y = canvasPadding + officers[i].Position.Y * squareSize + unitPad;
+			var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+			var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 			var w = squareSize - unitPad * 2;
 			var h = squareSize - unitPad * 2;
 			if (mousePosition.X >= x && mousePosition.X < x + w && mousePosition.Y >= y && mousePosition.Y < y + h) {
 				var path = officers[i].Objective[2];
 				for (var j = 0; j < path.Points.length; j++) {
-					var pathX = canvasPadding + path.Points[j].X * squareSize + unitPad;
-					var pathY = canvasPadding + path.Points[j].Y * squareSize + unitPad;
+					var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;
+					var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
 					fillRect(pathX, pathY, w, h, finalPathColor);
 				}
 			}

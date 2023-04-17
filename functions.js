@@ -76,6 +76,7 @@ function drawRect (x, y, w, h, s) {
 }
 
 function drawMessage (msg, x, y, align) {
+	ctx.textBaseline = 'middle';
 	ctx.textAlign = (align == null) ? "start" : align;
 	ctx.fillText(msg, x, y);
 }
