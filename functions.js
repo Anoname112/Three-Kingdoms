@@ -364,7 +364,7 @@ function openSelectCard (clickedObjects) {
 // City card
 function openCityCard (cityIndex, select) {
 	if (select) closeCard(selectCard);
-	openInfoCard ('City', cityIndex);
+	openInfoCard('City', cityIndex);
 	
 	var city = cities[cityIndex];
 	var backColor = 'enemyColor';
@@ -462,7 +462,7 @@ function march () {
 				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
 				
 				closeCard(marchCard);
-				return;
+				openInfoCard('City', source);
 			}
 		}
 	}
@@ -679,7 +679,7 @@ function openUnitCard (cityIndex, objective) {
 // Deployed card
 function openDeployedCard (commander, select) {
 	if (select) closeCard(selectCard);
-	openInfoCard ('Unit', commander);
+	openInfoCard('Unit', commander);
 	
 	var backColor = (officers[commander].Force == playerForce) ? 'allyColor' : 'enemyColor';
 	
