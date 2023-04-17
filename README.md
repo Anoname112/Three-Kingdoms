@@ -1,8 +1,5 @@
 # Three-Kingdoms
 Notes:
-- centering initial letter on cities
-- update info after actions (march)
-- march progress
 - dismiss
 - player card, dev card, unit card
 
