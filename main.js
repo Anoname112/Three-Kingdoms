@@ -191,14 +191,19 @@ abilities[1] = new Ability('Benevolence', '', 7, [[5, 1000]], []);
 
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
-	window.onresize = onResize;
+	//window.onresize = onResize;
 	
+	const ratio = window.devicePixelRatio;
 	canvas = getElement('myCanvas');
 	canvas.onclick = onMouseClick;
 	canvas.onmousemove = onMouseMove;
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
+	canvas.width = window.innerWidth * ratio;
+	canvas.height = window.innerHeight * ratio;
+	canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    canvas.getContext("2d").scale(ratio, ratio);
 	ctx = canvas.getContext('2d');
+	
 	
 	playerCard = document.createElement('div');
 	playerCard.classList.add('playerCard');
