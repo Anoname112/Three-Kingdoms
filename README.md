@@ -1,7 +1,7 @@
 # Three-Kingdoms
 Notes:
-- dismiss
 - dev card, unit card
+- play, animate
 
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
 <br /><br />
