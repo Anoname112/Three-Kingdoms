@@ -326,6 +326,20 @@ function createUnitsTable (unitsIndex) {
 		</tr>` + unitsHTML + `</table>`;
 }
 
+function createStatsTable (officerIndex) {
+	var officer = officers[officerIndex];
+	return `<table class="stats">
+			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>POL</th><th>CHR</th></tr>
+			<tr>
+				<td>` + officer.LDR + `</td>
+				<td>` + officer.WAR + `</td>
+				<td>` + officer.INT + `</td>
+				<td>` + officer.POL + `</td>
+				<td>` + officer.CHR + `</td>
+			</tr>
+		</table>`;
+}
+
 function calculatedStatsTable (elementId, LDR, WAR, INT) {
 	getElement(elementId).innerHTML = `<table class="stats">
 			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>ATK</th><th>DEF</th></tr>
@@ -353,7 +367,7 @@ function openPlayerCard () {
 			<div class="playerProfile">
 				<div class="playerName allyColor">` + officers[player].Name + `</div>
 				<b>` + forces[playerForce].Name + `</b>
-				` + createOfficersTable([player]) + `
+				` + createStatsTable(player) + `
 			</div>
 		</div>`;
 	
