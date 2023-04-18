@@ -122,6 +122,21 @@ body {
 	font-size: 13px;
 }
 
+.playerContent {
+	display: grid;
+	grid-template-columns: 60px auto;
+	grid-template-areas: 'portrait profile';
+}
+
+.playerPortrait {
+	grid-area: portrait;
+}
+
+.playerProfile {
+	grid-area: profile;
+	padding-left: 5px;
+}
+
 .selectContent input, .cityContent input, .deployedContent input {
 	display: block;
 	width: 100px;

@@ -326,7 +326,7 @@ function createUnitsTable (unitsIndex) {
 		</tr>` + unitsHTML + `</table>`;
 }
 
-function createStatsTable (elementId, LDR, WAR, INT) {
+function calculatedStatsTable (elementId, LDR, WAR, INT) {
 	getElement(elementId).innerHTML = `<table class="stats">
 			<tr><th>LDR</th><th>WAR</th><th>INT</th><th>ATK</th><th>DEF</th></tr>
 			<tr>
@@ -348,9 +348,13 @@ function openPlayerCard () {
 			<div class="forceSquare" style="background-color: ` + forces[playerForce].Color + `;"></div>&nbsp;` +
 			cities[officers[player].City].Name + `
 		</div>
-		<div class="playerContent">` + 
-			officers[player].Name + `<br />
-			<img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg">
+		<div class="playerContent">
+			<div class="playerPortrait"><img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg"></div>
+			<div class="playerProfile">
+				<b>` + officers[player].Name + `</b><br />
+				<b>` + forces[playerForce].Name + `</b>
+				` + createOfficersTable([player]) + `
+			</div>
 		</div>`;
 	
 	playerCard.style.visibility = 'visible';
@@ -505,7 +509,7 @@ function assistedStats () {
 		}
 	}
 	if (isAssisted) {
-		createStatsTable('assistedStats', stats[0], stats[1], stats[2]);
+		calculatedStatsTable('assistedStats', stats[0], stats[1], stats[2]);
 	}
 }
 
@@ -519,7 +523,7 @@ function commanderChanged (source) {
 	var commander = getElement('commander') ? getElement('commander').value : '';
 	var stats = getStats(commander);
 	if (stats.length > 0) {
-		createStatsTable('relevantStats', stats[0], stats[1], stats[2]);
+		calculatedStatsTable('relevantStats', stats[0], stats[1], stats[2]);
 		
 		var viableOfficers = getCityViableOfficers(source);
 		var assistHTML = '';
