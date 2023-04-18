@@ -379,7 +379,7 @@ function onMouseClick (e) {
 		}
 		// Clicked units
 		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective[0] == 'March') {
+			if (officers[i].Objective[0] == 'March' && officers[i].Force == playerForce) {
 				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
 				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 				var w = squareSize - unitPad * 2;

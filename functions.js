@@ -351,7 +351,7 @@ function openPlayerCard () {
 		<div class="playerContent">
 			<div class="playerPortrait"><img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg"></div>
 			<div class="playerProfile">
-				<b>` + officers[player].Name + `</b><br />
+				<div class="playerName allyColor">` + officers[player].Name + `</div>
 				<b>` + forces[playerForce].Name + `</b>
 				` + createOfficersTable([player]) + `
 			</div>
