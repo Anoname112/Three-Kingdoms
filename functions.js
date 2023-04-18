@@ -307,7 +307,7 @@ function createUnitsTable (unitsIndex) {
 	for (var i = 0; i < unitsIndex.length; i++) {
 		var unit = units[unitsIndex[i]];
 		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
-		var officer = unit.Officer == '-' ? '-' : officers[unit.Officer].Name;
+		var officer = unit.Objective == '-' ? '-' : officers[unit.Objective[1]].Name;
 		unitsHTML += `<tr>
 				<td>` + unitTypes[unit.Type].Name + `</td>
 				<td>` + unit.Strength + `</td>
@@ -493,9 +493,12 @@ function march () {
 				officers[commander].Progress = 0;
 				for (var i = 0; i < deployUnits.length; i++) {
 					units[deployUnits[i]].Objective = ['March', commander];
-					units[deployUnits[i]].Officer = commander;
+					units[deployUnits[i]].Progress = 0;
 				}
-				for (var i = 0; i < assistOfficers.length; i++) officers[assistOfficers[i]].Objective = ['Assist', commander];
+				for (var i = 0; i < assistOfficers.length; i++) {
+					officers[assistOfficers[i]].Objective = ['Assist', commander];
+					officers[assistOfficers[i]].Progress = 0;
+				}
 				
 				closeCard(marchCard);
 				openInfoCard('City', source);
@@ -713,6 +716,31 @@ function openUnitCard (cityIndex, objective) {
 }
 
 // Deployed card
+function dismissDeployed (commander) {
+	closeCard(deployedCard);
+	
+	var progress = officers[commander].Progress;
+	if (Number.isInteger(progress)) {
+		officers[commander].Objective = progress ? 'Return' : '-';
+		officers[commander].Progress = progress ? 0 : '-';
+		for (var i = 0; i < units.length; i++) {
+			if (units[i].Objective != '-' && units[i].Objective[1] == commander) {
+				units[i].Objective = progress ? 'Return' : '-';
+				units[i].Progress = progress ? 0 : '-';
+			}
+		}
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective != '-' && officers[i].Objective[1] == commander) {
+				officers[i].Objective = progress ? 'Return' : '-';
+				officers[i].Progress = progress ? 0 : '-';
+			}
+		}
+		
+		openInfoCard('City', officers[commander].City);
+	}
+}
+
+// Deployed card
 function openDeployedCard (commander, select) {
 	if (select) closeCard(selectCard);
 	openInfoCard('Unit', commander);
@@ -721,7 +749,7 @@ function openDeployedCard (commander, select) {
 	
 	hoverCard.style.visibility = 'hidden';
 	
-	var buttons = `<input type="button" value="Dismiss" onclick="">
+	var buttons = `<input type="button" value="Dismiss" onclick="dismissDeployed(` + commander + `)">
 		<input type="button" value="Cancel" onclick="closeCard(deployedCard)">`;
 	deployedCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[commander].Name + ` Unit</div>
 		<div class="selectContent">` + buttons + `</div>`;
@@ -753,17 +781,25 @@ function openInfoCard (mode, index) {
 		// March units
 		var marchUnits = [];
 		for (var i = 0; i < units.length; i++) {
-			if (units[i].Officer == index) marchUnits.push(i);
+			if (units[i].Objective != '-' && units[i].Objective[0] == 'March' && units[i].Objective[1] == index) marchUnits.push(i);
 		}
 		
 		// Assist officers
 		var assistOfficers = [];
 		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective != '-' && officers[i].Objective[1] == index) assistOfficers.push(i);
+			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == index) assistOfficers.push(i);
 		}
 		
 		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
-			<div class="deployedContent">` + createUnitsTable(marchUnits) + `<br />` + createOfficersTable(assistOfficers) + `</div>`;
+			<div class="deployedContent">` +
+				createUnitsTable(marchUnits) + `<br />` +
+				createOfficersTable([index].concat(assistOfficers)) + `<br />
+				<b>Assisted Stats:</b>
+				<div id="infoStats"></div>
+			</div>`;
+		
+		var assisted = getAssistedStats(index);
+		calculatedStatsTable('infoStats', assisted[0], assisted[1], assisted[2]);
 	}
 	
 	infoCard.style.visibility = 'visible';
