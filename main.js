@@ -116,19 +116,22 @@ scenarios.push(new Scenario(
 		[18, 'Fa Zheng', 28]
 	], [
 		// Units
-		// type, force, city, position, morale, strength
-		[0, 0, 8, getCityPosition(8), 90, 7000],
-		[0, 0, 8, getCityPosition(8), 90, 7000],
-		[1, 0, 8, getCityPosition(8), 85, 7000],
-		[2, 0, 8, getCityPosition(8), 85, 7000],
-		[0, 0, 9, getCityPosition(9), 90, 7000],
-		[1, 0, 9, getCityPosition(9), 85, 7000],
-		[2, 0, 9, getCityPosition(9), 85, 7000],
-		[0, 0, 10, getCityPosition(10), 60, 6000],
-		[2, 0, 10, getCityPosition(10), 50, 5500],
-		[0, 0, 45, getCityPosition(45), 45, 5000],
-		[2, 0, 45, getCityPosition(45), 55, 6000],
-		[2, 0, 45, getCityPosition(45), 55, 6000]
+		// type, city, position, morale, strength
+		[0, 8, getCityPosition(8), 90, 7000],
+		[0, 8, getCityPosition(8), 90, 7000],
+		[1, 8, getCityPosition(8), 85, 7000],
+		[2, 8, getCityPosition(8), 85, 7000],
+		[0, 9, getCityPosition(9), 90, 7000],
+		[1, 9, getCityPosition(9), 85, 7000],
+		[2, 9, getCityPosition(9), 85, 7000],
+		[0, 10, getCityPosition(10), 60, 6000],
+		[2, 10, getCityPosition(10), 50, 5500],
+		[0, 45, getCityPosition(45), 45, 5000],
+		[2, 45, getCityPosition(45), 55, 6000],
+		[2, 45, getCityPosition(45), 55, 6000],
+		[1, 7, getCityPosition(7), 55, 6000],
+		[1, 7, getCityPosition(7), 55, 6000],
+		[2, 7, getCityPosition(7), 45, 5000]
 	], [
 		// Playables
 		15, 247, 382, 277
@@ -372,7 +375,7 @@ function applyScenario (name) {
 			
 			// Units
 			for (var j = 0; j < scenarios[i].Units.length; j++) {
-				units.push(new Unit(scenarios[i].Units[j][0], scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], scenarios[i].Units[j][5], '-', '-'));
+				units.push(new Unit(scenarios[i].Units[j][0], cities[scenarios[i].Units[j][1]].Force, scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-'));
 			}
 		}
 	}
@@ -478,9 +481,11 @@ function onMouseMove (e) {
 						var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
 							<div class="unitInfo">
 								<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
-								<b>` + forces[officers[i].Force].Name + `</b><br />
-								Commander: ` + officers[i].Name + `<br />
-								Target: ` + cities[officers[i].Objective[1]].Name + `
+								<table class="stats">
+									<tr><th colspan="2">` + forces[officers[i].Force].Name + `</th></tr>
+									<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
+									<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
+								</table>
 							</div>`;
 						hoverCard.innerHTML = string;
 						
@@ -506,18 +511,18 @@ function onMouseMove (e) {
 				else hoverCard.style.top = hoverY + 'px';
 				
 				var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
-				if (cities[index].Force != '-') {
-					forceName = forces[cities[index].Force].Name;
-					forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+				if (cities[index].Force == '-') string += '<table class="cityStats">';
+				else {
+					var forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
 					string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-					string += '<b>' + forceName + '</b><br />';
+					string += '<table class="cityStats"><tr><th colspan="2">' + forces[cities[index].Force].Name + '</th></tr>';
 				}
-				
-				string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
-					'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
-					'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
-					'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
-					'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
+				string += `<tr><th>Gold</th><td>` + cities[index].Gold + `</td></tr>
+						<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>
+						<tr><th>Strength</th><td>` + getCityStrength(index) + `</td></tr>
+						<tr><th>Defense</th><td>` + cities[index].cDefense + `/` + cities[index].Defense + `</td></tr>
+						<tr><th>Order</th><td>` + cities[index].cOrder + `/100</td></tr>
+					</div>`;
 				hoverCard.innerHTML = string;
 				
 				openInfoCard('City', index);

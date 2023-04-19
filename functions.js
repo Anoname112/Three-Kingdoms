@@ -232,6 +232,21 @@ function getForceMarchableCities (forceIndex) {
 	return marchable;
 }
 
+function getDeployedUnits (commander) {
+	var deployedUnits = [];
+	for (var i = 0; i < units.length; i++) {
+		if (units[i].Objective != '-' && units[i].Objective[0] == 'March' && units[i].Objective[1] == commander) deployedUnits.push(i);
+	}
+	return deployedUnits;
+}
+
+function getDeployedStrength (commander) {
+	var deployedUnits = getDeployedUnits(commander);
+	var strength = 0;
+	for (var i = 0; i < deployedUnits.length; i++) strength += units[deployedUnits[i]].Strength;
+	return strength;
+}
+
 function getEnemyForces (forceIndex) {
 	var enemyForces = [];
 	for (var i = 0; i < forces.length; i++) {
@@ -814,11 +829,8 @@ function openInfoCard (mode, index) {
 		var backColor = 'enemyColor';
 		if (officers[index].Force == playerForce) backColor = 'allyColor';
 		
-		// March units
-		var marchUnits = [];
-		for (var i = 0; i < units.length; i++) {
-			if (units[i].Objective != '-' && units[i].Objective[0] == 'March' && units[i].Objective[1] == index) marchUnits.push(i);
-		}
+		// Deployed units
+		var deployedUnits = getDeployedUnits(index);
 		
 		// Assist officers
 		var assistOfficers = [];
@@ -829,9 +841,11 @@ function openInfoCard (mode, index) {
 		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
 			<div class="deployedContent">
 				<table class="stats">
+					<tr><th colspan="2">` + forces[officers[index].Force].Name + `</th></tr>
+					<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(index) + `</td></tr>
 					<tr><th>Target</th><td style="text-align: center;">` + cities[officers[index].Objective[1]].Name + `</td></tr>
 				</table><br />` +
-				createUnitsTable(marchUnits) + `<br />` +
+				createUnitsTable(deployedUnits) + `<br />` +
 				createOfficersTable([index].concat(assistOfficers)) + `<br />
 				<b>Assisted Stats:</b>
 				<div id="infoStats"></div>

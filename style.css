@@ -121,15 +121,20 @@ body {
 }
 
 .cityStats {
-	margin: 0;
-	padding: 0;
-	border: 0;
 	border-collapse: collapse;
 	font-size: 13px;
 }
 
+.cityStats tr th {
+	padding: 2px;
+	border: 1px solid #AAAAAA;
+	background-color: #CCCCCC;
+}
+
 .cityStats tr td {
-	padding: 0;
+	padding: 2px;
+	border: 1px solid #AAAAAA;
+	text-align: right;
 }
 
 .playerContent, .selectContent, .cityContent, .marchContent, .deployedContent {
