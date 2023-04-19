@@ -47,12 +47,15 @@ const mapWidth = map.length;
 const mapHeight = map[0].length;
 const assistPercentage = 5;
 
+// Canvas
 const canvasPad = 0;
 const canvasFontSize = (isMobile || isPortrait) ? 9 : 14;
 const canvasFont = canvasFontSize + 'px "Consolas"';
 const cityPad = 3;
-const buttonPad = 6;
 const unitPad = 3;
+const buttonPad = 6;
+const fontDark = '#000000';
+const fontLight = '#FFFFFF';
 
 // Control
 const controlPad = 10;
@@ -61,13 +64,7 @@ const controlPad = 10;
 const cardMargin = 10;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
-
-// Message
-const infoPad = 150;
-const infoFontSize = (isMobile || isPortrait) ? 9 : 14;
-const infoFont = canvasFontSize + 'px "Segoe UI"';
-const fontDark = '#000000';
-const fontLight = '#FFFFFF';
+const buttonWidth = 100;
 
 // Pathfingding
 const buttonColor = '#4444FF';

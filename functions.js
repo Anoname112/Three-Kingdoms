@@ -210,6 +210,7 @@ function getForceViableUnits (forceIndex) {
 }
 
 function getForceMarchableCities (forceIndex) {
+	// Cities that have both available officers and available units
 	var marchable = [];
 	for (var i = 0; i < cities.length; i++) {
 		if (cities[i].Force == forceIndex && getCityViableOfficers(i).length > 0 && getCityViableUnits(i).length > 0) marchable.push(i);
@@ -430,11 +431,16 @@ function openCityCard (cityIndex, select) {
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>
-			<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm')"` + farmDisabled + `>
-			<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade')"` + tradeDisabled + `>
-			<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech')"` + techDisabled + `>
-			<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense')"` + defenseDisabled + `>
-			<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order')"` + orderDisabled + `>
+			<div class="buttonsGroup">
+				<div class="label">Development &#9654;</div>
+				<div class="buttons">
+					<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm')"` + farmDisabled + `>
+					<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade')"` + tradeDisabled + `>
+					<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech')"` + techDisabled + `>
+					<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense')"` + defenseDisabled + `>
+					<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order')"` + orderDisabled + `>
+				</div>
+			</div>
 			<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
 			<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
@@ -456,7 +462,7 @@ function openCityCard (cityIndex, select) {
 	cityCard.innerHTML = string;
 	
 	cityCard.style.visibility = 'visible';
-	if (mousePosition.X + cityCard.clientWidth > mapSize) cityCard.style.left = (mousePosition.X - cityCard.clientWidth) + 'px';
+	if (mousePosition.X + cityCard.clientWidth + buttonWidth > mapSize) cityCard.style.left = (mousePosition.X - cityCard.clientWidth) + 'px';
 	else cityCard.style.left = mousePosition.X + 'px';
 	if (mousePosition.Y + cityCard.clientHeight > mapSize) cityCard.style.top = (mousePosition.Y - cityCard.clientHeight) + 'px';
 	else cityCard.style.top = mousePosition.Y + 'px';

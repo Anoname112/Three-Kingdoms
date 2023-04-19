@@ -15,8 +15,6 @@ var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var mousePosition;
 var squareSize;
 var mapSize;
-var buttonWidth;
-var buttonHeight;
 var infoX;
 var infoY;
 var infoXHalf;
@@ -245,8 +243,6 @@ window.onload = function () {
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
 	squareSize = mapSize / map.length;
-	buttonWidth = 3.5 * squareSize;
-	buttonHeight = 1.5 * squareSize;
 	infoX = isPortrait ? canvasPad : canvasPad * 2 + mapSize;
 	infoY = isPortrait ? canvasPad * 2 + mapSize : canvasPad;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
