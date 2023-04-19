@@ -658,7 +658,6 @@ function openMarchCard (cityIndex) {
 	var unitsDiv = '';
 	
 	var string = '';
-	marchCard.style.visibility = 'visible';
 	if (city.Force == playerForce) {
 		source = cityIndex;
 		var targets = getCities(city.Force, 'nonForce', [source, 'near']);
@@ -740,6 +739,7 @@ function openMarchCard (cityIndex) {
 		</div>`;
 	
 	marchCard.innerHTML = string;
+	marchCard.style.visibility = 'visible';
 }
 
 // Dev card
@@ -750,6 +750,9 @@ function openDevCard (cityIndex, objective) {
 	if (viableOfficers.length > 0) {
 		
 	}
+	
+	devCard.innerHTML = '';
+	devCard.style.visibility = 'visible';
 }
 
 // Unit card
