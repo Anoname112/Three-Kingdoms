@@ -17,6 +17,10 @@ body {
 	background-color: rgb(0, 0, 0, 0.3);
 }
 
+#scenariosDiv {
+	padding: 5px;
+}
+
 #source, #target {
 	width: 130px;
 }
@@ -152,6 +156,13 @@ body {
 	display: block;
 	width: 100px;
 	height: 21px;
+}
+
+.scenarioButtonsGroup .label {
+	display: block;
+	padding: 5px;
+	border: 1px solid #AAAAAA;
+	font-size: 20px;
 }
 
 .buttonsGroup {

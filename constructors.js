@@ -60,12 +60,13 @@ function Ability (name, desc, cost, allyeffect, enemyeffect) {
 	this.EnemyEffect = enemyeffect;
 }
 
-function Scenario (name, date, forces, officers, units) {
+function Scenario (name, date, forces, officers, units, playables) {
 	this.Name = name;
 	this.Date = date;
 	this.Forces = forces;
 	this.Officers = officers;
 	this.Units = units;
+	this.Playables = playables;
 }
 
 function Force (name, ruler, color) {

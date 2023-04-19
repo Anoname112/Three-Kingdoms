@@ -15,6 +15,7 @@ var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var mousePosition;
 var squareSize;
 var mapSize;
+var buttonHeight;
 var infoX;
 var infoY;
 var infoXHalf;
@@ -128,6 +129,9 @@ scenarios.push(new Scenario(
 		[0, 0, 45, getCityPosition(45), 45, 5000],
 		[2, 0, 45, getCityPosition(45), 55, 6000],
 		[2, 0, 45, getCityPosition(45), 55, 6000]
+	], [
+		// Playables
+		15, 247, 382, 277
 	]
 ));
 
@@ -243,6 +247,7 @@ window.onload = function () {
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
 	squareSize = mapSize / map.length;
+	buttonHeight = squareSize + buttonPad * 2;
 	infoX = isPortrait ? canvasPad : canvasPad * 2 + mapSize;
 	infoY = isPortrait ? canvasPad * 2 + mapSize : canvasPad;
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
@@ -300,23 +305,43 @@ window.onload = function () {
 		}
 	}
 	
-	reset();
+	gState = 0;
+	intervalId = setInterval(timerTick, timerInterval);
+	/*
+	var scenariosHTML = '<div id="scenariosDiv">Pick a Scenario..';
+	for (var i = 0; i < scenarios.length; i++) {
+		var scenario = scenarios[i];
+		scenariosHTML += `<div class="scenarioButtonsGroup">
+				<div class="label">` + scenario.Name + ` &#9654;</div>
+				<div class="buttons">`;
+		for (var j = 0; j < scenario.Playables.length; j++) {
+			var officer = officers[scenario.Playables[j]];
+			scenariosHTML += `<input type="button" value="Play as ` + officer.Name + `" onclick="inita('` + scenario.Name + `', ` + scenario.Playables[j] + `)">`;
+		}
+		scenariosHTML += `</div>
+			</div>`;
+	}
+	scenariosHTML += '</div>';
+	document.body.innerHTML += scenariosHTML;
+	*/
+	/*
+	// Play Warlord scenario as Cao Cao right of the bat
+	init('Warlords', 15);
+	*/
 }
 
-function reset () {
-	applyScenario('Warlords');
+function init (scenario, officerIndex) {
+	applyScenario(scenario);
 	
 	startPoint = new Point.Zero();
 	endPoint = new Point.Zero();
 	mousePosition = new Point.Zero();
 	
-	player = 15;
+	player = officerIndex;
 	playerForce = officers[player].Force;
 	openPlayerCard();
 	
 	gState = 1;
-	
-	intervalId  = setInterval(timerTick, timerInterval);
 }
 
 function applyScenario (name) {
@@ -368,35 +393,49 @@ function onMouseClick (e) {
 	
 	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
-		var indexX = parseInt((eX - canvasPad) / squareSize);
-		var indexY = parseInt((eY - canvasPad) / squareSize);
-		
-		var clickedObjects = [];
-		// Clicked city
-		if (map[indexX][indexY] >= 40) {
-			var index = map[indexX][indexY] - 40;
-			clickedObjects.push([cityCard, index]);
-		}
-		// Clicked units
-		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective[0] == 'March' && officers[i].Force == playerForce) {
-				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
-				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
-				var w = squareSize - unitPad * 2;
-				var h = squareSize - unitPad * 2;
-				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
-					clickedObjects.push([deployedCard, i]);
+	if (gState == 0) {
+		var line = 0;
+		for (var i = 0; i < scenarios.length; i++) {
+			var x = canvasPad;
+			for (var j = 0; j < scenarios[i].Playables.length; j++) {
+				var y = canvasPad + (line++ * buttonHeight);
+				if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
+					init(scenarios[i].Name, scenarios[i].Playables[j]);
 				}
 			}
 		}
-		
-		if (clickedObjects.length > 0) {
-			if (clickedObjects.length == 1) {
-				if (clickedObjects[0][0] == cityCard) openCityCard(clickedObjects[0][1]);
-				else if (clickedObjects[0][0] == deployedCard) openDeployedCard(clickedObjects[0][1]);
+	}
+	else if (gState == 1) {
+		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
+			var indexX = parseInt((eX - canvasPad) / squareSize);
+			var indexY = parseInt((eY - canvasPad) / squareSize);
+			
+			var clickedObjects = [];
+			// Clicked city
+			if (map[indexX][indexY] >= 40) {
+				var index = map[indexX][indexY] - 40;
+				clickedObjects.push([cityCard, index]);
 			}
-			else openSelectCard(clickedObjects);
+			// Clicked units
+			for (var i = 0; i < officers.length; i++) {
+				if (officers[i].Objective[0] == 'March' && officers[i].Force == playerForce) {
+					var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+					var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
+					var w = squareSize - unitPad * 2;
+					var h = squareSize - unitPad * 2;
+					if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
+						clickedObjects.push([deployedCard, i]);
+					}
+				}
+			}
+			
+			if (clickedObjects.length > 0) {
+				if (clickedObjects.length == 1) {
+					if (clickedObjects[0][0] == cityCard) openCityCard(clickedObjects[0][1]);
+					else if (clickedObjects[0][0] == deployedCard) openDeployedCard(clickedObjects[0][1]);
+				}
+				else openSelectCard(clickedObjects);
+			}
 		}
 	}
 }
@@ -409,75 +448,80 @@ function onMouseMove (e) {
 	hoverCard.style.visibility = 'hidden';
 	//infoCard.style.visibility = 'hidden';
 	
-	if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
-		var indexX = parseInt((eX - canvasPad) / squareSize);
-		var indexY = parseInt((eY - canvasPad) / squareSize);
+	if (gState == 0) {
 		
-		// Hovering a unit
-		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective[0] == 'March') {
-				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
-				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
-				var w = squareSize - unitPad * 2;
-				var h = squareSize - unitPad * 2;
-				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
-					var backColor = 'enemyColor';
-					if (officers[i].Force == playerForce) backColor = 'allyColor';
-					
-					hoverCard.style.visibility = 'visible';
-					var hoverX = eX + hoverMarginX;
-					var hoverY = eY + hoverMarginY;
-					if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
-					else hoverCard.style.left = hoverX + 'px';
-					if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
-					else hoverCard.style.top = hoverY + 'px';
-					
-					var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
-						<div class="unitInfo">
-							<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
-							<b>` + forces[officers[i].Force].Name + `</b><br />
-							Commander: ` + officers[i].Name + `<br />
-							Target: ` + cities[officers[i].Objective[1]].Name + `
-						</div>`;
-					hoverCard.innerHTML = string;
-					
-					openInfoCard('Unit', i);
-					return;
+	}
+	else if (gState == 1) {
+		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
+			var indexX = parseInt((eX - canvasPad) / squareSize);
+			var indexY = parseInt((eY - canvasPad) / squareSize);
+			
+			// Hovering a unit
+			for (var i = 0; i < officers.length; i++) {
+				if (officers[i].Objective[0] == 'March') {
+					var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+					var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
+					var w = squareSize - unitPad * 2;
+					var h = squareSize - unitPad * 2;
+					if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
+						var backColor = 'enemyColor';
+						if (officers[i].Force == playerForce) backColor = 'allyColor';
+						
+						hoverCard.style.visibility = 'visible';
+						var hoverX = eX + hoverMarginX;
+						var hoverY = eY + hoverMarginY;
+						if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+						else hoverCard.style.left = hoverX + 'px';
+						if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+						else hoverCard.style.top = hoverY + 'px';
+						
+						var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
+							<div class="unitInfo">
+								<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
+								<b>` + forces[officers[i].Force].Name + `</b><br />
+								Commander: ` + officers[i].Name + `<br />
+								Target: ` + cities[officers[i].Objective[1]].Name + `
+							</div>`;
+						hoverCard.innerHTML = string;
+						
+						openInfoCard('Unit', i);
+						return;
+					}
 				}
 			}
-		}
-		
-		// Hovering a city
-		if (map[indexX][indexY] >= 40) {
-			var index = map[indexX][indexY] - 40;
-			var backColor = 'enemyColor';
-			if (cities[index].Force == '-') backColor = 'neutralColor';
-			else if (cities[index].Force == playerForce) backColor = 'allyColor';
 			
-			hoverCard.style.visibility = 'visible';
-			var hoverX = eX + hoverMarginX;
-			var hoverY = eY + hoverMarginY;
-			if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
-			else hoverCard.style.left = hoverX + 'px';
-			if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
-			else hoverCard.style.top = hoverY + 'px';
-			
-			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
-			if (cities[index].Force != '-') {
-				forceName = forces[cities[index].Force].Name;
-				forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
-				string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-				string += '<b>' + forceName + '</b><br />';
+			// Hovering a city
+			if (map[indexX][indexY] >= 40) {
+				var index = map[indexX][indexY] - 40;
+				var backColor = 'enemyColor';
+				if (cities[index].Force == '-') backColor = 'neutralColor';
+				else if (cities[index].Force == playerForce) backColor = 'allyColor';
+				
+				hoverCard.style.visibility = 'visible';
+				var hoverX = eX + hoverMarginX;
+				var hoverY = eY + hoverMarginY;
+				if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+				else hoverCard.style.left = hoverX + 'px';
+				if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+				else hoverCard.style.top = hoverY + 'px';
+				
+				var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
+				if (cities[index].Force != '-') {
+					forceName = forces[cities[index].Force].Name;
+					forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+					string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
+					string += '<b>' + forceName + '</b><br />';
+				}
+				
+				string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
+					'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
+					'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
+					'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
+					'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
+				hoverCard.innerHTML = string;
+				
+				openInfoCard('City', index);
 			}
-			
-			string += '<table class="cityStats"><tr><td>Farm:</td><td class="right">' + cities[index].cFarm + '/' + cities[index].Farm +
-				'</td></tr><tr><td>Trade:</td><td class="right">' + cities[index].cTrade + '/' + cities[index].Trade +
-				'</td></tr><tr><td>Tech:</td><td class="right">' + cities[index].cTech + '/' + cities[index].Tech +
-				'</td></tr><tr><td>Defense:&nbsp;</td><td class="right">' + cities[index].cDefense + '/' + cities[index].Defense +
-				'</td></tr><tr><td>Order:</td><td class="right">' + cities[index].cOrder + '/100</td></tr></div>';
-			hoverCard.innerHTML = string;
-			
-			openInfoCard('City', index);
 		}
 	}
 }
@@ -499,64 +543,77 @@ function draw () {
 	// Begin drawing
 	ctx.beginPath();
 	
-	var x = canvasPad;
-	var y = canvasPad;
-	// Draw background map
-	drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
-	// Draw roads
-	ctx.globalAlpha = 0.5;
-	for (var i = 0; i < map.length; i++) {
-		for (var j = 0; j < map[i].length; j++) {
-			var x = canvasPad + i * squareSize;
-			var y = canvasPad + j * squareSize;
-			
-			if (map[i][j] != 1) {
-				drawRect(x, y, squareSize, squareSize, cityColor);
-				fillRect(x, y, squareSize, squareSize, roadColor);
+	if (gState == 0) {
+		var line = 0;
+		for (var i = 0; i < scenarios.length; i++) {
+			var x = canvasPad;
+			for (var j = 0; j < scenarios[i].Playables.length; j++) {
+				var y = canvasPad + (line++ * buttonHeight);
+				drawRect(x, y, scenarioWidth, buttonHeight, fontDark);
+				drawMessage(scenarios[i].Name + ': Play as ' + officers[scenarios[i].Playables[j]].Name, x + scenarioWidth / 2, y + buttonHeight / 2, 'center');
 			}
 		}
 	}
-	ctx.globalAlpha = 1.0;
-	
-	// Draw cities
-	for (var i = 0; i < map.length; i++) {
-		for (var j = 0; j < map[i].length; j++) {
-			var x = canvasPad + i * squareSize;
-			var y = canvasPad + j * squareSize;
-			
-			if (map[i][j] >= 40) {
-				var index = map[i][j] - 40;
-				if (cities[index].Force == '-') {
-					var emptyX = x + cityPad;
-					var emptyY = y + cityPad;
-					var emptySize = squareSize - (2 * cityPad);
-					fillRect(emptyX, emptyY, emptySize, emptySize, cityColor);
-				}
-				else {
-					fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
-					ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
-					drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
+	else if (gState == 1) {
+		var x = canvasPad;
+		var y = canvasPad;
+		// Draw background map
+		drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
+		// Draw roads
+		ctx.globalAlpha = 0.5;
+		for (var i = 0; i < map.length; i++) {
+			for (var j = 0; j < map[i].length; j++) {
+				var x = canvasPad + i * squareSize;
+				var y = canvasPad + j * squareSize;
+				
+				if (map[i][j] != 1) {
+					drawRect(x, y, squareSize, squareSize, cityColor);
+					fillRect(x, y, squareSize, squareSize, roadColor);
 				}
 			}
 		}
-	}
-	
-	// Draw deployed units
-	for (var i = 0; i < officers.length; i++) {
-		if (officers[i].Objective[0] == 'March') {
-			var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
-			var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
-			var w = squareSize - unitPad * 2;
-			var h = squareSize - unitPad * 2;
-			if (mousePosition.X >= x && mousePosition.X < x + w && mousePosition.Y >= y && mousePosition.Y < y + h) {
-				var path = officers[i].Objective[2];
-				for (var j = 0; j < path.Points.length; j++) {
-					var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;
-					var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
-					fillRect(pathX, pathY, w, h, finalPathColor);
+		ctx.globalAlpha = 1.0;
+		
+		// Draw cities
+		for (var i = 0; i < map.length; i++) {
+			for (var j = 0; j < map[i].length; j++) {
+				var x = canvasPad + i * squareSize;
+				var y = canvasPad + j * squareSize;
+				
+				if (map[i][j] >= 40) {
+					var index = map[i][j] - 40;
+					if (cities[index].Force == '-') {
+						var emptyX = x + cityPad;
+						var emptyY = y + cityPad;
+						var emptySize = squareSize - (2 * cityPad);
+						fillRect(emptyX, emptyY, emptySize, emptySize, cityColor);
+					}
+					else {
+						fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
+						ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
+						drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
+					}
 				}
 			}
-			drawImage(unitImage, x, y, w, h);
+		}
+		
+		// Draw deployed units
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective[0] == 'March') {
+				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
+				var w = squareSize - unitPad * 2;
+				var h = squareSize - unitPad * 2;
+				if (mousePosition.X >= x && mousePosition.X < x + w && mousePosition.Y >= y && mousePosition.Y < y + h) {
+					var path = officers[i].Objective[2];
+					for (var j = 0; j < path.Points.length; j++) {
+						var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;
+						var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
+						fillRect(pathX, pathY, w, h, finalPathColor);
+					}
+				}
+				drawImage(unitImage, x, y, w, h);
+			}
 		}
 	}
 	
