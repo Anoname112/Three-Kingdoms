@@ -77,7 +77,7 @@ const startColor = '#22CC22';
 const exploredColor = '#880000';
 const opensetColor = '#CCCC22';
 const endColor = '#FF2222';
-const finalPathColor = '#2222CC';
+const finalPathColor = 'rgba(34, 34, 204, 0.5)';
 
 // Images
 const images = [];

@@ -396,9 +396,9 @@ function onMouseClick (e) {
 	if (gState == 0) {
 		var line = 0;
 		for (var i = 0; i < scenarios.length; i++) {
-			var x = canvasPad;
+			var x = canvasPad + buttonMargin;
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
-				var y = canvasPad + (line++ * buttonHeight);
+				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
 					init(scenarios[i].Name, scenarios[i].Playables[j]);
 				}
@@ -546,12 +546,12 @@ function draw () {
 	if (gState == 0) {
 		var line = 0;
 		for (var i = 0; i < scenarios.length; i++) {
-			var x = canvasPad;
+			var x = canvasPad + buttonMargin;
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
-				var y = canvasPad + (line++ * buttonHeight);
+				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				drawRect(x, y, scenarioWidth, buttonHeight, fontDark);
 				drawMessage(
-					scenarios[i].Name + ': Play as ' + officers[scenarios[i].Playables[j]].Name,
+					'[' + scenarios[i].Date + '] ' + scenarios[i].Name + ': ' + officers[scenarios[i].Playables[j]].Name,
 					x + buttonPad,
 					y + buttonHeight / 2
 				);
