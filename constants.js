@@ -53,6 +53,7 @@ const canvasFontSize = (isMobile || isPortrait) ? 9 : 14;
 const canvasFont = canvasFontSize + 'px "Consolas"';
 const cityPad = 3;
 const unitPad = 3;
+const buttonMargin = 5;
 const buttonPad = 5;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
