@@ -57,7 +57,7 @@ const buttonMargin = 5;
 const buttonPad = 5;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
-const scenarioWidth = 600;
+const scenarioWidth = 300;
 
 // Control
 const controlPad = 10;

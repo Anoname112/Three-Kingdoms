@@ -550,7 +550,11 @@ function draw () {
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
 				var y = canvasPad + (line++ * buttonHeight);
 				drawRect(x, y, scenarioWidth, buttonHeight, fontDark);
-				drawMessage(scenarios[i].Name + ': Play as ' + officers[scenarios[i].Playables[j]].Name, x + scenarioWidth / 2, y + buttonHeight / 2, 'center');
+				drawMessage(
+					scenarios[i].Name + ': Play as ' + officers[scenarios[i].Playables[j]].Name,
+					x + buttonPad,
+					y + buttonHeight / 2
+				);
 			}
 		}
 	}
