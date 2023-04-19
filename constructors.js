@@ -75,10 +75,10 @@ function Force (name, ruler, color) {
 	this.Color = color;
 }
 
-function City (name, force, money, food, farm, trade, tech, defense, cfarm, ctrade, ctech, cdefense, corder, speciality) {
+function City (name, force, gold, food, farm, trade, tech, defense, cfarm, ctrade, ctech, cdefense, corder, speciality) {
 	this.Name = name;
 	this.Force = force;
-	this.Money = money;
+	this.Gold = gold;
 	this.Food = food;
 	this.Farm = farm;
 	this.Trade = trade;
