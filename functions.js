@@ -756,15 +756,56 @@ function openDevCard (cityIndex, objective) {
 				objectiveHTML += 'Farm: <input type="text" value="` + city.cFarm + `/` + city.Farm + `" readonly>';
 				break;
 			case 'Trade':
+				objectiveHTML += 'Trade: <input type="text" value="` + city.cTrade + `/` + city.Trade + `" readonly>';
 				break;
 			case 'Tech':
+				objectiveHTML += 'Tech: <input type="text" value="` + city.cTech + `/` + city.Tech + `" readonly>';
 				break;
 			case 'Defense':
+				objectiveHTML += 'Defense: <input type="text" value="` + city.cDefense + `/` + city.Defense + `" readonly>';
 				break;
 			case 'Order':
+				objectiveHTML += 'Order: <input type="text" value="` + city.cOrder + `/100" readonly>';
 				break;
 			default:
 				break;
+		}
+		
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		// Sort
+		for (var i = 0; i < viableOfficers.length; i++) {
+			for (var j = 0; j < viableOfficers.length; j++) {
+				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) ||
+					(objective == 'Tech' && officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) ||
+					(objective == 'Defense' && officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) ||
+					(objective == 'Order' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
+					var temp = viableOfficers[i];
+					viableOfficers[i] = viableOfficers[j];
+					viableOfficers[j] = temp;
+				}
+			}
+		}
+
+		var officersHTML = '';
+		for (var i = 0; i < viableOfficers.length; i++) {
+			var officer = officers[viableOfficers[i]];
+			officersHTML += `<label for="officer` + viableOfficers[i] + `">
+					<input type="checkbox" id="officer` + viableOfficers[i] + `">
+					<span>` + officer.Name + ` | `;
+			switch (objective) {
+				case 'Farm': officersHTML += officer.POL; break;
+				case 'Trade': officersHTML += officer.POL; break;
+				case 'Tech': officersHTML += officer.INT; break;
+				case 'Defense': officersHTML += officer.WAR; break;
+				case 'Order': officersHTML += officer.LDR; break;
+				default: break;
+			} 
+			officersHTML += `</span>
+				</label>`;
+		}
+		if (assistHTML.length > 0) {
+			getElement('assistDiv').innerHTML = assistHTML;
+			getElement('assistDiv').style.visibility = 'visible';
 		}
 
 		devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
@@ -775,18 +816,10 @@ function openDevCard (cityIndex, objective) {
 						<td>` + objectiveHTML + `</td>
 					</tr>
 					<tr>
-						<td>` + '' + `</td>
-						<td><div id="relevantStats"></div></td>
+						<td><div id="officersDiv" class="checkboxes"></div></td>
 					</tr>
 					<tr>
-						<td>` + '' + `</td>
-					</tr>
-					<tr>
-						<td><div id="assistDiv" class="checkboxes"></div></td>
-						<td><div id="assistedStats"></div></td>
-					</tr>
-					<tr>
-						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
+						<td><input type="button" value="Develop" onclick=""> <input type="button" value="Cancel" onclick="closeCard(devCard)"></td>
 						<td></td>
 					</tr>
 				</table>
