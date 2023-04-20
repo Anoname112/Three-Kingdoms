@@ -753,8 +753,17 @@ function openDevCard (cityIndex, objective) {
 		var objectiveHTML = '';
 		switch (objective) {
 			case 'Farm':
+				objectiveHTML += 'Farm: <input type="text" value="` + city.cFarm + `/` + city.Farm + `" readonly>';
 				break;
 			case 'Trade':
+				break;
+			case 'Tech':
+				break;
+			case 'Defense':
+				break;
+			case 'Order':
+				break;
+			default:
 				break;
 		}
 
@@ -762,7 +771,8 @@ function openDevCard (cityIndex, objective) {
 			<div class="devContent">
 				<table>
 					<tr>
-						<td>City: ` + city.Name + `</td><td></td>
+						<td>City: <input type="text" value="` + city.Name + `" readonly></td>
+						<td>` + objectiveHTML + `</td>
 					</tr>
 					<tr>
 						<td>` + '' + `</td>
