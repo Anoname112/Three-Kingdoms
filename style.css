@@ -12,6 +12,10 @@ input[type=text] {
 	width: 110px;
 }
 
+select {
+	height: 21px;
+}
+
 #myCanvas {
 	position: fixed;
 }
@@ -141,7 +145,7 @@ input[type=text] {
 	text-align: right;
 }
 
-.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .deployedContent {
+.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .deployedContent {
 	padding: 5px;
 	font-size: 13px;
 }

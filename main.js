@@ -120,10 +120,10 @@ scenarios.push(new Scenario(
 		[0, 8, getCityPosition(8), 90, 7000],
 		[0, 8, getCityPosition(8), 90, 7000],
 		[1, 8, getCityPosition(8), 85, 7000],
-		[2, 8, getCityPosition(8), 85, 7000],
+		[2, 8, getCityPosition(8), 85, 6500],
 		[0, 9, getCityPosition(9), 90, 7000],
 		[1, 9, getCityPosition(9), 85, 7000],
-		[2, 9, getCityPosition(9), 85, 7000],
+		[2, 9, getCityPosition(9), 85, 6500],
 		[0, 10, getCityPosition(10), 60, 6000],
 		[2, 10, getCityPosition(10), 50, 5500],
 		[0, 45, getCityPosition(45), 45, 5000],
@@ -516,11 +516,18 @@ function onMouseMove (e) {
 }
 
 function playClick (e) {
-	// Development and training progress
-	// Animate unit, then battle
+	// BEFORE animate
+	// Enemies attack
+	
+	// Animate
+	
+	// AFTER animate
+	// Development and military progress
+	// Enemies development and military
+	// Battle
 	// Increase date
 	// Tax income and harvest
-	// Food consumption (of units before excluding new recurit)
+	// Food consumption (excluding new establish)
 }
 
 function draw () {

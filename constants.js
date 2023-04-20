@@ -46,6 +46,8 @@ const scaling = 1;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const assistPercentage = 5;
+const strengthLimit = 10000;
+const unitLimit = 10;
 
 // Canvas
 const canvasPad = 0;

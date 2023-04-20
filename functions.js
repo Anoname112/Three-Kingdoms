@@ -155,9 +155,14 @@ function getCityPosition (cityIndex) {
 	return new Point(0, 0);
 }
 
-function getCityUnitCount (cityIndex) {
+function getCityUnitCount (cityIndex, includeEstablish) {
 	var count = null;
 	for (var i = 0; i < units.length; i++) if (units[i].City == cityIndex) count++;
+	if (includeEstablish) {
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].City == cityIndex && officers[i].Objective != '-' && officers[i].Objective[0] == 'Establish') count++;
+		}
+	}
 	return count;
 }
 
@@ -453,12 +458,12 @@ function openCityCard (cityIndex, select) {
 		backColor = 'allyColor';
 		var viableOfficers = getCityViableOfficers(cityIndex);
 		var viableUnits = getCityViableUnits(cityIndex);
-		var unitCount = getCityUnitCount(cityIndex);
+		var unitCount = getCityUnitCount(cityIndex, true);
 		
 		var recuritable = false;
 		var drillable = false;
 		for (var i = 0; i < viableUnits.length; i++) {
-			if (units[viableUnits[i]].Strength < 10000) recuritable = true;
+			if (units[viableUnits[i]].Strength < strengthLimit) recuritable = true;
 			if (units[viableUnits[i]].Morale < 100) drillable = true;
 		}
 		
@@ -468,7 +473,8 @@ function openCityCard (cityIndex, select) {
 		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech ? '' : ' disabled';
 		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense ? '' : ' disabled';
 		var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 ? '' : ' disabled';
-		var recuritDisabled = viableOfficers.length > 0 && (recuritable || unitCount < 10) ? '' : ' disabled';
+		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit ? '' : ' disabled';
+		var recuritDisabled = viableOfficers.length > 0 && recuritable ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>
@@ -482,8 +488,14 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order')"` + orderDisabled + `>
 				</div>
 			</div>
-			<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
-			<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
+			<div class="buttonsGroup">
+				<div class="label">Military &#9654;</div>
+				<div class="buttons">
+					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish')"` + establishDisabled + `>
+					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
+					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
+				</div>
+			</div>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
 	else if (city.Force == '-') {
@@ -580,9 +592,11 @@ function assistedStats () {
 // March card
 function commanderChanged (source) {
 	getElement('relevantStats').innerHTML = '';
-	getElement('assistDiv').innerHTML = '';
-	getElement('assistDiv').style.visibility = 'hidden';
-	getElement('assistedStats').innerHTML = '';
+	if (getElement('assistDiv')) {
+		getElement('assistDiv').innerHTML = '';
+		getElement('assistDiv').style.visibility = 'hidden';
+		getElement('assistedStats').innerHTML = '';
+	}
 	
 	var commander = getElement('commander') ? getElement('commander').value : '';
 	var stats = getStats(commander);
@@ -741,6 +755,7 @@ function openMarchCard (cityIndex) {
 	marchCard.style.visibility = 'visible';
 }
 
+// Dev card
 function develop (cityIndex, objective) {
 	if (Number.isInteger(cityIndex) && (objective == 'Farm' || objective == 'Trade' || objective == 'Tech' || objective == 'Defense' || objective == 'Order')) {
 		// Check officers
@@ -794,11 +809,11 @@ function openDevCard (cityIndex, objective) {
 		var viableOfficers = getCityViableOfficers(cityIndex);
 		// Sort
 		for (var i = 0; i < viableOfficers.length; i++) {
-			for (var j = 0; j < viableOfficers.length; j++) {
-				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL > officers[viableOfficers[j]].POL) ||
-					(objective == 'Tech' && officers[viableOfficers[i]].INT > officers[viableOfficers[j]].INT) ||
-					(objective == 'Defense' && officers[viableOfficers[i]].WAR > officers[viableOfficers[j]].WAR) ||
-					(objective == 'Order' && officers[viableOfficers[i]].LDR > officers[viableOfficers[j]].LDR)) {
+			for (var j = i + 1; j < viableOfficers.length; j++) {
+				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) ||
+					(objective == 'Tech' && officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) ||
+					(objective == 'Defense' && officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) ||
+					(objective == 'Order' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
 					var temp = viableOfficers[i];
 					viableOfficers[i] = viableOfficers[j];
 					viableOfficers[j] = temp;
@@ -834,7 +849,10 @@ function openDevCard (cityIndex, objective) {
 						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
 					</tr>
 					<tr>
-						<td><input type="button" value="Develop" onclick="develop(` + cityIndex + `, '` + objective + `')"> <input type="button" value="Cancel" onclick="closeCard(devCard)"></td>
+						<td>
+							<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `')">
+							<input type="button" value="Cancel" onclick="closeCard(devCard)">
+						</td>
 					</tr>
 				</table>
 			</div>`;
@@ -845,12 +863,121 @@ function openDevCard (cityIndex, objective) {
 }
 
 // Unit card
+function military (cityIndex, objective) {
+	var officer = getElement('officer') ? getElement('officer').value : '';
+	officer = getOfficerIndexByName(officer);
+	if (officer != null) {
+		if (getElement('unitType')) {
+			var unitType = parseInt(getElement('unitType').value);
+			officers[officer].Objective = [objective, unitType];
+			officers[officer].Progress = 0;
+		}
+		else if (getElement('unit')) {
+			var unit = parseInt(getElement('unit').value);
+			officers[officer].Objective = [objective, unit];
+			officers[officer].Progress = 0;
+			units[unit].Objective = [objective, officer];
+			units[unit].Progress = 0;
+		}
+		else return;
+		
+		closeCard(unitCard);
+		openInfoCard('City', cityIndex);
+	}
+}
+
+// Unit card
+function officerChanged (cityIndex) {
+	getElement('relevantStats').innerHTML = '';
+	
+	var officer = getElement('officer') ? getElement('officer').value : '';
+	var index = getOfficerIndexByName(officer);
+	if (index != null) {
+		getElement('relevantStats').innerHTML = createStatsTable(index);	
+	}
+}
+
+// Unit card
 function openUnitCard (cityIndex, objective) {
 	closeCard(cityCard);
 	
 	var viableOfficers = getCityViableOfficers(cityIndex);
 	if (viableOfficers.length > 0) {
+		var city = cities[cityIndex];
 		
+		var objectiveHTML = '';
+		switch (objective) {
+			case 'Establish':
+				var options = '';
+				for (var i = 0; i < unitTypes.length; i++) {
+					options += '<option value="' + i + '">' + unitTypes[i].Name + '</option>';
+				}
+				objectiveHTML += 'Unit Type: <select id="unitType">' + options + '</select>';
+				break;
+			case 'Recurit':
+				var options = '';
+				var viableUnits = getCityViableUnits(cityIndex);
+				for (var i = 0; i < viableUnits.length; i++) {
+					var unit = units[viableUnits[i]];
+					if (unit.Strength < strengthLimit) {
+						options += '<option value="' + viableUnits[i] + '">' + unitTypes[unit.Type].Name + ' | ' + unit.Strength + ' | ' + unit.Morale + '</option>';
+					}
+				}
+				objectiveHTML += 'Unit: <select id="unit">' + options + '</select>';
+				break;
+			case 'Drill':
+				var options = '';
+				var viableUnits = getCityViableUnits(cityIndex);
+				for (var i = 0; i < viableUnits.length; i++) {
+					var unit = units[viableUnits[i]];
+					if (unit.Morale < 100) {
+						options += '<option value="' + viableUnits[i] + '">' + unitTypes[unit.Type].Name + ' | ' + unit.Strength + ' | ' + unit.Morale + '</option>';
+					}
+				}
+				objectiveHTML += 'Unit: <select id="unit">' + options + '</select>';
+				break;
+			default:
+				break;
+		}
+		
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		// Sort
+		for (var i = 0; i < viableOfficers.length; i++) {
+			for (var j = i + 1; j < viableOfficers.length; j++) {
+				if (((objective == 'Establish' || objective == 'Recurit') && officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) ||
+					(objective == 'Drill' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
+					var temp = viableOfficers[i];
+					viableOfficers[i] = viableOfficers[j];
+					viableOfficers[j] = temp;
+				}
+			}
+		}
+		var officersHTML = '<div id="officerListDiv"><datalist id="officerList">';
+		for (var i = 0; i < viableOfficers.length; i++) officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">';
+		officersHTML += '</datalist></div>';
+		
+		unitCard.innerHTML = officersHTML + `<div class="title allyColor">` + objective + `</div>
+			<div class="unitContent">
+				<table>
+					<tr>
+						<td>City: <input type="text" value="` + city.Name + `" readonly></td>
+						<td>` + objectiveHTML + `</td>
+					</tr>
+					<tr>
+						<td><div id="officersDiv">Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged(` + cityIndex + `)"></div></td>
+						<td><div id="relevantStats"></div></td>
+					</tr>
+					<tr>
+						<td>
+							<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `')">
+							<input type="button" value="Cancel" onclick="closeCard(unitCard)">
+						</td>
+					</tr>
+				</table>
+			</div>`;
+		
+		unitCard.style.visibility = 'visible';
+		if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 	}
 }
 
