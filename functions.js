@@ -753,19 +753,19 @@ function openDevCard (cityIndex, objective) {
 		var objectiveHTML = '';
 		switch (objective) {
 			case 'Farm':
-				objectiveHTML += 'Farm: <input type="text" value="` + city.cFarm + `/` + city.Farm + `" readonly>';
+				objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>';
 				break;
 			case 'Trade':
-				objectiveHTML += 'Trade: <input type="text" value="` + city.cTrade + `/` + city.Trade + `" readonly>';
+				objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>';
 				break;
 			case 'Tech':
-				objectiveHTML += 'Tech: <input type="text" value="` + city.cTech + `/` + city.Tech + `" readonly>';
+				objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>';
 				break;
 			case 'Defense':
-				objectiveHTML += 'Defense: <input type="text" value="` + city.cDefense + `/` + city.Defense + `" readonly>';
+				objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>';
 				break;
 			case 'Order':
-				objectiveHTML += 'Order: <input type="text" value="` + city.cOrder + `/100" readonly>';
+				objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/100" readonly>';
 				break;
 			default:
 				break;
@@ -775,10 +775,10 @@ function openDevCard (cityIndex, objective) {
 		// Sort
 		for (var i = 0; i < viableOfficers.length; i++) {
 			for (var j = 0; j < viableOfficers.length; j++) {
-				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) ||
-					(objective == 'Tech' && officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) ||
-					(objective == 'Defense' && officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) ||
-					(objective == 'Order' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
+				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL > officers[viableOfficers[j]].POL) ||
+					(objective == 'Tech' && officers[viableOfficers[i]].INT > officers[viableOfficers[j]].INT) ||
+					(objective == 'Defense' && officers[viableOfficers[i]].WAR > officers[viableOfficers[j]].WAR) ||
+					(objective == 'Order' && officers[viableOfficers[i]].LDR > officers[viableOfficers[j]].LDR)) {
 					var temp = viableOfficers[i];
 					viableOfficers[i] = viableOfficers[j];
 					viableOfficers[j] = temp;
