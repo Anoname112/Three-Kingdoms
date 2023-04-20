@@ -8,6 +8,10 @@ body {
 	font-family: "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
 }
 
+input[type=text] {
+	width: 110px;
+}
+
 #myCanvas {
 	position: fixed;
 }
@@ -22,7 +26,7 @@ body {
 }
 
 #source, #target {
-	width: 130px;
+	
 }
 
 #commanderDiv {
@@ -30,7 +34,7 @@ body {
 }
 
 #commander {
-	width: 130px;
+	
 }
 
 #relevantStats, #assistedStats {

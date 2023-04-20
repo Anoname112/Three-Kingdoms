@@ -310,23 +310,7 @@ window.onload = function () {
 	
 	gState = 0;
 	intervalId = setInterval(timerTick, timerInterval);
-	/*
-	var scenariosHTML = '<div id="scenariosDiv">Pick a Scenario..';
-	for (var i = 0; i < scenarios.length; i++) {
-		var scenario = scenarios[i];
-		scenariosHTML += `<div class="scenarioButtonsGroup">
-				<div class="label">` + scenario.Name + ` &#9654;</div>
-				<div class="buttons">`;
-		for (var j = 0; j < scenario.Playables.length; j++) {
-			var officer = officers[scenario.Playables[j]];
-			scenariosHTML += `<input type="button" value="Play as ` + officer.Name + `" onclick="inita('` + scenario.Name + `', ` + scenario.Playables[j] + `)">`;
-		}
-		scenariosHTML += `</div>
-			</div>`;
-	}
-	scenariosHTML += '</div>';
-	document.body.innerHTML += scenariosHTML;
-	*/
+	
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);

@@ -733,13 +733,33 @@ function openMarchCard (cityIndex) {
 				</tr>
 				<tr>
 					<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
-					<td></td>
 				</tr>
 			</table>
 		</div>`;
 	
 	marchCard.innerHTML = string;
 	marchCard.style.visibility = 'visible';
+}
+
+function develop (cityIndex, objective) {
+	if (Number.isInteger(cityIndex) && (objective == 'Farm' || objective == 'Trade' || objective == 'Tech' || objective == 'Defense' || objective == 'Order')) {
+		// Check officers
+		var devOfficers = [];
+		for (var i = 0; i < officers.length; i++) {
+			if (getElement('officer' + i) && getElement('officer' + i).checked) devOfficers.push(i);
+		}
+		
+		if (devOfficers.length > 0) {
+			// Assign objectives
+			for (var i = 0; i < devOfficers.length; i++) {
+				officers[devOfficers[i]].Objective = [objective, cityIndex];
+				officers[devOfficers[i]].Progress = 0;
+			}
+			
+			closeCard(devCard);
+			openInfoCard('City', cityIndex);
+		}
+	}
 }
 
 // Dev card
@@ -785,7 +805,6 @@ function openDevCard (cityIndex, objective) {
 				}
 			}
 		}
-
 		var officersHTML = '';
 		for (var i = 0; i < viableOfficers.length; i++) {
 			var officer = officers[viableOfficers[i]];
@@ -803,7 +822,7 @@ function openDevCard (cityIndex, objective) {
 			officersHTML += `</span>
 				</label>`;
 		}
-
+		
 		devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
 			<div class="devContent">
 				<table>
@@ -815,8 +834,7 @@ function openDevCard (cityIndex, objective) {
 						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
 					</tr>
 					<tr>
-						<td><input type="button" value="Develop" onclick=""> <input type="button" value="Cancel" onclick="closeCard(devCard)"></td>
-						<td></td>
+						<td><input type="button" value="Develop" onclick="develop(` + cityIndex + `, '` + objective + `')"> <input type="button" value="Cancel" onclick="closeCard(devCard)"></td>
 					</tr>
 				</table>
 			</div>`;
