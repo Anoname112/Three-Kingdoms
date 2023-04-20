@@ -1,6 +1,5 @@
 # Three-Kingdoms
-Notes:
-- play, animate
+Notes: play, animate
 
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
 <br /><br />
