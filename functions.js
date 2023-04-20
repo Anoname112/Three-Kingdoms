@@ -748,11 +748,41 @@ function openDevCard (cityIndex, objective) {
 	
 	var viableOfficers = getCityViableOfficers(cityIndex);
 	if (viableOfficers.length > 0) {
-		
+		var city = cities[cityIndex];
+
+		var objectiveHTML = '';
+		switch (objective) {
+			case 'Farm':
+				break;
+			case 'Trade':
+				break;
+		}
+
+		devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
+			<div class="devContent">
+				<table>
+					<tr>
+						<td>City: ` + city.Name + `</td><td></td>
+					</tr>
+					<tr>
+						<td>` + '' + `</td>
+						<td><div id="relevantStats"></div></td>
+					</tr>
+					<tr>
+						<td>` + '' + `</td>
+					</tr>
+					<tr>
+						<td><div id="assistDiv" class="checkboxes"></div></td>
+						<td><div id="assistedStats"></div></td>
+					</tr>
+					<tr>
+						<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>`;
+		devCard.style.visibility = 'visible';
 	}
-	
-	devCard.innerHTML = '';
-	devCard.style.visibility = 'visible';
 }
 
 // Unit card
