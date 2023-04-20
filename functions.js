@@ -749,7 +749,7 @@ function openDevCard (cityIndex, objective) {
 	var viableOfficers = getCityViableOfficers(cityIndex);
 	if (viableOfficers.length > 0) {
 		var city = cities[cityIndex];
-
+		
 		var objectiveHTML = '';
 		switch (objective) {
 			case 'Farm':
@@ -799,13 +799,9 @@ function openDevCard (cityIndex, objective) {
 				case 'Defense': officersHTML += officer.WAR; break;
 				case 'Order': officersHTML += officer.LDR; break;
 				default: break;
-			} 
+			}
 			officersHTML += `</span>
 				</label>`;
-		}
-		if (assistHTML.length > 0) {
-			getElement('assistDiv').innerHTML = assistHTML;
-			getElement('assistDiv').style.visibility = 'visible';
 		}
 
 		devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
@@ -816,7 +812,7 @@ function openDevCard (cityIndex, objective) {
 						<td>` + objectiveHTML + `</td>
 					</tr>
 					<tr>
-						<td><div id="officersDiv" class="checkboxes"></div></td>
+						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
 					</tr>
 					<tr>
 						<td><input type="button" value="Develop" onclick=""> <input type="button" value="Cancel" onclick="closeCard(devCard)"></td>
@@ -824,7 +820,9 @@ function openDevCard (cityIndex, objective) {
 					</tr>
 				</table>
 			</div>`;
+		
 		devCard.style.visibility = 'visible';
+		if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 	}
 }
 
