@@ -517,7 +517,8 @@ function onMouseMove (e) {
 
 function playClick (e) {
 	// BEFORE animate
-	// Enemies attack
+	// Enemies march
+	// Enemies dev and military based on force diligence
 	
 	// Animate
 	
