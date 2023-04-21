@@ -525,7 +525,7 @@ function playClick (e) {
 	// AFTER animate
 	// Increase date
 	// Development and military progress
-	// Enemies development and military
+	// Enemies development and military progress
 	// Revolts
 	// Battle
 	// Tax income and harvest
