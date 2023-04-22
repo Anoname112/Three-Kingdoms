@@ -48,6 +48,7 @@ const mapHeight = map[0].length;
 const assistPercentage = 5;
 const strengthLimit = 10000;
 const unitLimit = 10;
+const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
 
 // Canvas
 const canvasPad = 0;
