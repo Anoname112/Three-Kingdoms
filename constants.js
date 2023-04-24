@@ -43,6 +43,7 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 
 const timerInterval = 20;
 const scaling = 1;
+const animationTime = 10000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const assistPercentage = 5;
