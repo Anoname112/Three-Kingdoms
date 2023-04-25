@@ -101,12 +101,12 @@ select {
 
 .smallPortrait {
 	height: 30px;
-	border-radius: 15px;
+	border-radius: 50%;
 }
 
 .bigPortrait {
 	height: 60px;
-	border-radius: 30px;
+	border-radius: 50%;
 }
 
 .timeSpace {
