@@ -308,6 +308,8 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
+function forceDiligence (forceIndex) { }
+
 function createCityTable (cityIndex) {
 	var city = cities[cityIndex];
 	var forceName = forces[city.Force] ? forces[city.Force].Name : '-'
