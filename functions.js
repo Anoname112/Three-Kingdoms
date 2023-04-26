@@ -308,7 +308,14 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
-function forceDiligence (forceIndex) { }
+function forceDiligence (forceIndex) {
+	var rulerStats = getStats(officers[forces[forceIndex].Ruler].Name);
+	var totalInfluence = 0;
+	for (var i = 0; i < influence.length; i++) {
+		totalInfluence += rulerStats[i] * influence[i];
+	}
+	return totalInfluence;
+}
 
 function createCityTable (cityIndex) {
 	var city = cities[cityIndex];
