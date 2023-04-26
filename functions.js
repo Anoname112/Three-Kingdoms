@@ -632,6 +632,19 @@ function commanderChanged (source) {
 	}
 }
 
+function createUnitDivInnerHTML (cityIndex) {
+	var viableUnits = getCityViableUnits(cityIndex);
+	var unitsHTML = '';
+	for (var i = 0; i < viableUnits.length; i++) {
+		var unit = units[viableUnits[i]];
+		unitsHTML += `<label for="unit` + viableUnits[i] + `">
+				<input type="checkbox" id="unit` + viableUnits[i] + `">
+				<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
+			</label>`;
+	}
+	return `Units: (type | strength | morale)<br /><div class="checkboxes">` + unitsHTML + `</div>`;
+}
+
 // March card
 function sourceChanged () {
 	getElement('officerListDiv').innerHTML = '';
@@ -651,20 +664,9 @@ function sourceChanged () {
 			officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">'
 		}
 		
-		var viableUnits = getCityViableUnits(source);
-		var unitsHTML = '';
-		for (var i = 0; i < viableUnits.length; i++) {
-			var unit = units[viableUnits[i]];
-			unitsHTML += `<label for="unit` + viableUnits[i] + `">
-					<input type="checkbox" id="unit` + viableUnits[i] + `">
-					<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
-				</label>`;
-		}
-		
 		getElement('officerListDiv').innerHTML = '<datalist id="officerList">' + officersHTML + '</datalist>';
 		getElement('commanderDiv').innerHTML = 'Commander: <input type="text" id="commander" list="officerList" oninput="commanderChanged(' + source + ')">';
-		getElement('unitsDiv').innerHTML = `Units: (type | strength | morale)<br />
-			<div class="checkboxes">` + unitsHTML + `</div>`;
+		getElement('unitsDiv').innerHTML = createUnitDivInnerHTML(source);
 	}
 }
 
@@ -702,19 +704,8 @@ function openMarchCard (cityIndex) {
 		commanderDiv = `<div id="commanderDiv">
 				Commander: <input type="text" id="commander" list="officerList" oninput="commanderChanged(` + source + `)">
 			</div>`;
-		 
-		var viableUnits = getCityViableUnits(source);
-		for (var i = 0; i < viableUnits.length; i++) {
-			var unit = units[viableUnits[i]];
-			unitsDiv += `<label for="unit` + viableUnits[i] + `">
-					<input type="checkbox" id="unit` + viableUnits[i] + `">
-					<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
-				</label>`;
-		}
-		unitsDiv = `<div id="unitsDiv">
-				Units: (type | strength | morale)<br />
-				<div class="checkboxes">` + unitsDiv + `</div>
-			</div>`;
+		
+		unitsDiv = `<div id="unitsDiv">` + createUnitDivInnerHTML(source) + `</div>`;
 		
 		string = `<datalist id="targetList">` + targetsHTML + `</datalist>`;
 	}
