@@ -631,9 +631,3 @@ function draw () {
 	
 	ctx.stroke();
 }
-
-function timerTick () {
-	// Movement
-	
-	draw();
-}
