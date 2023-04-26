@@ -10,9 +10,8 @@ var unitCard;
 var deployedCard;
 var infoCard;
 
-var intervalId;
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
-var mousePosition;
+var mousePos;
 var squareSize;
 var mapSize;
 var buttonHeight;
@@ -198,6 +197,7 @@ window.onload = function () {
 	window.oncontextmenu = onContextMenu;
 	//window.onresize = onResize;
 	
+	// Prepare canvas
 	const ratio = window.devicePixelRatio;
 	canvas = getElement('myCanvas');
 	canvas.onclick = onMouseClick;
@@ -209,7 +209,7 @@ window.onload = function () {
     canvas.getContext("2d").scale(ratio, ratio);
 	ctx = canvas.getContext('2d');
 	
-	
+	// Define cards
 	playerCard = document.createElement('div');
 	playerCard.classList.add('playerCard');
 	document.body.appendChild(playerCard);
@@ -246,7 +246,7 @@ window.onload = function () {
 	infoCard.classList.add('infoCard');
 	document.body.appendChild(infoCard);
 	
-	// Prepare canvas
+	// Init sizes
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
 	squareSize = mapSize / map.length;
@@ -308,13 +308,14 @@ window.onload = function () {
 		}
 	}
 	
-	gState = 0;
-	intervalId = setInterval(timerTick, timerInterval);
+	mousePos = new Point.Zero();
 	
+	gState = 0;
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);
 	*/
+	draw();
 }
 
 function init (scenario, officerIndex) {
@@ -322,7 +323,7 @@ function init (scenario, officerIndex) {
 	
 	startPoint = new Point.Zero();
 	endPoint = new Point.Zero();
-	mousePosition = new Point.Zero();
+	mousePos = new Point.Zero();
 	
 	player = officerIndex;
 	playerForce = officers[player].Force;
@@ -376,7 +377,7 @@ function onResize (e) {
 function onMouseClick (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
-	mousePosition = new Point(eX, eY);
+	mousePos = new Point(eX, eY);
 	
 	//infoCard.style.visibility = 'hidden';
 	
@@ -388,6 +389,7 @@ function onMouseClick (e) {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
 					init(scenarios[i].Name, scenarios[i].Playables[j]);
+					draw();
 				}
 			}
 		}
@@ -430,13 +432,13 @@ function onMouseClick (e) {
 function onMouseMove (e) {
 	var eX = e.clientX;
 	var eY = e.clientY;
-	mousePosition = new Point(eX, eY);
+	mousePos = new Point(eX, eY);
 	
 	hoverCard.style.visibility = 'hidden';
 	//infoCard.style.visibility = 'hidden';
 	
 	if (gState == 0) {
-		
+		draw();
 	}
 	else if (gState == 1) {
 		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
@@ -474,6 +476,7 @@ function onMouseMove (e) {
 						hoverCard.innerHTML = string;
 						
 						openInfoCard('Unit', i);
+						draw();
 						return;
 					}
 				}
@@ -510,6 +513,7 @@ function onMouseMove (e) {
 				hoverCard.innerHTML = string;
 				
 				openInfoCard('City', index);
+				draw();
 			}
 		}
 	}
@@ -549,7 +553,11 @@ function draw () {
 			var x = canvasPad + buttonMargin;
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-				drawRect(x, y, scenarioWidth, buttonHeight, fontDark);
+				var w = scenarioWidth;
+				var h = buttonHeight;
+				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, finalPathColor);
+				drawRect(x, y, w, h, fontDark);
+				ctx.fillStyle = fontDark;
 				drawMessage(
 					'[' + scenarios[i].Date + '] ' + scenarios[i].Name + ': ' + officers[scenarios[i].Playables[j]].Name,
 					x + buttonPad,
@@ -608,7 +616,7 @@ function draw () {
 				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 				var w = squareSize - unitPad * 2;
 				var h = squareSize - unitPad * 2;
-				if (mousePosition.X >= x && mousePosition.X < x + w && mousePosition.Y >= y && mousePosition.Y < y + h) {
+				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) {
 					var path = officers[i].Objective[2];
 					for (var j = 0; j < path.Points.length; j++) {
 						var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;

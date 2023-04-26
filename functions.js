@@ -439,10 +439,10 @@ function openSelectCard (clickedObjects) {
 	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard)"></div>`;
 	
 	selectCard.style.visibility = 'visible';
-	if (mousePosition.X + selectCard.clientWidth > mapSize) selectCard.style.left = (mousePosition.X - selectCard.clientWidth) + 'px';
-	else selectCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + selectCard.clientHeight > mapSize) selectCard.style.top = (mousePosition.Y - selectCard.clientHeight) + 'px';
-	else selectCard.style.top = mousePosition.Y + 'px';
+	if (mousePos.X + selectCard.clientWidth > mapSize) selectCard.style.left = (mousePos.X - selectCard.clientWidth) + 'px';
+	else selectCard.style.left = mousePos.X + 'px';
+	if (mousePos.Y + selectCard.clientHeight > mapSize) selectCard.style.top = (mousePos.Y - selectCard.clientHeight) + 'px';
+	else selectCard.style.top = mousePos.Y + 'px';
 }
 
 // City card
@@ -517,10 +517,10 @@ function openCityCard (cityIndex, select) {
 	cityCard.innerHTML = string;
 	
 	cityCard.style.visibility = 'visible';
-	if (mousePosition.X + cityCard.clientWidth + buttonWidth > mapSize) cityCard.style.left = (mousePosition.X - cityCard.clientWidth) + 'px';
-	else cityCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + cityCard.clientHeight > mapSize) cityCard.style.top = (mousePosition.Y - cityCard.clientHeight) + 'px';
-	else cityCard.style.top = mousePosition.Y + 'px';
+	if (mousePos.X + cityCard.clientWidth + buttonWidth > mapSize) cityCard.style.left = (mousePos.X - cityCard.clientWidth) + 'px';
+	else cityCard.style.left = mousePos.X + 'px';
+	if (mousePos.Y + cityCard.clientHeight > mapSize) cityCard.style.top = (mousePos.Y - cityCard.clientHeight) + 'px';
+	else cityCard.style.top = mousePos.Y + 'px';
 }
 
 // March card
@@ -563,6 +563,7 @@ function march () {
 				
 				closeCard(marchCard);
 				openInfoCard('City', source);
+				draw();
 			}
 		}
 	}
@@ -775,6 +776,7 @@ function develop (cityIndex, objective) {
 			
 			closeCard(devCard);
 			openInfoCard('City', cityIndex);
+			draw();
 		}
 	}
 }
@@ -885,6 +887,7 @@ function military (cityIndex, objective) {
 		
 		closeCard(unitCard);
 		openInfoCard('City', cityIndex);
+		draw();
 	}
 }
 
@@ -1005,6 +1008,7 @@ function dismissDeployed (commander) {
 		}
 		
 		openInfoCard('City', officers[commander].City);
+		draw();
 	}
 }
 
@@ -1023,10 +1027,10 @@ function openDeployedCard (commander, select) {
 		<div class="selectContent">` + buttons + `</div>`;
 	
 	deployedCard.style.visibility = 'visible';
-	if (mousePosition.X + deployedCard.clientWidth > mapSize) deployedCard.style.left = (mousePosition.X - deployedCard.clientWidth) + 'px';
-	else deployedCard.style.left = mousePosition.X + 'px';
-	if (mousePosition.Y + deployedCard.clientHeight > mapSize) deployedCard.style.top = (mousePosition.Y - deployedCard.clientHeight) + 'px';
-	else deployedCard.style.top = mousePosition.Y + 'px';
+	if (mousePos.X + deployedCard.clientWidth > mapSize) deployedCard.style.left = (mousePos.X - deployedCard.clientWidth) + 'px';
+	else deployedCard.style.left = mousePos.X + 'px';
+	if (mousePos.Y + deployedCard.clientHeight > mapSize) deployedCard.style.top = (mousePos.Y - deployedCard.clientHeight) + 'px';
+	else deployedCard.style.top = mousePos.Y + 'px';
 }
 
 // Info card
