@@ -530,8 +530,8 @@ function playClick (e) {
 	// Battle
 	// Tax income and harvest
 	// Food consumption (excluding new establish)
-
- // Save changes to localStorage
+	
+	// Save changes to localStorage
 }
 
 function draw () {
