@@ -44,18 +44,6 @@ function drawImage (image, x, y, w, h) {
 	ctx.drawImage(image, x, y, w, h);
 }
 
-function drawLifeBeing (image, position, rotation) {
-	var centerX = position.X + image.width / 2;
-	var centerY = position.Y + image.height / 2;
-	
-	ctx.save();
-	ctx.translate(centerX, centerY);
-	ctx.rotate(degreeToRadian(rotation));
-	ctx.translate(-centerX, -centerY);
-	drawImage(image, position.X, position.Y);
-	ctx.restore();
-}
-
 function fillRect (x, y, w, h, s) {
 	ctx.fillStyle = s == null ? "#000" : s;
 	ctx.fillRect(x, y, w, h);
