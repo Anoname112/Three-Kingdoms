@@ -326,83 +326,6 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
-function createCityTable (cityIndex) {
-	var city = cities[cityIndex];
-	var forceName = forces[city.Force] ? forces[city.Force].Name : '-'
-	return `<table class="stats">
-			<tr><th colspan="2">` + forceName + `</th><th>Farm</th><td>` + city.cFarm + `/` + city.Farm + `</td></tr>
-			<tr><th>Gold</th><td>` + city.Gold + `</td><th>Trade</th><td>` + city.cTrade + `/` + city.Trade + `</td></tr>
-			<tr><th>Food</th><td>` + city.Food + `</td><th>Tech</th><td>` + city.cTech + `/` + city.Tech + `</td></tr>
-			<tr><th>Strength</th><td>` + getCityStrength(cityIndex) + `</td><th>Defense</th><td>` + city.cDefense + `/` + city.Defense + `</td></tr>
-			<tr><th>Speciality</th><td>` + city.Speciality + `</td><th>Order</th><td>` + city.cOrder + `/100</td></tr>
-		</table>`;
-}
-
-function createOfficersTable (officersIndex) {
-	var officersHTML = '';
-	for (var i = 0; i < officersIndex.length; i++) {
-		var officer = officers[officersIndex[i]];
-		var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
-		officersHTML += `<tr>
-				<td>` + officer.Name + `</td>
-				<td>` + officer.LDR + `</td>
-				<td>` + officer.WAR + `</td>
-				<td>` + officer.INT + `</td>
-				<td>` + officer.POL + `</td>
-				<td>` + officer.CHR + `</td>
-				<td>` + objective + `</td>
-				<td>` + officer.Progress + `</td>
-			</tr>`;
-	}
-	return `<table class="stats">
-		<tr>
-			<th>Officers (` + officersIndex.length + `)</th>
-			<th>LDR</th>
-			<th>WAR</th>
-			<th>INT</th>
-			<th>POL</th>
-			<th>CHR</th>
-			<th>Objective</th>
-			<th>Progress</th>
-		</tr>` + officersHTML + `</table>`;
-}
-
-function createUnitsTable (unitsIndex) {
-	var unitsHTML = '';
-	for (var i = 0; i < unitsIndex.length; i++) {
-		var unit = units[unitsIndex[i]];
-		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
-		var target = '-';
-		switch (objective) {
-			case 'Transfer':
-				target = unit.Objective == '-' ? '-' : cities[unit.Objective[1]].Name;
-				break;
-			case 'March':
-			case 'Recurit':
-			case 'Drill':
-				target = unit.Objective == '-' ? '-' : officers[unit.Objective[1]].Name;
-				break;
-		}
-		unitsHTML += `<tr>
-				<td>` + unitTypes[unit.Type].Name + `</td>
-				<td>` + unit.Strength + `</td>
-				<td>` + unit.Morale + `</td>
-				<td>` + objective + `</td>
-				<td>` + target + `</td>
-				<td>` + unit.Progress + `</td>
-			</tr>`;
-	}
-	return `<table class="stats">
-		<tr>
-			<th>Units (` + unitsIndex.length + `)</th>
-			<th>Strength</th>
-			<th>Morale</th>
-			<th>Objective</th>
-			<th>Target</th>
-			<th>Progress</th>
-		</tr>` + unitsHTML + `</table>`;
-}
-
 function createStatsTable (officerIndex) {
 	var officer = officers[officerIndex];
 	return `<table class="stats">
@@ -473,6 +396,7 @@ function openSelectCard (clickedObjects) {
 	else selectCard.style.top = mousePos.Y + 'px';
 }
 
+// City card
 function getLowestMarchCost (cityIndex) {
 	var cost = strengthLimit * marchCost;
 	var viableUnits = getCityViableUnits(cityIndex);
@@ -483,18 +407,21 @@ function getLowestMarchCost (cityIndex) {
 	return cost;
 }
 
+// City card
 function getLowestEstablishCost () {
 	var cost = unitTypes[0].Cost;
 	for (var i = 1; i < unitTypes.length; i++) if (unitTypes[i].Cost < cost) cost = unitTypes[i].Cost;
 	return cost;
 }
 
+// City card
 function getHighestEstablishCost () {
 	var cost = unitTypes[0].Cost;
 	for (var i = 1; i < unitTypes.length; i++) if (unitTypes[i].Cost > cost) cost = unitTypes[i].Cost;
 	return cost;
 }
 
+// City card
 function getLowestRecuritCost (cityIndex) {
 	var cost = getHighestEstablishCost();
 	var viableUnits = getCityViableUnits(cityIndex);
@@ -505,6 +432,7 @@ function getLowestRecuritCost (cityIndex) {
 	return cost;
 }
 
+// City card
 function getTransferCities (cityIndex) {
 	var forceCities = getCities(cities[cityIndex].Force, 'force', [cityIndex, 'near']);
 	var transferCities = [];
@@ -603,20 +531,23 @@ function march () {
 		var commander = getElement('commander') ? getElement('commander').value : '';
 		commander = getOfficerIndexByName(commander);
 		if (Number.isInteger(commander)) {
-			// Check deploy units
+			// Get deploy units
 			var deployUnits = [];
 			for (var i = 0; i < units.length; i++) {
 				if (getElement('unit' + i) && getElement('unit' + i).checked) deployUnits.push(i);
 			}
-			if (deployUnits.length > 0) {
-				// Check assist officers
+			// Get total cost
+			var totalStrength = 0;
+			for (var i = 0; i < deployUnits.length; i++) totalStrength += units[deployUnits[i]].Strength;
+			var totalCost = totalStrength * marchCost;
+			if (deployUnits.length > 0 && cities[source].Food >= totalCost) {
+				// Get assist officers
 				var assistOfficers = [];
 				for (var i = 0; i < officers.length; i++) {
 					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
 				}
 				
 				// Assign objectives
-				var totalStrength = 0;
 				initPathfinding();
 				startPathfinding(officers[commander].Position, getCityPosition(target));
 				officers[commander].Objective = ['March', target, finalPath];
@@ -624,7 +555,6 @@ function march () {
 				for (var i = 0; i < deployUnits.length; i++) {
 					units[deployUnits[i]].Objective = ['March', commander];
 					units[deployUnits[i]].Progress = 0;
-					totalStrength += units[deployUnits[i]].Strength;
 				}
 				for (var i = 0; i < assistOfficers.length; i++) {
 					officers[assistOfficers[i]].Objective = ['Assist', commander];
@@ -632,7 +562,7 @@ function march () {
 				}
 				
 				// Apply cost
-				cities[source].Food -= totalStrength * marchCost;
+				cities[source].Food -= totalCost;
 				
 				closeCard(marchCard);
 				openInfoCard('City', source);
@@ -698,6 +628,7 @@ function commanderChanged (source) {
 	}
 }
 
+// March card
 function createUnitDivInnerHTML (cityIndex) {
 	var viableUnits = getCityViableUnits(cityIndex);
 	var unitsHTML = '';
@@ -825,13 +756,15 @@ function openMarchCard (cityIndex) {
 // Dev card
 function develop (cityIndex, objective) {
 	if (Number.isInteger(cityIndex) && (objective == 'Farm' || objective == 'Trade' || objective == 'Tech' || objective == 'Defense' || objective == 'Order')) {
-		// Check officers
+		// Get officers
 		var devOfficers = [];
 		for (var i = 0; i < officers.length; i++) {
 			if (getElement('officer' + i) && getElement('officer' + i).checked) devOfficers.push(i);
 		}
 		
-		if (devOfficers.length > 0) {
+		// Get total cost
+		var totalCost = devOfficers.length * devCost;
+		if (devOfficers.length > 0 && cities[cityIndex].Gold >= totalCost) {
 			// Assign objectives
 			for (var i = 0; i < devOfficers.length; i++) {
 				officers[devOfficers[i]].Objective = [objective, cityIndex];
@@ -839,7 +772,7 @@ function develop (cityIndex, objective) {
 			}
 			
 			// Apply cost
-			cities[cityIndex].Gold -= devOfficers.length * devCost;
+			cities[cityIndex].Gold -= totalCost;
 			
 			closeCard(devCard);
 			openInfoCard('City', cityIndex);
@@ -961,22 +894,43 @@ function military (cityIndex, objective) {
 		officer = getOfficerIndexByName(officer);
 		if (officer != null) {
 			if (getElement('unitType')) {
-				var unitType = parseInt(getElement('unitType').value);
-				officers[officer].Objective = [objective, unitType];
-				officers[officer].Progress = 0;
+				var unitTypeIndex = parseInt(getElement('unitType').value);
+				
+				// Get cost
+				var cost = unitTypes[unitTypeIndex].Cost;
+				if (cities[cityIndex].Gold >= cost) {
+					// Assign objective
+					officers[officer].Objective = [objective, unitTypeIndex];
+					officers[officer].Progress = 0;
+					
+					// Apply cost
+					cities[cityIndex].Gold -= cost;
+					
+					closeCard(unitCard);
+					openInfoCard('City', cityIndex);
+					draw();
+				}
 			}
 			else if (getElement('unit')) {
-				var unit = parseInt(getElement('unit').value);
-				officers[officer].Objective = [objective, unit];
-				officers[officer].Progress = 0;
-				units[unit].Objective = [objective, officer];
-				units[unit].Progress = 0;
+				var unitIndex = parseInt(getElement('unit').value);
+				
+				// Get cost
+				var cost = unitTypes[units[unitIndex].Type].Cost * recuritMultiplier;
+				if (cities[cityIndex].Gold >= cost) {
+					// Assign objectives
+					officers[officer].Objective = [objective, unitIndex];
+					officers[officer].Progress = 0;
+					units[unitIndex].Objective = [objective, officer];
+					units[unitIndex].Progress = 0;
+					
+					// Apply cost
+					cities[cityIndex].Gold -= cost;
+					
+					closeCard(unitCard);
+					openInfoCard('City', cityIndex);
+					draw();
+				}
 			}
-			else return;
-			
-			closeCard(unitCard);
-			openInfoCard('City', cityIndex);
-			draw();
 		}
 	}
 }
@@ -1150,6 +1104,86 @@ function openDeployedCard (commander, select) {
 	else deployedCard.style.left = mousePos.X + 'px';
 	if (mousePos.Y + deployedCard.clientHeight > mapSize) deployedCard.style.top = (mousePos.Y - deployedCard.clientHeight) + 'px';
 	else deployedCard.style.top = mousePos.Y + 'px';
+}
+
+// Info card
+function createCityTable (cityIndex) {
+	var city = cities[cityIndex];
+	var forceName = forces[city.Force] ? forces[city.Force].Name : '-'
+	return `<table class="stats">
+			<tr><th colspan="2">` + forceName + `</th><th>Farm</th><td>` + city.cFarm + `/` + city.Farm + `</td></tr>
+			<tr><th>Gold</th><td>` + city.Gold + `</td><th>Trade</th><td>` + city.cTrade + `/` + city.Trade + `</td></tr>
+			<tr><th>Food</th><td>` + city.Food + `</td><th>Tech</th><td>` + city.cTech + `/` + city.Tech + `</td></tr>
+			<tr><th>Strength</th><td>` + getCityStrength(cityIndex) + `</td><th>Defense</th><td>` + city.cDefense + `/` + city.Defense + `</td></tr>
+			<tr><th>Speciality</th><td>` + city.Speciality + `</td><th>Order</th><td>` + city.cOrder + `/100</td></tr>
+		</table>`;
+}
+
+// Info card
+function createOfficersTable (officersIndex) {
+	var officersHTML = '';
+	for (var i = 0; i < officersIndex.length; i++) {
+		var officer = officers[officersIndex[i]];
+		var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
+		officersHTML += `<tr>
+				<td>` + officer.Name + `</td>
+				<td>` + officer.LDR + `</td>
+				<td>` + officer.WAR + `</td>
+				<td>` + officer.INT + `</td>
+				<td>` + officer.POL + `</td>
+				<td>` + officer.CHR + `</td>
+				<td>` + objective + `</td>
+				<td>` + officer.Progress + `</td>
+			</tr>`;
+	}
+	return `<table class="stats">
+		<tr>
+			<th>Officers (` + officersIndex.length + `)</th>
+			<th>LDR</th>
+			<th>WAR</th>
+			<th>INT</th>
+			<th>POL</th>
+			<th>CHR</th>
+			<th>Objective</th>
+			<th>Progress</th>
+		</tr>` + officersHTML + `</table>`;
+}
+
+// Info card
+function createUnitsTable (unitsIndex) {
+	var unitsHTML = '';
+	for (var i = 0; i < unitsIndex.length; i++) {
+		var unit = units[unitsIndex[i]];
+		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
+		var target = '-';
+		switch (objective) {
+			case 'Transfer':
+				target = unit.Objective == '-' ? '-' : cities[unit.Objective[1]].Name;
+				break;
+			case 'March':
+			case 'Recurit':
+			case 'Drill':
+				target = unit.Objective == '-' ? '-' : officers[unit.Objective[1]].Name;
+				break;
+		}
+		unitsHTML += `<tr>
+				<td>` + unitTypes[unit.Type].Name + `</td>
+				<td>` + unit.Strength + `</td>
+				<td>` + unit.Morale + `</td>
+				<td>` + objective + `</td>
+				<td>` + target + `</td>
+				<td>` + unit.Progress + `</td>
+			</tr>`;
+	}
+	return `<table class="stats">
+		<tr>
+			<th>Units (` + unitsIndex.length + `)</th>
+			<th>Strength</th>
+			<th>Morale</th>
+			<th>Objective</th>
+			<th>Target</th>
+			<th>Progress</th>
+		</tr>` + unitsHTML + `</table>`;
 }
 
 // Info card
