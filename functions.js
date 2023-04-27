@@ -240,6 +240,23 @@ function getForceMarchableCities (forceIndex) {
 	return marchable;
 }
 
+function getForceDiligence (forceIndex) {
+	var rulerStats = getStats(forces[forceIndex].Ruler);
+	var totalInfluence = 0;
+	for (var i = 0; i < influence.length; i++) {
+		totalInfluence += rulerStats[i] * influence[i];
+	}
+	return totalInfluence;
+}
+
+function getForceEnemies (forceIndex) {
+	var enemyForces = [];
+	for (var i = 0; i < forces.length; i++) {
+		if (i != forceIndex) enemyForces.push(i);
+	}
+	return enemyForces;
+}
+
 function getDeployedUnits (commander) {
 	var deployedUnits = [];
 	for (var i = 0; i < units.length; i++) {
@@ -255,20 +272,18 @@ function getDeployedStrength (commander) {
 	return strength;
 }
 
-function getEnemyForces (forceIndex) {
-	var enemyForces = [];
-	for (var i = 0; i < forces.length; i++) {
-		if (i != forceIndex) enemyForces.push(i);
-	}
-	return enemyForces;
-}
-
 function getOfficerIndexByName (officerName) {
 	for (var i = 0; i < officers.length; i++) if (officers[i].Name == officerName) return i;
 	return null;
 }
 
-function getStats (officerName) {
+function getStats (officerIndex) {
+	var officer = officers[officerIndex];
+	if (officer) return [officer.LDR, officer.WAR, officer.INT, officer.POL, officer.CHR];
+	return [];
+}
+
+function getStatsByName (officerName) {
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Name == officerName) {
 			return [officers[i].LDR, officers[i].WAR, officers[i].INT, officers[i].POL, officers[i].CHR];
@@ -278,7 +293,7 @@ function getStats (officerName) {
 }
 
 function getAssistedStats (officerIndex) {
-	var stats = getStats(officers[officerIndex].Name);
+	var stats = getStats(officerIndex);
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == officerIndex) {
 			stats[0] += assistPercentage / 100 * officers[i].LDR;
@@ -309,15 +324,6 @@ function calculateDefense (LDR, INT) {
 function calculateDamage (morale, attack, defense, effectiveness) {
 	var e = effectiveness ? effectiveness : 1.0;
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
-}
-
-function forceDiligence (forceIndex) {
-	var rulerStats = getStats(officers[forces[forceIndex].Ruler].Name);
-	var totalInfluence = 0;
-	for (var i = 0; i < influence.length; i++) {
-		totalInfluence += rulerStats[i] * influence[i];
-	}
-	return totalInfluence;
 }
 
 function createCityTable (cityIndex) {
@@ -642,7 +648,7 @@ function assistedStats () {
 	
 	var isAssisted = false;
 	var commander = getElement('commander') ? getElement('commander').value : '';
-	var stats = getStats(commander);
+	var stats = getStatsByName(commander);
 	if (stats.length > 0) {
 		for (var i = 0; i < officers.length; i++) {
 			var checkbox = getElement('officer' + i);
@@ -669,7 +675,7 @@ function commanderChanged (source) {
 	}
 	
 	var commander = getElement('commander') ? getElement('commander').value : '';
-	var stats = getStats(commander);
+	var stats = getStatsByName(commander);
 	if (stats.length > 0) {
 		calculatedStatsTable('relevantStats', stats[0], stats[1], stats[2]);
 		
