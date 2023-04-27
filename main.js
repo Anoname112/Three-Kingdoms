@@ -28,9 +28,9 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
-unitTypes.push(new UnitType('Spearmen', 'foot', 80, 100, 3, 1, [1.0, 1.0, 1.1], 1200));
+unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 3, 1, [1.0, 1.0, 1.1], 1200));
 unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 5, 1, [1.1, 1.0, 1.2], 1400));
-unitTypes.push(new UnitType('Archer', 'bow', 60, 70, 3, 3, [0.9, 1.1, 1.0], 1000));
+unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 3, 3, [0.9, 1.1, 1.0], 1000));
 
 /*
 1. February 184: Revolt Awakens Heroric Ambitions
