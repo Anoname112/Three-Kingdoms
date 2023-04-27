@@ -944,9 +944,9 @@ function officerChanged (cityIndex) {
 	getElement('relevantStats').innerHTML = '';
 	
 	var officer = getElement('officer') ? getElement('officer').value : '';
-	var index = getOfficerIndexByName(officer);
-	if (index != null) {
-		getElement('relevantStats').innerHTML = createStatsTable(index);	
+	var officerIndex = getOfficerIndexByName(officer);
+	if (officerIndex != null) {
+		getElement('relevantStats').innerHTML = createStatsTable(officerIndex);	
 	}
 }
 
