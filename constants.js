@@ -53,6 +53,18 @@ const marchCost = 1;
 const devCost = 100;
 const recuritMultiplier = 0.5;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
+const objectiveLength = {
+	'Farm': 30,
+	'Trade': 30,
+	'Tech': 30,
+	'Defense': 30,
+	'Order': 30,
+	'Establish': 30,
+	'Recurit': 30,
+	'Drill': 30,
+	'Transfer': 10,
+	'Return': 10
+};
 
 // Canvas
 const canvasPad = 0;

@@ -146,7 +146,7 @@ cities[4] = new City('Chang An', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[5] = new City('Luo Yang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[6] = new City('He Nei', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[7] = new City('Pu Yang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
-cities[8] = new City('Chen Liu', '-', 5000, 6500, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
+cities[8] = new City('Chen Liu', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[9] = new City('Xu Chang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[10] = new City('Xiao Pei', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[11] = new City('Xia Pi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
@@ -523,7 +523,7 @@ function onMouseMove (e) {
 function playClick (e) {
 	// BEFORE animate
 	// Enemies march
-	// Enemies dev and military based on force diligence
+	// Enemies dev and military (based on force diligence)
 	
 	// Animate
 	
