@@ -1158,12 +1158,12 @@ function createUnitsTable (unitsIndex) {
 		var target = '-';
 		switch (objective) {
 			case 'Transfer':
-				target = unit.Objective == '-' ? '-' : cities[unit.Objective[1]].Name;
+				target = cities[unit.Objective[1]].Name;
 				break;
 			case 'March':
 			case 'Recurit':
 			case 'Drill':
-				target = unit.Objective == '-' ? '-' : officers[unit.Objective[1]].Name;
+				target = officers[unit.Objective[1]].Name;
 				break;
 		}
 		unitsHTML += `<tr>
