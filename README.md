@@ -7,4 +7,4 @@ Screenshot:
    <img src="https://raw.githubusercontent.com/Anoname112/Three-Kingdoms/main/ss.png" title="Three Kingdoms">
 </a>
 <br /><br />
-Notes: cost, transfer unit, personel, play, animate
+Notes: transfer unit, personel, play, animate
