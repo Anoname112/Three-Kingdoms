@@ -452,6 +452,34 @@ function openSelectCard (clickedObjects) {
 	else selectCard.style.top = mousePos.Y + 'px';
 }
 
+function getLowestMarchCost (cityIndex) {
+	for (var i = 0; i < units.length; i++) {
+		
+	}
+}
+
+function getLowestEstablishCost () {
+	var cost = unitTypes[0].Cost;
+	for (var i = 1; i < unitTypes.length; i++) if (unitTypes[i].Cost < cost) cost = unitTypes[i].Cost;
+	return cost;
+}
+
+function getHighestEstablishCost () {
+	var cost = unitTypes[0].Cost;
+	for (var i = 1; i < unitTypes.length; i++) if (unitTypes[i].Cost > cost) cost = unitTypes[i].Cost;
+	return cost;
+}
+
+function getLowestRecuritCost (cityIndex) {
+	var cost = getHighestEstablishCost();
+	var viableUnits = getCityViableUnits(cityIndex);
+	for (var i = 0; i < viableUnits.length; i++) {
+		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritMultiplier;
+		if (recuritCost < cost) cost = recuritCost;
+	}
+	return cost;
+}
+
 // City card
 function openCityCard (cityIndex, select) {
 	if (select) closeCard(selectCard);
@@ -477,13 +505,13 @@ function openCityCard (cityIndex, select) {
 		}
 		
 		var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 ? '' : ' disabled';
-		var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm ? '' : ' disabled';
-		var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade ? '' : ' disabled';
-		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech ? '' : ' disabled';
-		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense ? '' : ' disabled';
-		var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 ? '' : ' disabled';
-		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit ? '' : ' disabled';
-		var recuritDisabled = viableOfficers.length > 0 && recuritable ? '' : ' disabled';
+		var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm && city.Gold >= devCost ? '' : ' disabled';
+		var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade && city.Gold >= devCost ? '' : ' disabled';
+		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech && city.Gold >= devCost ? '' : ' disabled';
+		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense && city.Gold >= devCost ? '' : ' disabled';
+		var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 && city.Gold >= devCost ? '' : ' disabled';
+		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getLowestEstablishCost() ? '' : ' disabled';
+		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>

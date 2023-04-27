@@ -103,7 +103,7 @@ function Unit (type, force, city, position, morale, strength, objective, progres
 	this.Progress = progress;
 }
 
-function UnitType (name, type, attack, defense, speed, range, effectiveness) {
+function UnitType (name, type, attack, defense, speed, range, effectiveness, cost) {
 	this.Name = name;
 	this.Type = type;
 	this.Attack = attack;
@@ -111,4 +111,5 @@ function UnitType (name, type, attack, defense, speed, range, effectiveness) {
 	this.Speed = speed;
 	this.Range = range;
 	this.Effectiveness = effectiveness;	// [Spearmen, Horsemen, Archer]
+	this.Cost = cost;
 }
