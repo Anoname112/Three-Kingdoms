@@ -2,6 +2,10 @@ function getElement (id) {
 	return document.getElementById(id);
 }
 
+function isNumeric (value) {
+	return /^\d+$/.test(value);
+}
+
 function updateCanvasSize () {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
@@ -869,10 +873,10 @@ function openDevCard (cityIndex, objective) {
 // Unit card
 function military (cityIndex, objective) {
 	if (objective == 'Transfer') {
-		var target = getElement('target') ? parseInt(getElement('target').value) : '';
-		var playerCities = getCities(playerForce, 'force');
-		if (Number.isInteger(cityIndex) && Number.isInteger(target) && playerCities.includes(cityIndex) && playerCities.includes(target)) {
-			// Check transfer units
+		var target = getElement('target') && isNumeric(getElement('target').value) ? parseInt(getElement('target').value) : '';
+		var forceCities = getCities(cities[cityIndex].Force, 'force');
+		if (Number.isInteger(cityIndex) && Number.isInteger(target) && forceCities.includes(cityIndex) && forceCities.includes(target)) {
+			// Get transfer units
 			var transferUnits = [];
 			for (var i = 0; i < units.length; i++) {
 				if (getElement('unit' + i) && getElement('unit' + i).checked) transferUnits.push(i);
@@ -915,7 +919,7 @@ function military (cityIndex, objective) {
 				var unitIndex = parseInt(getElement('unit').value);
 				
 				// Get cost
-				var cost = unitTypes[units[unitIndex].Type].Cost * recuritMultiplier;
+				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
 					// Assign objectives
 					officers[officer].Objective = [objective, unitIndex];
@@ -1157,13 +1161,13 @@ function createUnitsTable (unitsIndex) {
 		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
 		var target = '-';
 		switch (objective) {
-			case 'Transfer':
-				target = cities[unit.Objective[1]].Name;
-				break;
 			case 'March':
 			case 'Recurit':
 			case 'Drill':
 				target = officers[unit.Objective[1]].Name;
+				break;
+			case 'Transfer':
+				target = cities[unit.Objective[1]].Name;
 				break;
 		}
 		unitsHTML += `<tr>
