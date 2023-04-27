@@ -21,7 +21,7 @@ select {
 }
 
 #playSvg {
-	border-radius: 1000px;
+	border-radius: 50%;
 	background-color: rgb(0, 0, 0, 0.3);
 }
 
