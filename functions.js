@@ -465,7 +465,7 @@ function openCityCard (cityIndex, select) {
 		var drillable = false;
 		for (var i = 0; i < viableUnits.length; i++) {
 			if (units[viableUnits[i]].Strength < strengthLimit) recuritable = true;
-			if (units[viableUnits[i]].Morale < 100) drillable = true;
+			if (units[viableUnits[i]].Morale < moraleLimit) drillable = true;
 		}
 		
 		var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 && city.Food >= getLowestMarchCost(cityIndex) ? '' : ' disabled';
@@ -473,7 +473,7 @@ function openCityCard (cityIndex, select) {
 		var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade && city.Gold >= devCost ? '' : ' disabled';
 		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech && city.Gold >= devCost ? '' : ' disabled';
 		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense && city.Gold >= devCost ? '' : ' disabled';
-		var orderDisabled = viableOfficers.length > 0 && city.cOrder < 100 && city.Gold >= devCost ? '' : ' disabled';
+		var orderDisabled = viableOfficers.length > 0 && city.cOrder < orderLimit && city.Gold >= devCost ? '' : ' disabled';
 		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getLowestEstablishCost() ? '' : ' disabled';
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
@@ -804,7 +804,7 @@ function openDevCard (cityIndex, objective) {
 				objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>';
 				break;
 			case 'Order':
-				objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/100" readonly>';
+				objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>';
 				break;
 			default:
 				break;
@@ -1007,7 +1007,7 @@ function openUnitCard (cityIndex, objective) {
 					var viableUnits = getCityViableUnits(cityIndex);
 					for (var i = 0; i < viableUnits.length; i++) {
 						var unit = units[viableUnits[i]];
-						if (unit.Morale < 100) {
+						if (unit.Morale < moraleLimit) {
 							options += '<option value="' + viableUnits[i] + '">' + unitTypes[unit.Type].Name + ' | ' + unit.Strength + ' | ' + unit.Morale + '</option>';
 						}
 					}
@@ -1115,7 +1115,7 @@ function createCityTable (cityIndex) {
 			<tr><th>Gold</th><td>` + city.Gold + `</td><th>Trade</th><td>` + city.cTrade + `/` + city.Trade + `</td></tr>
 			<tr><th>Food</th><td>` + city.Food + `</td><th>Tech</th><td>` + city.cTech + `/` + city.Tech + `</td></tr>
 			<tr><th>Strength</th><td>` + getCityStrength(cityIndex) + `</td><th>Defense</th><td>` + city.cDefense + `/` + city.Defense + `</td></tr>
-			<tr><th>Speciality</th><td>` + city.Speciality + `</td><th>Order</th><td>` + city.cOrder + `/100</td></tr>
+			<tr><th>Speciality</th><td>` + city.Speciality + `</td><th>Order</th><td>` + city.cOrder + `/` + orderLimit + `</td></tr>
 		</table>`;
 }
 

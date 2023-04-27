@@ -509,7 +509,7 @@ function onMouseMove (e) {
 						<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>
 						<tr><th>Strength</th><td>` + getCityStrength(index) + `</td></tr>
 						<tr><th>Defense</th><td>` + cities[index].cDefense + `/` + cities[index].Defense + `</td></tr>
-						<tr><th>Order</th><td>` + cities[index].cOrder + `/100</td></tr>
+						<tr><th>Order</th><td>` + cities[index].cOrder + `/` + moraleLimit + `</td></tr>
 					</div>`;
 				hoverCard.innerHTML = string;
 				
