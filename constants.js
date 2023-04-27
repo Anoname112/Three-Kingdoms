@@ -45,10 +45,11 @@ const scaling = 1;
 const animationTime = 10000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
+const cityIndexStart = 40;
 const assistPercentage = 5;
 const strengthLimit = 10000;
 const unitLimit = 10;
-const marchCost = 5;
+const marchCost = 1;
 const devCost = 100;
 const recuritMultiplier = 0.5;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
@@ -64,9 +65,10 @@ const buttonPad = 5;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
 const scenarioWidth = 300;
+const roadAlpha = 0.5;
 
 // Control
-const controlPad = 10;
+const playSvgPad = 10;
 
 // Card
 const cardMargin = 10;

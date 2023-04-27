@@ -146,7 +146,7 @@ cities[4] = new City('Chang An', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[5] = new City('Luo Yang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[6] = new City('He Nei', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[7] = new City('Pu Yang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
-cities[8] = new City('Chen Liu', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
+cities[8] = new City('Chen Liu', '-', 5000, 6500, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[9] = new City('Xu Chang', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[10] = new City('Xiao Pei', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 cities[11] = new City('Xia Pi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
@@ -190,8 +190,9 @@ cities[48] = new City('Nan Hai', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[49] = new City('Jiao Zhi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 
 var abilities = [];		// 4: morale, 5: strength, 
-abilities[0] = new Ability('True Leader', '', 7, [[4, 20]], [[4, 20]]);
-abilities[1] = new Ability('Benevolence', '', 7, [[5, 1000]], []);
+abilities[0] = new Ability('True Leader', '', 7, [[4, 30]], [[4, 30]]);
+abilities[1] = new Ability('Benevolence', '', 7, [[5, 800]], []);
+abilities[2] = new Ability('Conqueror', '', 7, [], [4, 50]);
 
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
@@ -274,10 +275,10 @@ window.onload = function () {
 	playSvg = getElement("playSvg");
 	playSvg.onclick = playClick;
 	playSvg.style.position = "absolute";
-	playSvg.style.top = controlPad;
-	playSvg.style.right = controlPad;
-	playSvg.style.width = playerCard.clientHeight - controlPad * 2;
-	playSvg.style.height = playerCard.clientHeight - controlPad * 2;
+	playSvg.style.top = playSvgPad;
+	playSvg.style.right = playSvgPad;
+	playSvg.style.width = playerCard.clientHeight - playSvgPad * 2;
+	playSvg.style.height = playerCard.clientHeight - playSvgPad * 2;
 	
 	playerCard.innerHTML = '<div id="playerContent"></div>';
 	playerCard.appendChild(playSvg);
@@ -401,8 +402,8 @@ function onMouseClick (e) {
 			
 			var clickedObjects = [];
 			// Clicked city
-			if (map[indexX][indexY] >= 40) {
-				var index = map[indexX][indexY] - 40;
+			if (map[indexX][indexY] >= cityIndexStart) {
+				var index = map[indexX][indexY] - cityIndexStart;
 				clickedObjects.push([cityCard, index]);
 			}
 			// Clicked units
@@ -483,8 +484,8 @@ function onMouseMove (e) {
 			}
 			
 			// Hovering a city
-			if (map[indexX][indexY] >= 40) {
-				var index = map[indexX][indexY] - 40;
+			if (map[indexX][indexY] >= cityIndexStart) {
+				var index = map[indexX][indexY] - cityIndexStart;
 				var backColor = 'enemyColor';
 				if (cities[index].Force == '-') backColor = 'neutralColor';
 				else if (cities[index].Force == playerForce) backColor = 'allyColor';
@@ -572,7 +573,7 @@ function draw () {
 		// Draw background map
 		drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
 		// Draw roads
-		ctx.globalAlpha = 0.5;
+		ctx.globalAlpha = roadAlpha;
 		for (var i = 0; i < map.length; i++) {
 			for (var j = 0; j < map[i].length; j++) {
 				var x = canvasPad + i * squareSize;
@@ -592,8 +593,8 @@ function draw () {
 				var x = canvasPad + i * squareSize;
 				var y = canvasPad + j * squareSize;
 				
-				if (map[i][j] >= 40) {
-					var index = map[i][j] - 40;
+				if (map[i][j] >= cityIndexStart) {
+					var index = map[i][j] - cityIndexStart;
 					if (cities[index].Force == '-') {
 						var emptyX = x + cityPad;
 						var emptyY = y + cityPad;

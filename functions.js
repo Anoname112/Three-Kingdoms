@@ -144,7 +144,7 @@ function getCities (forceIndex, alliance, sort) {
 }
 
 function getCityPosition (cityIndex) {
-	var mapValue = cityIndex + 40;
+	var mapValue = cityIndex + cityIndexStart;
 	var x = 0;
 	var y = 0;
 	for (var i = 0; i < map.length; i++) {
@@ -453,9 +453,13 @@ function openSelectCard (clickedObjects) {
 }
 
 function getLowestMarchCost (cityIndex) {
-	for (var i = 0; i < units.length; i++) {
-		
+	var cost = strengthLimit * marchCost;
+	var viableUnits = getCityViableUnits(cityIndex);
+	for (var i = 0; i < viableUnits.length; i++) {
+		var unit = units[viableUnits[i]];
+		if (unit.City == cityIndex && unit.Strength * marchCost < cost) cost = unit.Strength * marchCost;
 	}
+	return cost;
 }
 
 function getLowestEstablishCost () {
@@ -504,7 +508,7 @@ function openCityCard (cityIndex, select) {
 			if (units[viableUnits[i]].Morale < 100) drillable = true;
 		}
 		
-		var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 ? '' : ' disabled';
+		var marchDisabled = viableOfficers.length > 0 && viableUnits.length > 0 && city.Food >= getLowestMarchCost(cityIndex) ? '' : ' disabled';
 		var farmDisabled = viableOfficers.length > 0 && city.cFarm < city.Farm && city.Gold >= devCost ? '' : ' disabled';
 		var tradeDisabled = viableOfficers.length > 0 && city.cTrade < city.Trade && city.Gold >= devCost ? '' : ' disabled';
 		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech && city.Gold >= devCost ? '' : ' disabled';
