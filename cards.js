@@ -731,7 +731,7 @@ function openOfficerCard (cityIndex, objective) {
 				if (officer.Objective[0] != 'Return') {
 					officersHTML += `<label for="officer` + nonViableOfficers[i] + `">
 							<input type="checkbox" id="officer` + nonViableOfficers[i] + `">
-							<span>` + officer.Name + `</span>
+							<span>` + officer.Name + ` | ` + officer.Objective[0] + `</span>
 						</label>`;
 				}
 			}
