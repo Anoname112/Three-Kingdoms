@@ -52,10 +52,10 @@ function Officer (name, force, city, position, leadership, war, intelligence, po
 	this.Progress = progress;
 }
 
-function Ability (name, desc, cost, allyEffect, enemyEffect) {
+function Ability (name, desc, cooldown, allyEffect, enemyEffect) {
 	this.Name = name;
 	this.Desc = desc;
-	this.Cost = cost;
+	this.Cooldown = cooldown;
 	this.AllyEffect = allyEffect;
 	this.EnemyEffect = enemyEffect;
 }

@@ -129,33 +129,28 @@ function openCityCard (cityIndex, select) {
 
 // March card
 function march () {
-	// Check target and source (should be player force)
 	var source = getElement('source') ? getElement('source').value : '';
 	var target = getElement('target') ? getElement('target').value : '';
 	source = getCityIndexByName(source);
 	target = getCityIndexByName(target);
 	if (Number.isInteger(source) && Number.isInteger(target) && getCities(playerForce, 'force').includes(source)) {
-		// Check commander
 		var commander = getElement('commander') ? getElement('commander').value : '';
 		commander = getOfficerIndexByName(commander);
 		if (Number.isInteger(commander)) {
-			// Get deploy units
+			var totalCost = 0;
 			var deployUnits = [];
 			for (var i = 0; i < units.length; i++) {
-				if (getElement('unit' + i) && getElement('unit' + i).checked) deployUnits.push(i);
+				if (getElement('unit' + i) && getElement('unit' + i).checked) {
+					totalCost += units[i].Strength * marchCost;
+					deployUnits.push(i);
+				}
 			}
-			// Get total cost
-			var totalStrength = 0;
-			for (var i = 0; i < deployUnits.length; i++) totalStrength += units[deployUnits[i]].Strength;
-			var totalCost = totalStrength * marchCost;
 			if (deployUnits.length > 0 && cities[source].Food >= totalCost) {
-				// Get assist officers
 				var assistOfficers = [];
 				for (var i = 0; i < officers.length; i++) {
 					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
 				}
 				
-				// Assign objectives
 				initPathfinding();
 				startPathfinding(officers[commander].Position, getCityPosition(target));
 				officers[commander].Objective = ['March', target, finalPath];
@@ -169,7 +164,6 @@ function march () {
 					officers[assistOfficers[i]].Progress = 0;
 				}
 				
-				// Apply cost
 				cities[source].Food -= totalCost;
 				
 				closeCard(marchCard);
@@ -364,22 +358,18 @@ function openMarchCard (cityIndex) {
 // Dev card
 function develop (cityIndex, objective) {
 	if (Number.isInteger(cityIndex) && (objective == 'Farm' || objective == 'Trade' || objective == 'Tech' || objective == 'Defense' || objective == 'Order')) {
-		// Get officers
 		var devOfficers = [];
 		for (var i = 0; i < officers.length; i++) {
 			if (getElement('officer' + i) && getElement('officer' + i).checked) devOfficers.push(i);
 		}
 		
-		// Get total cost
 		var totalCost = devOfficers.length * devCost;
 		if (devOfficers.length > 0 && cities[cityIndex].Gold >= totalCost) {
-			// Assign objectives
 			for (var i = 0; i < devOfficers.length; i++) {
 				officers[devOfficers[i]].Objective = [objective, cityIndex];
 				officers[devOfficers[i]].Progress = 0;
 			}
 			
-			// Apply cost
 			cities[cityIndex].Gold -= totalCost;
 			
 			closeCard(devCard);
@@ -419,7 +409,7 @@ function openDevCard (cityIndex, objective) {
 		}
 		
 		var viableOfficers = getCityViableOfficers(cityIndex);
-		// Sort
+		// Sort based on relevant stat
 		for (var i = 0; i < viableOfficers.length; i++) {
 			for (var j = i + 1; j < viableOfficers.length; j++) {
 				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) ||
@@ -480,7 +470,6 @@ function military (cityIndex, objective) {
 		var target = getElement('target') && isNumeric(getElement('target').value) ? parseInt(getElement('target').value) : '';
 		var forceCities = getCities(cities[cityIndex].Force, 'force');
 		if (Number.isInteger(cityIndex) && Number.isInteger(target) && forceCities.includes(cityIndex) && forceCities.includes(target)) {
-			// Get transfer units
 			var transferUnits = [];
 			for (var i = 0; i < units.length; i++) {
 				if (getElement('unit' + i) && getElement('unit' + i).checked) transferUnits.push(i);
@@ -504,14 +493,11 @@ function military (cityIndex, objective) {
 			if (getElement('unitType')) {
 				var unitTypeIndex = parseInt(getElement('unitType').value);
 				
-				// Get cost
 				var cost = unitTypes[unitTypeIndex].Cost;
 				if (cities[cityIndex].Gold >= cost) {
-					// Assign objective
 					officers[officer].Objective = [objective, unitTypeIndex];
 					officers[officer].Progress = 0;
 					
-					// Apply cost
 					cities[cityIndex].Gold -= cost;
 					
 					closeCard(unitCard);
@@ -522,16 +508,13 @@ function military (cityIndex, objective) {
 			else if (getElement('unit')) {
 				var unitIndex = parseInt(getElement('unit').value);
 				
-				// Get cost
 				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
-					// Assign objectives
 					officers[officer].Objective = [objective, unitIndex];
 					officers[officer].Progress = 0;
 					units[unitIndex].Objective = [objective, officer];
 					units[unitIndex].Progress = 0;
 					
-					// Apply cost
 					cities[cityIndex].Gold -= cost;
 					
 					closeCard(unitCard);
@@ -625,7 +608,7 @@ function openUnitCard (cityIndex, objective) {
 			}
 			
 			var viableOfficers = getCityViableOfficers(cityIndex);
-			// Sort
+			// Sort based on relevant stat
 			for (var i = 0; i < viableOfficers.length; i++) {
 				for (var j = i + 1; j < viableOfficers.length; j++) {
 					if (((objective == 'Establish' || objective == 'Recurit') && officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) ||
@@ -738,7 +721,7 @@ function openOfficerCard (cityIndex, objective) {
 		
 		var viableOfficers = getCityViableOfficers(cityIndex);
 		if (viableOfficers.length > 0) {
-			// Sort based on charisma
+			// Sort based on Charisma
 			for (var i = 0; i < viableOfficers.length; i++) {
 				for (var j = i + 1; j < viableOfficers.length; j++) {
 					if (officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) {
@@ -977,10 +960,7 @@ function openInfoCard (mode, index) {
 		var backColor = 'enemyColor';
 		if (officers[index].Force == playerForce) backColor = 'allyColor';
 		
-		// Deployed units
 		var deployedUnits = getDeployedUnits(index);
-		
-		// Assist officers
 		var assistOfficers = [];
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == index) assistOfficers.push(i);
