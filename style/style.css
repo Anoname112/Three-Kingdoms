@@ -1,0 +1,218 @@
+*::-webkit-scrollbar {
+  width: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
+}
+
+input[type=text] {
+  width: 110px;
+}
+
+select {
+  height: 21px;
+}
+
+#myCanvas {
+  position: fixed;
+}
+
+#playSvg {
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#relevantStats, #assistedStats {
+  vertical-align: middle;
+  height: 41px;
+}
+
+#officersDiv, #assistDiv {
+  visibility: hidden;
+}
+
+.playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .officerCard, .deployedCard, .infoCard {
+  position: fixed;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  background-color: #DDDDDD;
+  visibility: hidden;
+  cursor: default;
+  opacity: 0.95;
+}
+
+.playerCard, .hoverCard, .marchCard, .devCard, .unitCard, .officerCard, .infoCard {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.forceName, .cityName, .unitName, .title {
+  padding: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.playerName {
+  display: table-cell;
+  padding: 2px 3px 3px 3px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.allyColor {
+  background-color: #4F1E02;
+  background-image: linear-gradient(to bottom right, #1F0B01, #7E3316);
+}
+
+.enemyColor {
+  background-color: #FF1E02;
+  background-image: linear-gradient(to bottom right, #AF0B01, #DE3326);
+}
+
+.neutralColor {
+  background-color: #888888;
+}
+
+.smallPortrait {
+  height: 30px;
+  border-radius: 50%;
+}
+
+.bigPortrait {
+  height: 60px;
+  border-radius: 50%;
+}
+
+.timeSpace {
+  padding: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+}
+
+.forceSquare {
+  display: inline-block;
+  padding: 4px;
+  border: 2px solid #555555;
+  border-radius: 2px;
+}
+
+.cityInfo, .unitInfo {
+  padding: 5px;
+  font-size: 13px;
+}
+
+.cityStats {
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.cityStats tr th {
+  padding: 2px;
+  border: 1px solid #AAAAAA;
+  background-color: #CCCCCC;
+}
+
+.cityStats tr td {
+  padding: 2px;
+  border: 1px solid #AAAAAA;
+  text-align: right;
+}
+
+.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent {
+  padding: 5px;
+  font-size: 13px;
+}
+
+.playerContent {
+  display: grid;
+  grid-template-columns: 60px auto;
+  grid-template-areas: "portrait profile";
+}
+
+.playerPortrait {
+  grid-area: portrait;
+}
+
+.playerProfile {
+  grid-area: profile;
+  padding-left: 5px;
+}
+
+.selectContent input, .cityContent input, .deployedContent input, .buttonsGroup .buttons input {
+  display: block;
+  width: 100px;
+  height: 21px;
+}
+
+.buttonsGroup {
+  position: relative;
+}
+
+.buttonsGroup .label {
+  border: 1px solid #AAAAAA;
+  height: 21px;
+  text-align: center;
+}
+
+.buttonsGroup .buttons {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100px;
+}
+
+.buttonsGroup:hover .buttons {
+  display: block;
+}
+
+.stats {
+  border-collapse: collapse;
+}
+
+.stats th {
+  padding: 2px;
+  border: 1px solid #AAAAAA;
+  min-width: 32px;
+  background-color: #CCCCCC;
+  text-align: center;
+}
+
+.stats td {
+  padding: 2px;
+  border: 1px solid #AAAAAA;
+  min-width: 32px;
+  text-align: right;
+}
+
+.checkboxes {
+  border: 1px solid #000000;
+  background-color: #FFFFFF;
+}
+
+.checkboxes label {
+  display: block;
+}
+
+.checkboxes label:hover {
+  background-color: #1E90FF;
+  color: #FFFFFF;
+}
+
+.checkboxes label input, .checkboxes label span {
+  vertical-align: top;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.right {
+  text-align: right;
+}
