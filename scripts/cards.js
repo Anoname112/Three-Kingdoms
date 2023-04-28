@@ -679,6 +679,10 @@ function personel (cityIndex, objective) {
 					officer.Progress = officer.Progress > 0 ? 0 : '-';
 				}
 				else {
+					if (officer.Objective[0] == 'Recurit' || officer.Objective[0] == 'Drill') {
+						units[officer.Objective[1]].Objective = '-';
+						units[officer.Objective[1]].Progress = '-';
+					}
 					officer.Objective = '-';
 					officer.Progress = '-';
 				}
