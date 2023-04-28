@@ -75,7 +75,7 @@ function openCityCard (cityIndex, select) {
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getCityLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
-		var employDisabled = getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
+		var employDisabled = viableOfficers.length > 0 && getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
 		var dismissDisabled = getCityNonViableOfficers(cityIndex, true).length > 0 ? '' : ' disabled';
 		var oTransferDisabled = viableOfficers.length > 0 ? '' : ' disabled';
 		
@@ -544,14 +544,13 @@ function military (cityIndex, objective) {
 }
 
 // Unit card
-function officerChanged (cityIndex) {
+function officerChanged (inputId) {
 	getElement('relevantStats').innerHTML = '';
 	
-	var officer = getElement('officer') ? getElement('officer').value : '';
+	var inputId = inputId ? inputId : 'officer';
+	var officer = getElement(inputId) ? getElement(inputId).value : '';
 	var officerIndex = getOfficerIndexByName(officer);
-	if (officerIndex != null) {
-		getElement('relevantStats').innerHTML = createStatsTable(officerIndex);	
-	}
+	if (officerIndex != null) getElement('relevantStats').innerHTML = createStatsTable(officerIndex);	
 }
 
 // Unit card
@@ -649,7 +648,7 @@ function openUnitCard (cityIndex, objective) {
 							<td>` + objectiveHTML + `</td>
 						</tr>
 						<tr>
-							<td><div id="officersDiv">Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged(` + cityIndex + `)"></div></td>
+							<td><div id="officersDiv">Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged()"></div></td>
 							<td><div id="relevantStats"></div></td>
 						</tr>
 						<tr>
@@ -669,14 +668,56 @@ function openUnitCard (cityIndex, objective) {
 
 // Officer card
 function personel (cityIndex, objective) {
-	if (objective == 'Employ') {
-		
+	var choosenOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (getElement('officer' + i) && getElement('officer' + i).checked) choosenOfficers.push(i);
 	}
-	else if (objective == 'Dismiss') {
-		
-	}
-	else if (objective == 'Transfer') {
-		
+	if (choosenOfficers.length > 0) {
+		if (objective == 'Employ') {
+			var target = getElement('target') ? getElement('target').value : '';
+			target = getOfficerIndexByName(target);
+			if (Number.isInteger(target)) {
+				for (var i = 0; i < choosenOfficers.length; i++) {
+					officers[choosenOfficers[i]].Objective = [objective, target];
+					officers[choosenOfficers[i]].Progress = 0;
+				}
+				
+				closeCard(officerCard);
+				openInfoCard('City', cityIndex);
+				draw();
+			}
+		}
+		else if (objective == 'Dismiss') {
+			for (var i = 0; i < choosenOfficers.length; i++) {
+				var officer = officers[choosenOfficers[i]];
+				if (officer.Objective[0] == 'March') dismissDeployed(choosenOfficers[i]);
+				else if (officer.Objective[0] == 'Assist' || officer.Objective[0] == 'Employ') {
+					officer.Objective = officer.Progress > 0 ? ['Return', cityIndex] : '-';
+					officer.Progress = officer.Progress > 0 ? 0 : '-';
+				}
+				else {
+					officer.Objective = '-';
+					officer.Progress = '-';
+				}
+			}
+			
+			closeCard(officerCard);
+			openInfoCard('City', cityIndex);
+			draw();
+		}
+		else if (objective == 'Transfer') {
+			var target = getElement('target') ? parseInt(getElement('target').value) : '';
+			if (Number.isInteger(target)) {
+				for (var i = 0; i < choosenOfficers.length; i++) {
+					officers[choosenOfficers[i]].Objective = [objective, target];
+					officers[choosenOfficers[i]].Progress = 0;
+				}
+				
+				closeCard(officerCard);
+				openInfoCard('City', cityIndex);
+				draw();
+			}
+		}
 	}
 }
 
@@ -716,8 +757,11 @@ function openOfficerCard (cityIndex, objective) {
 					</label>`;
 			}
 			
-			firstRowHTML = `<tr><td>` + targetOfficerList + `Employ: <input type="text" id="target" list="officerList"></td></tr>`;
-			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+			firstRowHTML = `<tr>
+					<td>` + targetOfficerList + `Employ: <input type="text" id="target" list="officerList" oninput="officerChanged('target')"></td>
+					<td><div id="relevantStats"></div></td>
+				</tr>`;
+			secondRowHTML = `<tr><td colspan="2"><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
 		}
 	}
 	else if (objective == 'Dismiss') {
@@ -729,7 +773,7 @@ function openOfficerCard (cityIndex, objective) {
 				if (officer.Objective[0] != 'Return') {
 					officersHTML += `<label for="officer` + nonViableOfficers[i] + `">
 							<input type="checkbox" id="officer` + nonViableOfficers[i] + `">
-							<span>` + officer.Name + `</span>
+							<span>` + officer.Name + ` | ` + officer.Objective[0] + `</span>
 						</label>`;
 				}
 			}
@@ -752,7 +796,7 @@ function openOfficerCard (cityIndex, objective) {
 				var officer = officers[viableOfficers[i]];
 				officersHTML += `<label for="officer` + viableOfficers[i] + `">
 						<input type="checkbox" id="officer` + viableOfficers[i] + `">
-						<span>` + officer.Name + ` | ` + officer.CHR + `</span>
+						<span>` + officer.Name + ` | ` + officer.LDR + ` | ` + officer.WAR + ` | ` + officer.INT + ` | ` + officer.POL + ` | ` + officer.CHR + `</span>
 					</label>`;
 			}
 			
@@ -760,26 +804,28 @@ function openOfficerCard (cityIndex, objective) {
 					<td>Source: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td>
 					<td>Target: ` + targetsHTML + `</td>
 				</tr>`;
-			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+			secondRowHTML = `<tr><td colspan="2"><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
 		}
 	}
 	
-	officerCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
-		<div class="officerContent">
-			<table>` +
-				firstRowHTML +
-				secondRowHTML +
-				`<tr>
-					<td>
-						<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `')">
-						<input type="button" value="Cancel" onclick="closeCard(officerCard)">
-					</td>
-				</tr>
-			</table>
-		</div>`;
-	
-	officerCard.style.visibility = 'visible';
-	if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
+	if (firstRowHTML.length > 0 && secondRowHTML.length > 0) {
+		officerCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
+			<div class="officerContent">
+				<table>` +
+					firstRowHTML +
+					secondRowHTML +
+					`<tr>
+						<td>
+							<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `')">
+							<input type="button" value="Cancel" onclick="closeCard(officerCard)">
+						</td>
+					</tr>
+				</table>
+			</div>`;
+		
+		officerCard.style.visibility = 'visible';
+		if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
+	}
 }
 
 // Deployed card
@@ -789,18 +835,18 @@ function dismissDeployed (commander) {
 	var cityIndex = officers[commander].City;
 	var progress = officers[commander].Progress;
 	if (Number.isInteger(progress)) {
-		officers[commander].Objective = progress ? ['Return', cityIndex] : '-';
-		officers[commander].Progress = progress ? 0 : '-';
+		officers[commander].Objective = progress > 0 ? ['Return', cityIndex] : '-';
+		officers[commander].Progress = progress > 0 ? 0 : '-';
 		for (var i = 0; i < units.length; i++) {
 			if (units[i].Objective != '-' && units[i].Objective[1] == commander) {
-				units[i].Objective = progress ? ['Return', cityIndex] : '-';
-				units[i].Progress = progress ? 0 : '-';
+				units[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
+				units[i].Progress = progress > 0 ? 0 : '-';
 			}
 		}
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[1] == commander) {
-				officers[i].Objective = progress ? ['Return', cityIndex] : '-';
-				officers[i].Progress = progress ? 0 : '-';
+				officers[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
+				officers[i].Progress = progress > 0 ? 0 : '-';
 			}
 		}
 		
