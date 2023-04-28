@@ -191,9 +191,10 @@ cities[48] = new City('Nan Hai', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400,
 cities[49] = new City('Jiao Zhi', '-', 5000, 100000, 2400, 2400, 2800, 4000, 400, 400, 600, 2800, 80, '-');
 
 var abilities = [];		// 4: morale, 5: strength, 
-abilities[0] = new Ability('True Leader', '', 7, [[4, 30]], [[4, 30]]);
-abilities[1] = new Ability('Benevolence', '', 7, [[5, 800]], []);
-abilities[2] = new Ability('Conqueror', '', 7, [], [4, 50]);
+abilities[0] = new Ability('True Leader', '', 0, [[4, 30]], [[4, 30]]);
+abilities[1] = new Ability('Benevolence', '', 10, [[5, 800]], []);
+abilities[3] = new Ability('Tiger', '', 0, [[4, 50]], []);
+abilities[3] = new Ability('Conqueror', '', 0, [], [[4, 50]]);
 
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
