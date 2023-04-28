@@ -230,7 +230,7 @@ function commanderChanged (source) {
 	}
 }
 
-// March card
+// March & Unit card
 function createUnitDivInnerHTML (cityIndex) {
 	var viableUnits = getCityViableUnits(cityIndex);
 	var unitsHTML = '';
