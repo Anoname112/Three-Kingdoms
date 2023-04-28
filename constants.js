@@ -64,6 +64,7 @@ const objectiveLength = {
 	'Establish': 30,
 	'Recurit': 30,
 	'Drill': 30,
+	'Employ': 30,
 	'Transfer': 10,
 	'Return': 10
 };

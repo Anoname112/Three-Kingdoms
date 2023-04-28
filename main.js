@@ -7,6 +7,7 @@ var cityCard;
 var marchCard;
 var devCard;
 var unitCard;
+var officerCard;
 var deployedCard;
 var infoCard;
 
@@ -239,6 +240,10 @@ window.onload = function () {
 	unitCard.classList.add('unitCard');
 	document.body.appendChild(unitCard);
 	
+	officerCard = document.createElement('div');
+	officerCard.classList.add('officerCard');
+	document.body.appendChild(officerCard);
+	
 	deployedCard = document.createElement('div');
 	deployedCard.classList.add('deployedCard');
 	document.body.appendChild(deployedCard);
@@ -257,10 +262,10 @@ window.onload = function () {
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
-	marchCard.style.left = devCard.style.left = unitCard.style.left = (canvasPad + cardMargin) + 'px';
-	marchCard.style.top = devCard.style.top = unitCard.style.top = (canvasPad + cardMargin) + 'px';
-	marchCard.style.width = devCard.style.width = unitCard.style.width = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
-	marchCard.style.height = devCard.style.height = unitCard.style.height = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
+	marchCard.style.left = devCard.style.left = unitCard.style.left = officerCard.style.left = (canvasPad + cardMargin) + 'px';
+	marchCard.style.top = devCard.style.top = unitCard.style.top = officerCard.style.top = (canvasPad + cardMargin) + 'px';
+	marchCard.style.width = devCard.style.width = unitCard.style.width = officerCard.style.width = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
+	marchCard.style.height = devCard.style.height = unitCard.style.height = officerCard.style.height = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
 	
 	playerCard.style.left = (infoX + cardMargin) + 'px';
 	playerCard.style.top = (infoY + cardMargin) + 'px';

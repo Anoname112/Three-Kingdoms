@@ -185,6 +185,14 @@ function getCityViableOfficers (cityIndex) {
 	return viableOfficers;
 }
 
+function getCityNonViableOfficers (cityIndex) {
+	var nonViableOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].City == cityIndex && officers[i].Objective != '-') nonViableOfficers.push(i);
+	}
+	return nonViableOfficers;
+}
+
 function getCityViableUnits (cityIndex) {
 	var viableUnits = [];
 	for (var i = 0; i < units.length; i++) {
@@ -267,6 +275,23 @@ function getDeployedStrength (commander) {
 function getOfficerIndexByName (officerName) {
 	for (var i = 0; i < officers.length; i++) if (officers[i].Name == officerName) return i;
 	return null;
+}
+
+function getOfficers (forceIndex, alliance, sort) {
+	var resultOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (alliance == 'force' && officers[i].Force == forceIndex) resultOfficers.push(i);
+		else if (alliance == 'nonForce' && officers[i].Force != forceIndex) resultOfficers.push(i);
+	}
+	if (sort) {
+		
+	}
+	return resultOfficers;
+}
+
+function isRuler (officerIndex) {
+	for (var i = 0; i < forces.length; i++) if (forces[i].Ruler == officerIndex) return true;
+	return false;
 }
 
 function getStats (officerIndex) {
@@ -469,7 +494,10 @@ function openCityCard (cityIndex, select) {
 		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getLowestEstablishCost() ? '' : ' disabled';
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
-		var transferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
+		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
+		var employDisabled = getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
+		var dismissDisabled = viableOfficers.length < getCityOfficers(cityIndex).length ? '' : ' disabled';
+		var oTransferDisabled = viableOfficers.length > 0 ? '' : ' disabled';
 		
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>
 			<div class="buttonsGroup">
@@ -488,7 +516,15 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish')"` + establishDisabled + `>
 					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
 					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
-					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer')"` + transferDisabled + `>
+					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer')"` + uTransferDisabled + `>
+				</div>
+			</div>
+			<div class="buttonsGroup">
+				<div class="label">Personel &#9654;</div>
+				<div class="buttons">
+					<input type="button" value="Employ" onclick="openOfficerCard(` + cityIndex + `, 'Employ')"` + employDisabled + `>
+					<input type="button" value="Dismiss" onclick="openOfficerCard(` + cityIndex + `, 'Dismiss')"` + dismissDisabled + `>
+					<input type="button" value="Transfer" onclick="openOfficerCard(` + cityIndex + `, 'Transfer')"` + oTransferDisabled + `>
 				</div>
 			</div>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
@@ -1049,6 +1085,119 @@ function openUnitCard (cityIndex, objective) {
 			if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 		}
 	}
+}
+
+// Officer card
+function personel (cityIndex, objective) {
+	if (objective == 'Employ') {
+		
+	}
+	else if (objective == 'Dismiss') {
+		
+	}
+	else if (objective == 'Transfer') {
+		
+	}
+}
+
+// Officer card
+function openOfficerCard (cityIndex, objective) {
+	closeCard(cityCard);
+	
+	var firstRowHTML = '';
+	var secondRowHTML = '';
+	var officersHTML = '';
+	if (objective == 'Employ') {
+		var targetOfficers = getOfficers(cities[cityIndex].Force, 'nonForce');
+		var targetOfficerList = '<datalist id="officerList"';
+		for (var i = 0; i < targetOfficers.length; i++) {
+			if (officers[targetOfficers[i]].City != '-' && !isRuler(targetOfficers[i])) targetOfficerList += '<option value="' + officers[targetOfficers[i]].Name + '">';
+		}
+		targetOfficerList += '</datalist>';
+		
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		if (viableOfficers.length > 0) {
+			// Sort based on charisma
+			for (var i = 0; i < viableOfficers.length; i++) {
+				for (var j = i + 1; j < viableOfficers.length; j++) {
+					if (officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) {
+						var temp = viableOfficers[i];
+						viableOfficers[i] = viableOfficers[j];
+						viableOfficers[j] = temp;
+					}
+				}
+			}
+			
+			for (var i = 0; i < viableOfficers.length; i++) {
+				var officer = officers[viableOfficers[i]];
+				officersHTML += `<label for="officer` + viableOfficers[i] + `">
+						<input type="checkbox" id="officer` + viableOfficers[i] + `">
+						<span>` + officer.Name + ` | ` + officer.CHR + `</span>
+					</label>`;
+			}
+			
+			firstRowHTML = `<tr><td>` + targetOfficerList + `Employ: <input type="text" id="target" list="officerList"></td></tr>`;
+			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+		}
+	}
+	else if (objective == 'Dismiss') {
+		var nonViableOfficers = getCityNonViableOfficers(cityIndex);
+		
+		if (nonViableOfficers.length > 0) {
+			for (var i = 0; i < nonViableOfficers.length; i++) {
+				var officer = officers[nonViableOfficers[i]];
+				officersHTML += `<label for="officer` + nonViableOfficers[i] + `">
+						<input type="checkbox" id="officer` + nonViableOfficers[i] + `">
+						<span>` + officer.Name + `</span>
+					</label>`;
+			}
+			
+			firstRowHTML = `<tr><td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td></tr>`;
+			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+		}
+	}
+	else if (objective == 'Transfer') {
+		var targets = getCities(cities[cityIndex].Force, 'force', [cityIndex, 'near']);
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		if (viableOfficers.length > 0 && targets.length > 0) {
+			var targetsHTML = '<select id="target">';
+			for (var i = 0; i < targets.length; i++) {
+				if (targets[i] != cityIndex) targetsHTML += '<option value="' + targets[i] + '">' + cities[targets[i]].Name + '</option>'
+			}
+			targetsHTML += '</select>';
+			
+			for (var i = 0; i < viableOfficers.length; i++) {
+				var officer = officers[viableOfficers[i]];
+				officersHTML += `<label for="officer` + viableOfficers[i] + `">
+						<input type="checkbox" id="officer` + viableOfficers[i] + `">
+						<span>` + officer.Name + ` | ` + officer.CHR + `</span>
+					</label>`;
+			}
+			
+			firstRowHTML = `<tr>
+					<td>Source: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td>
+					<td>Target: ` + targetsHTML + `</td>
+				</tr>`;
+			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+		}
+	}
+	
+	officerCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
+		<div class="officerContent">
+			<table>` +
+				firstRowHTML +
+				secondRowHTML +
+				`<tr>
+					<td>
+						<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `')">
+						<input type="button" value="Cancel" onclick="closeCard(officerCard)">
+					</td>
+				</tr>
+			</table>
+		</div>`;
+	
+	officerCard.style.visibility = 'visible';
+	if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 }
 
 // Deployed card

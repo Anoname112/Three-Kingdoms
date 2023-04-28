@@ -63,7 +63,7 @@ select {
 	visibility: hidden;
 }
 
-.playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .deployedCard, .infoCard {
+.playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .officerCard, .deployedCard, .infoCard {
 	position: fixed;
 	border: 1px solid #333333;
 	border-radius: $cardRadius;
@@ -73,7 +73,7 @@ select {
 	opacity: 0.95;
 }
 
-.playerCard, .hoverCard, .marchCard, .devCard, .unitCard, .infoCard {
+.playerCard, .hoverCard, .marchCard, .devCard, .unitCard, .officerCard, .infoCard {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -154,7 +154,7 @@ select {
 	text-align: right;
 }
 
-.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .deployedContent {
+.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent {
 	padding: $cardPadding;
 	font-size: $contentFontSize;
 }
