@@ -543,7 +543,7 @@ function military (cityIndex, objective) {
 	}
 }
 
-// Unit card
+// Unit & Officer card
 function officerChanged (inputId) {
 	getElement('relevantStats').innerHTML = '';
 	
