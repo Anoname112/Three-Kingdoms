@@ -261,6 +261,16 @@ function getCityLowestRecuritCost (cityIndex) {
 	return cost;
 }
 
+function getCityHighestRecuritCost (cityIndex) {
+	var cost = 0;
+	var viableUnits = getCityViableUnits(cityIndex);
+	for (var i = 0; i < viableUnits.length; i++) {
+		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritMultiplier;
+		if (recuritCost > cost) cost = recuritCost;
+	}
+	return cost;
+}
+
 function getTransferCities (cityIndex) {
 	var forceCities = getCities(cities[cityIndex].Force, 'force', [cityIndex, 'near']);
 	var transferCities = [];
