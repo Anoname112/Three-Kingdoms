@@ -318,9 +318,7 @@ window.onload = function () {
 	}
 	
 	mousePos = new Point.Zero();
-	mapAnimationStep = 0;
-	
-	gState = 0;
+	startTimestamp = mapAnimationStep = gState = 0;
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);
@@ -385,6 +383,8 @@ function onResize (e) {
 }
 
 function onMouseClick (e) {
+	if (startTimestamp > 0) return;
+	
 	var eX = e.clientX;
 	var eY = e.clientY;
 	mousePos = new Point(eX, eY);
@@ -536,8 +536,8 @@ function animateMap (timestamp) {
 		requestAnimationFrame(animateMap);
 	}
 	else {
+		startTimestamp = mapAnimationStep = 0;
 		// Update positions
-		mapAnimationStep = 0;
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
 				if (officers[i].Objective[2].Points[1]) {
@@ -591,6 +591,8 @@ function animateMap (timestamp) {
 }
 
 function playClick (e) {
+	if (startTimestamp > 0) return;
+	
 	for (var i = 0; i < forces.length; i++) {
 		if (i != playerForce) {
 			var diligence = getForceDiligence(i);
@@ -618,7 +620,51 @@ function playClick (e) {
 				}
 			}
 			
-			// Enemies dev and military
+			// Enemies development and military
+			var enemyCities = getCities(i, 'force');
+			for (var j = 0; j < enemyCities.length; j++) {
+				var city = cities[enemyCities[j]];
+				var viableOfficers = getCityViableOfficers(enemyCities[j]);
+				if (viableOfficers.length > 0) {
+					var viableUnits = getCityViableUnits(enemyCities[j]);
+					var unitCount = getCityUnitCount(enemyCities[j], true);
+					
+					var recuritable = false;
+					var drillable = false;
+					for (var k = 0; k < viableUnits.length; k++) {
+						if (units[viableUnits[k]].Strength < strengthLimit) recuritable = true;
+						if (units[viableUnits[k]].Morale < moraleLimit) drillable = true;
+					}
+					
+					for (var k = 0; k < viableOfficers.length; k++) {
+						if (Math.random() * 100 < diligence) {
+							switch (parseInt(Math.random() * 8)) {
+								case 0:
+									if (city.cFarm < city.Farm && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Farm', enemyCities[j]]);
+									break;
+								case 1:
+									if (city.cTrade < city.Trade && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Trade', enemyCities[j]]);
+									break;
+								case 2:
+									if (city.cTech < city.Tech && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Tech', enemyCities[j]]);
+									break;
+								case 3:
+									if (city.cDefense < city.Defense && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Defense', enemyCities[j]]);
+									break;
+								case 4:
+								case 5:
+								case 6:
+								case 7:
+									//unitCount < unitLimit && city.Gold >= getCityLowestEstablishCost()
+									//recuritable && city.Gold >= getCityLowestRecuritCost(enemyCities[j])
+									//drillable
+									if (city.cOrder < orderLimit && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Order', enemyCities[j]]);
+									break;
+							}
+						}
+					}
+				}
+			}
 			
 		}
 	}
