@@ -42,11 +42,12 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
 const scaling = 1;
-const animationTime = 10000;
+const animationTime = 5000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const cityIndexStart = 40;
 const orderLimit = 100;
+const orderDistrubtion = 5;
 const strengthLimit = 10000;
 const moraleLimit = 100;
 const unitLimit = 10;
@@ -55,7 +56,11 @@ const enemyTargetLookup = 4;
 const enemyAggresion = 0.2;
 const assistPercentage = 5;
 const devCost = 100;
-const recuritMultiplier = 0.5;
+const devMultiplier = 0.3;
+const establishMorale = 40;
+const recuritCostMultiplier = 0.5;
+const recuritMultiplier = 20;
+const drillMultiplier = 0.3;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
 const objectiveLength = {
 	'Farm': 30,

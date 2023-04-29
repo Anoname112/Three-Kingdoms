@@ -487,7 +487,7 @@ function military (cityIndex, objective) {
 			else if (getElement('unit')) {
 				var unitIndex = parseInt(getElement('unit').value);
 				
-				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritMultiplier : 0;
+				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritCostMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
 					officers[officer].Objective = [objective, unitIndex];
 					officers[officer].Progress = 0;
@@ -781,13 +781,13 @@ function dismissDeployed (commander) {
 		officers[commander].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 		officers[commander].Progress = progress > 0 ? 0 : '-';
 		for (var i = 0; i < units.length; i++) {
-			if (units[i].Objective != '-' && units[i].Objective[1] == commander) {
+			if (units[i].Objective != '-' && units[i].Objective[0] == 'March'  && units[i].Objective[1] == commander) {
 				units[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 				units[i].Progress = progress > 0 ? 0 : '-';
 			}
 		}
 		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective != '-' && officers[i].Objective[1] == commander) {
+			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == commander) {
 				officers[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 				officers[i].Progress = progress > 0 ? 0 : '-';
 			}
@@ -868,15 +868,15 @@ function createUnitsTable (unitsIndex) {
 	for (var i = 0; i < unitsIndex.length; i++) {
 		var unit = units[unitsIndex[i]];
 		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
-		var target = '-';
+		var name = '-';
 		switch (objective) {
 			case 'March':
 			case 'Recurit':
 			case 'Drill':
-				target = officers[unit.Objective[1]].Name;
+				name = officers[unit.Objective[1]].Name;
 				break;
 			case 'Transfer':
-				target = cities[unit.Objective[1]].Name;
+				name = cities[unit.Objective[1]].Name;
 				break;
 		}
 		unitsHTML += `<tr>
@@ -884,7 +884,7 @@ function createUnitsTable (unitsIndex) {
 				<td>` + unit.Strength + `</td>
 				<td>` + unit.Morale + `</td>
 				<td>` + objective + `</td>
-				<td>` + target + `</td>
+				<td>` + name + `</td>
 				<td>` + unit.Progress + `</td>
 			</tr>`;
 	}
@@ -894,7 +894,7 @@ function createUnitsTable (unitsIndex) {
 			<th>Strength</th>
 			<th>Morale</th>
 			<th>Objective</th>
-			<th>Target</th>
+			<th>Name</th>
 			<th>Progress</th>
 		</tr>` + unitsHTML + `</table>`;
 }

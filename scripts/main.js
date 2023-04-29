@@ -537,6 +537,146 @@ function animateMap (timestamp) {
 	}
 	else {
 		startTimestamp = mapAnimationStep = 0;
+		// Development and military progress
+		var redirected = [];
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective != '-' && !redirected.includes(i)) {
+				var objective = officers[i].Objective[0];
+				var index = officers[i].Objective[1];
+				officers[i].Progress += 10;
+				if (officers[i].Progress >= objectiveLength[objective]) {
+					switch (objective) {
+						case 'Farm':
+							cities[index].cFarm += floor(officers[i].POL * devMultiplier);
+							if (cities[index].cFarm > cities[index].Farm) cities[index].cFarm = cities[index].Farm;
+							cities[index].cOrder -= orderDistrubtion;
+							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
+							dismissObjective(i);
+							break;
+						case 'Trade':
+							cities[index].cTrade += floor(officers[i].POL * devMultiplier);
+							if (cities[index].cTrade > cities[index].Trade) cities[index].cTrade = cities[index].Trade;
+							cities[index].cOrder -= orderDistrubtion;
+							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
+							dismissObjective(i);
+							break;
+						case 'Tech':
+							cities[index].cTech += floor(officers[i].INT * devMultiplier);
+							if (cities[index].cTech > cities[index].Tech) cities[index].cTech = cities[index].Tech;
+							cities[index].cOrder -= orderDistrubtion;
+							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
+							dismissObjective(i);
+							break;
+						case 'Defense':
+							cities[index].cDefense += floor(officers[i].WAR * devMultiplier);
+							if (cities[index].cDefense > cities[index].Defense) cities[index].cDefense = cities[index].Defense;
+							cities[index].cOrder -= orderDistrubtion;
+							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
+							dismissObjective(i);
+							break;
+						case 'Order':
+							cities[index].cOrder += floor(officers[i].LDR * devMultiplier);
+							if (cities[index].cOrder > orderLimit) cities[index].cOrder = orderLimit;
+							dismissObjective(i);
+							break;
+						case 'Establish':
+							units.push(new Unit(index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-'));
+							dismissObjective(i);
+							break;
+						case 'Recurit':
+							units[index].Strength += floor(officers[i].CHR * recuritMultiplier);
+							if (units[index].Strength > strengthLimit) units[index].Strength = strengthLimit;
+							units[index].Objective = '-';
+							units[index].Progress = '-';
+							dismissObjective(i);
+							break;
+						case 'Drill':
+							units[index].Morale += floor(officers[i].LDR * drillMultiplier);
+							if (units[index].Morale > moraleLimit) units[index].Morale = moraleLimit;
+							units[index].Objective = '-';
+							units[index].Progress = '-';
+							dismissObjective(i);
+							break;
+						case 'Employ':
+							if (Math.random() * officers[i].CHR > Math.random() * getForceDiligence(officers[index].Force)) {
+								if (officers[index].Objective != '-') {
+									if (officers[index].Objective[0] == 'March') dismissDeployed(index);
+									else if (officers[index].Objective[0] == 'Recurit' || officers[index].Objective[0] == 'Drill') {
+										units[officers[index].Objective[1]].Objective = '-';
+										units[officers[index].Objective[1]].Progress = '-';
+									}
+								}
+								officers[index].Force = officers[i].Force;
+								officers[index].City = officers[i].City;
+								officers[index].Objective = ['Return', officers[i].City];
+								officers[index].Progress = 0;
+								redirected.push(index);
+								for (var j = 0; j < officers.length; j++) {
+									if (officers[j].Objective != '-' && officers[j].Objective[0] == 'Employ' && officers[j].Objective[1] == index) {
+										officers[j].Objective = ['Return', officers[j].City];
+										officers[j].Progress = 0;
+										redirected.push(j);
+									}
+								}
+							}
+							officers[i].Objective = ['Return', officers[i].City];
+							officers[i].Progress = 0;
+							break;
+						case 'Transfer':
+							officers[i].City = index;
+							officers[i].Position = getCityPosition(index);
+							dismissObjective(i);
+							break;
+						case 'Return':
+							officers[i].Position = getCityPosition(index);
+							dismissObjective(i);
+							break;
+					}
+				}
+			}
+		}
+		for (var i = 0; i < units.length; i++) {
+			if (units[i].Objective != '-') {
+				var objective = units[i].Objective[0];
+				var index = units[i].Objective[1];
+				units[i].Progress += 10;
+				if (units[i].Progress >= objectiveLength[objective]) {
+					switch (objective) {
+						case 'Transfer':
+							units[i].City = index;
+							units[i].Position = getCityPosition(index);
+							units[i].Objective = '-';
+							units[i].Progress = '-';
+							break;
+						case 'Return':
+							units[i].Position = getCityPosition(index);
+							units[i].Objective = '-';
+							units[i].Progress = '-';
+							break;
+					}
+				}
+			}
+		}
+		// Revolts
+		///
+		
+		// Increase date
+		var dateArray = date.split('-').map((x) =>parseInt(x));
+		dateArray[2] += 10;
+		if (dateArray[2] > 30) {
+			dateArray[2] = 1;
+			dateArray[1] += 1;
+			// Tax income, harvest, salary
+			///
+			
+			if (dateArray[1] > 12) {
+				dateArray[1] = 1;
+				dateArray[0] += 1;
+			}
+		}
+		date = dateArray.join('-');
+		openPlayerCard();
+		
 		// Update positions
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
@@ -558,35 +698,15 @@ function animateMap (timestamp) {
 					}
 					officers[i].Objective[2].Points.shift();
 					
-					// Collisions
-					
+					// Collisions and Battles
+					///
 				}
 			}
 		}
 		draw();
 		
-		// Increase date
-		var dateArray = date.split('-').map((x) =>parseInt(x));
-		dateArray[2] += 10;
-		if (dateArray[2] > 30) {
-			dateArray[2] = 1;
-			dateArray[1] += 1;
-			if (dateArray[1] > 12) {
-				dateArray[1] = 1;
-				dateArray[0] += 1;
-			}
-		}
-		date = dateArray.join('-');
-		openPlayerCard();
-		
-		// Development and military progress
-		// Enemies development and military progress
-		// Revolts
-		// Battle
-		// Tax income and harvest
-		// Food consumption (excluding new establish)
-		
 		// Save changes to localStorage
+		///
 	}
 }
 
@@ -672,7 +792,7 @@ function playClick (e) {
 												units[viableUnits[l]].Objective = ['Recurit', viableOfficers[k]];
 												units[viableUnits[l]].Progress = 0;
 												
-												city.Gold -= unitTypes[units[viableUnits[l]].Type].Cost * recuritMultiplier;
+												city.Gold -= unitTypes[units[viableUnits[l]].Type].Cost * recuritCostMultiplier;
 												break;
 											}
 										}

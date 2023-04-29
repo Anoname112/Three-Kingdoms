@@ -74,6 +74,7 @@ function drawMessage (msg, x, y, align) {
 }
 
 function floor (value, floor) {
+	var floor = floor == null ? 1 : floor;
 	return Math.floor(value / floor) * floor;
 }
 
@@ -255,7 +256,7 @@ function getCityLowestRecuritCost (cityIndex) {
 	var cost = getCityHighestEstablishCost();
 	var viableUnits = getCityViableUnits(cityIndex);
 	for (var i = 0; i < viableUnits.length; i++) {
-		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritMultiplier;
+		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritCostMultiplier;
 		if (recuritCost < cost) cost = recuritCost;
 	}
 	return cost;
@@ -265,7 +266,7 @@ function getCityHighestRecuritCost (cityIndex) {
 	var cost = 0;
 	var viableUnits = getCityViableUnits(cityIndex);
 	for (var i = 0; i < viableUnits.length; i++) {
-		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritMultiplier;
+		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritCostMultiplier;
 		if (recuritCost > cost) cost = recuritCost;
 	}
 	return cost;
@@ -449,4 +450,9 @@ function assignDevObjective (officerIndex, objective, progress) {
 	officers[officerIndex].Progress = progress == null ? 0 : progress;
 	
 	cities[objective[1]].Gold -= devCost;
+}
+
+function dismissObjective (officerIndex) {
+	officers[officerIndex].Objective = '-';
+	officers[officerIndex].Progress = '-';
 }
