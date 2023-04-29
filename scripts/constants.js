@@ -42,7 +42,7 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
 const scaling = 1;
-const animationTime = 10000;
+const animationTime = 1000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const cityIndexStart = 40;
@@ -51,6 +51,8 @@ const strengthLimit = 10000;
 const moraleLimit = 100;
 const unitLimit = 10;
 const marchCost = 1;
+const enemyTargetLookup = 4;
+const enemyAggresion = 0.2;
 const assistPercentage = 5;
 const devCost = 100;
 const recuritMultiplier = 0.5;

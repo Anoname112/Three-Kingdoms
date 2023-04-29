@@ -177,11 +177,32 @@ function getCityUnits (cityIndex) {
 	return cityUnits;
 }
 
-function getCityViableOfficers (cityIndex) {
+function getCityViableOfficers (cityIndex, sort) {
 	var viableOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].City == cityIndex && officers[i].Objective == '-') viableOfficers.push(i);
 	}
+	
+	if (sort) {
+		for (var i = 0; i < viableOfficers.length; i++) {
+			for (var j = i + 1; j < viableOfficers.length; j++) {
+				var swap = false;
+				switch (sort) {
+					case 'LDR': if (officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR) swap = true; break;
+					case 'WAR': if (officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) swap = true; break;
+					case 'INT': if (officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) swap = true; break;
+					case 'POL': if (officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) swap = true; break;
+					case 'CHR': if (officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) swap = true; break;
+				}
+				if (swap) {
+					var temp = viableOfficers[i];
+					viableOfficers[i] = viableOfficers[j];
+					viableOfficers[j] = temp;
+				}
+			}
+		}
+	}
+	
 	return viableOfficers;
 }
 

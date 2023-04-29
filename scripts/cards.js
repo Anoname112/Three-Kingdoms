@@ -128,6 +128,22 @@ function openCityCard (cityIndex, select) {
 }
 
 // March card
+function deploy (commander, target, deployUnits, assistOfficers) {
+	initPathfinding();
+	startPathfinding(officers[commander].Position, getCityPosition(target));
+	officers[commander].Objective = ['March', target, finalPath];
+	officers[commander].Progress = 0;
+	for (var i = 0; i < deployUnits.length; i++) {
+		units[deployUnits[i]].Objective = ['March', commander];
+		units[deployUnits[i]].Progress = 0;
+	}
+	for (var i = 0; i < assistOfficers.length; i++) {
+		officers[assistOfficers[i]].Objective = ['Assist', commander];
+		officers[assistOfficers[i]].Progress = 0;
+	}
+}
+
+// March card
 function march () {
 	var source = getElement('source') ? getElement('source').value : '';
 	var target = getElement('target') ? getElement('target').value : '';
@@ -151,19 +167,7 @@ function march () {
 					if (getElement('officer' + i) && getElement('officer' + i).checked) assistOfficers.push(i);
 				}
 				
-				initPathfinding();
-				startPathfinding(officers[commander].Position, getCityPosition(target));
-				officers[commander].Objective = ['March', target, finalPath];
-				officers[commander].Progress = 0;
-				for (var i = 0; i < deployUnits.length; i++) {
-					units[deployUnits[i]].Objective = ['March', commander];
-					units[deployUnits[i]].Progress = 0;
-				}
-				for (var i = 0; i < assistOfficers.length; i++) {
-					officers[assistOfficers[i]].Objective = ['Assist', commander];
-					officers[assistOfficers[i]].Progress = 0;
-				}
-				
+				deploy(commander, target, deployUnits, assistOfficers);
 				cities[source].Food -= totalCost;
 				
 				closeCard(marchCard);
@@ -383,45 +387,20 @@ function develop (cityIndex, objective) {
 function openDevCard (cityIndex, objective) {
 	closeCard(cityCard);
 	
-	var viableOfficers = getCityViableOfficers(cityIndex);
+	var sort = objective == 'Farm' || objective == 'Trade' ? 'POL' : (objective == 'Tech' ? 'INT' : (objective == 'Defense' ? 'WAR' : (objective == 'Order' ? 'LDR' : null)));
+	var viableOfficers = getCityViableOfficers(cityIndex, sort);
 	if (viableOfficers.length > 0) {
 		var city = cities[cityIndex];
 		
 		var objectiveHTML = '';
 		switch (objective) {
-			case 'Farm':
-				objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>';
-				break;
-			case 'Trade':
-				objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>';
-				break;
-			case 'Tech':
-				objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>';
-				break;
-			case 'Defense':
-				objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>';
-				break;
-			case 'Order':
-				objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>';
-				break;
-			default:
-				break;
+			case 'Farm': objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>'; break;
+			case 'Trade': objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>'; break;
+			case 'Tech': objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>'; break;
+			case 'Defense': objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>'; break;
+			case 'Order': objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>'; break;
 		}
 		
-		var viableOfficers = getCityViableOfficers(cityIndex);
-		// Sort based on relevant stat
-		for (var i = 0; i < viableOfficers.length; i++) {
-			for (var j = i + 1; j < viableOfficers.length; j++) {
-				if (((objective == 'Farm' || objective == 'Trade') && officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) ||
-					(objective == 'Tech' && officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) ||
-					(objective == 'Defense' && officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) ||
-					(objective == 'Order' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
-					var temp = viableOfficers[i];
-					viableOfficers[i] = viableOfficers[j];
-					viableOfficers[j] = temp;
-				}
-			}
-		}
 		var officersHTML = '';
 		for (var i = 0; i < viableOfficers.length; i++) {
 			var officer = officers[viableOfficers[i]];
@@ -570,7 +549,7 @@ function openUnitCard (cityIndex, objective) {
 		unitCard.style.visibility = 'visible';
 	}
 	else {
-		var viableOfficers = getCityViableOfficers(cityIndex);
+		var viableOfficers = getCityViableOfficers(cityIndex, objective == 'Drill' ? 'LDR' : 'CHR');
 		if (viableOfficers.length > 0) {
 			var objectiveHTML = '';
 			switch (objective) {
@@ -607,18 +586,6 @@ function openUnitCard (cityIndex, objective) {
 					break;
 			}
 			
-			var viableOfficers = getCityViableOfficers(cityIndex);
-			// Sort based on relevant stat
-			for (var i = 0; i < viableOfficers.length; i++) {
-				for (var j = i + 1; j < viableOfficers.length; j++) {
-					if (((objective == 'Establish' || objective == 'Recurit') && officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) ||
-						(objective == 'Drill' && officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR)) {
-						var temp = viableOfficers[i];
-						viableOfficers[i] = viableOfficers[j];
-						viableOfficers[j] = temp;
-					}
-				}
-			}
 			var officersHTML = '<div id="officerListDiv"><datalist id="officerList">';
 			for (var i = 0; i < viableOfficers.length; i++) officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">';
 			officersHTML += '</datalist></div>';
@@ -723,19 +690,8 @@ function openOfficerCard (cityIndex, objective) {
 		}
 		targetOfficerList += '</datalist>';
 		
-		var viableOfficers = getCityViableOfficers(cityIndex);
+		var viableOfficers = getCityViableOfficers(cityIndex, 'CHR');
 		if (viableOfficers.length > 0) {
-			// Sort based on Charisma
-			for (var i = 0; i < viableOfficers.length; i++) {
-				for (var j = i + 1; j < viableOfficers.length; j++) {
-					if (officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) {
-						var temp = viableOfficers[i];
-						viableOfficers[i] = viableOfficers[j];
-						viableOfficers[j] = temp;
-					}
-				}
-			}
-			
 			for (var i = 0; i < viableOfficers.length; i++) {
 				var officer = officers[viableOfficers[i]];
 				officersHTML += `<label for="officer` + viableOfficers[i] + `">

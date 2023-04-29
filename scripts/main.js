@@ -13,6 +13,8 @@ var infoCard;
 
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var mousePos;
+var startTimestamp;
+var mapAnimationStep;
 var squareSize;
 var mapSize;
 var buttonHeight;
@@ -47,7 +49,7 @@ unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 3, 3, [0.9, 1.1, 1.0], 1000
 var scenarios = [];
 scenarios.push(new Scenario(
 	'Warlords',
-	'194-03-01', [
+	'194-3-1', [
 		// Forces
 		// name, ruler, color, cities
 		['Cao Cao Forces', 15, '#0000FF', [8, 9]],			// 0	
@@ -316,6 +318,7 @@ window.onload = function () {
 	}
 	
 	mousePos = new Point.Zero();
+	mapAnimationStep = 0;
 	
 	gState = 0;
 	/*
@@ -526,23 +529,103 @@ function onMouseMove (e) {
 	}
 }
 
+function animateMap (timestamp) {
+	mapAnimationStep = (Date.now() - startTimestamp) / animationTime;
+	if (mapAnimationStep < 1) {
+		draw();
+		requestAnimationFrame(animateMap);
+	}
+	else {
+		// Update positions
+		mapAnimationStep = 0;
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
+				if (officers[i].Objective[2].Points[1]) {
+					var newPos = officers[i].Objective[2].Points[1]
+					officers[i].Position = newPos;
+					officers[i].Progress += 10;
+					for (var j = 0; j < units.length; j++) {
+						if (units[j].Objective != '-' && units[j].Objective[0] == 'March' && units[j].Objective[1] == i) {
+							units[j].Position = newPos;
+							units[j].Progress += 10;
+						}
+					}
+					for (var j = 0; j < officers.length; j++) {
+						if (officers[j].Objective != '-' && officers[j].Objective[0] == 'Assist' && officers[j].Objective[1] == i) {
+							officers[j].Position = newPos;
+							officers[j].Progress += 10;
+						}
+					}
+					officers[i].Objective[2].Points.shift();
+					
+					// Collisions
+					
+				}
+			}
+		}
+		draw();
+		
+		// Increase date
+		var dateArray = date.split('-').map((x) =>parseInt(x));
+		dateArray[2] += 10;
+		if (dateArray[2] > 30) {
+			dateArray[2] = 1;
+			dateArray[1] += 1;
+			if (dateArray[1] > 12) {
+				dateArray[1] = 1;
+				dateArray[0] += 1;
+			}
+		}
+		date = dateArray.join('-');
+		openPlayerCard();
+		
+		// Development and military progress
+		// Enemies development and military progress
+		// Revolts
+		// Battle
+		// Tax income and harvest
+		// Food consumption (excluding new establish)
+		
+		// Save changes to localStorage
+	}
+}
+
 function playClick (e) {
-	// BEFORE animate
-	// Enemies march
-	// Enemies dev and military (based on force diligence)
+	for (var i = 0; i < forces.length; i++) {
+		if (i != playerForce) {
+			var diligence = getForceDiligence(i);
+			// Enemies march
+			var marchableCities = getForceMarchableCities(i);
+			for (var j = 0; j < marchableCities.length; j++) {
+				var source = marchableCities[j];
+				var targetCities = getCities(i, 'enemy', [source, 'near']);
+				var targetLookup = enemyTargetLookup > targetCities.length ? targetCities.length : enemyTargetLookup;
+				for (var k = 0; k < targetLookup; k++) {
+					var target = targetCities[k];
+					if (getCityStrength(source) * enemyAggresion > getCityStrength(target) && Math.random() * 100 < diligence * enemyAggresion) {
+						var viableOfficers = getCityViableOfficers(source, 'LDR');
+						var viableUnits = getCityViableUnits(source);
+						if (viableOfficers.length > 0 && viableUnits.length > 0) {
+							var commander = viableOfficers[0];
+							var totalCost = 0;
+							for (var l = 0; l < viableUnits.length; l++) totalCost += units[viableUnits[l]].Strength * marchCost;
+							if (cities[source].Food >= totalCost) {
+								deploy(commander, target, viableUnits, []);
+								cities[source].Food -= totalCost;
+							}
+						}
+					}
+				}
+			}
+			
+			// Enemies dev and military
+			
+		}
+	}
 	
 	// Animate
-	
-	// AFTER animate
-	// Increase date
-	// Development and military progress
-	// Enemies development and military progress
-	// Revolts
-	// Battle
-	// Tax income and harvest
-	// Food consumption (excluding new establish)
-	
-	// Save changes to localStorage
+	startTimestamp = Date.now();
+	requestAnimationFrame(animateMap);
 }
 
 function draw () {
@@ -630,6 +713,11 @@ function draw () {
 						var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
 						fillRect(pathX, pathY, w, h, finalPathColor);
 					}
+				}
+				if (officers[i].Objective[2].Points[1]) {
+					var diff = officers[i].Position.subtract(officers[i].Objective[2].Points[1]);
+					x -= diff.X * squareSize * mapAnimationStep;
+					y -= diff.Y * squareSize * mapAnimationStep;
 				}
 				drawImage(unitImage, x, y, w, h);
 			}
