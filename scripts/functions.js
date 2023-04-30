@@ -73,6 +73,16 @@ function drawMessage (msg, x, y, align) {
 	ctx.fillText(msg, x, y);
 }
 
+function drawGlowMessage (msg, x, y, align, style) {
+	ctx.fillStyle = fontLight;
+	drawMessage (msg, x - 1, y, align);
+	drawMessage (msg, x + 1, y, align);
+	drawMessage (msg, x, y - 1, align);
+	drawMessage (msg, x, y + 1, align);
+	ctx.fillStyle = style == null ? fontDark : style;
+	drawMessage (msg, x, y, align);
+}
+
 function floor (value, floor) {
 	var floor = floor == null ? 1 : floor;
 	return Math.floor(value / floor) * floor;
@@ -94,11 +104,6 @@ function getTextColor (cityColor) {
 	
 	if (average < 80) return fontLight;
 	else return fontDark;
-}
-
-function positionIncludes (points, point) {
-	for (var i = 0; i < points.length; i++) if (points[i].X == point.X && points[i].Y == point.Y) return true;
-	return false;
 }
 
 function getCityIndexByName (cityName) {
@@ -392,7 +397,7 @@ function getStatsByName (officerName) {
 function getAssistedStats (officerIndex) {
 	var stats = getStats(officerIndex);
 	for (var i = 0; i < officers.length; i++) {
-		if (officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == officerIndex) {
+		if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == officerIndex) {
 			stats[0] += assistPercentage / 100 * officers[i].LDR;
 			stats[1] += assistPercentage / 100 * officers[i].WAR;
 			stats[2] += assistPercentage / 100 * officers[i].INT;
@@ -460,4 +465,34 @@ function assignDevObjective (officerIndex, objective, progress) {
 function dismissObjective (officerIndex) {
 	officers[officerIndex].Objective = '-';
 	officers[officerIndex].Progress = '-';
+}
+
+function deployedCityCollision (officerIndex) {
+	var nonForceCities = getCities(officers[officerIndex].Force, 'nonForce');
+	for (var i = 0; i < nonForceCities.length; i++) {
+		var cityPosition = getCityPosition(nonForceCities[i]);
+		if (cityPosition.X == officers[officerIndex].Position.X && cityPosition.Y == officers[officerIndex].Position.Y) return nonForceCities[i];
+	}
+	return null;
+}
+
+function deployedUnitCollision (officerIndex) {
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Force != officers[officerIndex].Force && officers[i].Objective != '-' && officers[i].Objective[0] == 'March' &&
+			officers[i].Position.X == officers[officerIndex].Position.X && officers[i].Position.Y == officers[officerIndex].Position.Y) return i;
+	}
+	return null;
+}
+
+function getNearestTarget (unitIndex, targetUnits) {
+	var nearestDistance = (new Point(battleWidth, battleHeight)).length();
+	var nearestTarget = null;
+	for (var i = 0; i < targetUnits.length; i++) {
+		var distance = units[targetUnits[i]].Vec.subtract(units[unitIndex].Vec).length();
+		if (distance < nearestDistance) {
+			nearestDistance = distance;
+			nearestTarget = targetUnits[i];
+		}
+	}
+	return nearestTarget;
 }

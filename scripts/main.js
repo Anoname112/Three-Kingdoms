@@ -12,12 +12,18 @@ var deployedCard;
 var infoCard;
 
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
+var battle;
+var battleImage;
 var mousePos;
 var startTimestamp;
 var mapAnimationStep;
 var squareSize;
 var mapSize;
 var buttonHeight;
+var battleX;
+var battleY;
+var battleWidth;
+var battleHeight;
 var infoX;
 var infoY;
 var infoXHalf;
@@ -31,9 +37,9 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
-unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 3, 1, [1.0, 1.0, 1.1], 1200));
-unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 5, 1, [1.1, 1.0, 1.2], 1400));
-unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 3, 3, [0.9, 1.1, 1.0], 1000));
+unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 55, [1.0, 1.0, 1.1], 1200));
+unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 55, [1.1, 1.0, 1.2], 1400));
+unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 165, [0.9, 1.1, 1.0], 1000));
 
 /*
 1. February 184: Revolt Awakens Heroric Ambitions
@@ -197,6 +203,7 @@ abilities[0] = new Ability('True Leader', '', 0, [[4, 30]], [[4, 30]]);
 abilities[1] = new Ability('Benevolence', '', 10, [[5, 800]], []);
 abilities[3] = new Ability('Tiger', '', 0, [[4, 50]], []);
 abilities[3] = new Ability('Conqueror', '', 0, [], [[4, 50]]);
+// Demolisher
 
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
@@ -262,6 +269,7 @@ window.onload = function () {
 	buttonHeight = squareSize + buttonPad * 2;
 	infoX = isPortrait ? canvasPad : canvasPad * 2 + mapSize;
 	infoY = isPortrait ? canvasPad * 2 + mapSize : canvasPad;
+	
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
@@ -275,6 +283,10 @@ window.onload = function () {
 	playerCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
 	playerCard.style.height = ((window.innerHeight - infoY) / 4 - (cardMargin * 2)) + 'px';
 	
+	battleX = infoX;
+	battleY = infoY + playerCard.clientHeight + cardMargin * 2;
+	battleWidth = window.innerWidth - battleX;
+	battleHeight = window.innerHeight - battleY;
 	infoCard.style.left = (infoX + cardMargin) + 'px';
 	infoCard.style.top = (infoY + playerCard.clientHeight + cardMargin * 2) + 'px';
 	infoCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
@@ -319,6 +331,8 @@ window.onload = function () {
 	
 	mousePos = new Point.Zero();
 	startTimestamp = mapAnimationStep = gState = 0;
+	battle = null;
+	battleImage = [];
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);
@@ -337,6 +351,7 @@ function init (scenario, officerIndex) {
 	playerForce = officers[player].Force;
 	openPlayerCard();
 	
+	battle = null;
 	gState = 1;
 }
 
@@ -368,7 +383,7 @@ function applyScenario (name) {
 			
 			// Units
 			for (var j = 0; j < scenarios[i].Units.length; j++) {
-				units.push(new Unit(scenarios[i].Units[j][0], cities[scenarios[i].Units[j][1]].Force, scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-'));
+				units.push(new Unit(scenarios[i].Units[j][0], cities[scenarios[i].Units[j][1]].Force, scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-', null, null, 0));
 			}
 		}
 	}
@@ -383,15 +398,13 @@ function onResize (e) {
 }
 
 function onMouseClick (e) {
-	if (startTimestamp > 0) return;
-	
 	var eX = e.clientX;
 	var eY = e.clientY;
 	mousePos = new Point(eX, eY);
 	
 	//infoCard.style.visibility = 'hidden';
 	
-	if (gState == 0) {
+	if (gState == 0 && startTimestamp == 0) {
 		var line = 0;
 		for (var i = 0; i < scenarios.length; i++) {
 			var x = canvasPad + buttonMargin;
@@ -404,7 +417,7 @@ function onMouseClick (e) {
 			}
 		}
 	}
-	else if (gState == 1) {
+	else if (gState == 1 && startTimestamp == 0) {
 		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
 			var indexX = parseInt((eX - canvasPad) / squareSize);
 			var indexY = parseInt((eY - canvasPad) / squareSize);
@@ -436,6 +449,21 @@ function onMouseClick (e) {
 				else openSelectCard(clickedObjects);
 			}
 		}
+	}
+	else if (battle) {
+		var deployed0 = getDeployedUnits(battle[0]);
+		var deployed1 = getDeployedUnits(battle[1]);
+		if (deployed0.length == 0 || deployed1.length == 0) {
+			if (deployed0.length == 0) dismissDeployed(battle[0]);
+			if (deployed1.length == 0) dismissDeployed(battle[1]);
+			battle = null;
+			startTimestamp = 0;
+			openInfoCard('City', officers[player].City);
+			draw();
+			return;
+		}
+		
+		battle[2] = !battle[2];
 	}
 }
 
@@ -529,6 +557,113 @@ function onMouseMove (e) {
 	}
 }
 
+function animateUnits (unitIndexs, elapsed) {
+	var elapsedSecond = elapsed / 1000;
+	for (var i = 0; i < unitIndexs.length; i++) {
+		var unit = units[unitIndexs[i]];
+		var targetIndex = unit.Target;
+		if (Number.isInteger(targetIndex)) {
+			var unitType = unitTypes[unit.Type];
+			var subtract = units[targetIndex].Vec.subtract(unit.Vec);
+			var distance = subtract.length();
+			if (distance <= unitType.Range) {
+				// Attack target
+				unit.Cooldown -= 1 * elapsedSecond;
+				if (unit.Cooldown <= 0) {
+					var assistedStats = getAssistedStats(unit.Objective[1]);
+					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
+					var defense = calculateDefense(assistedStats[0], assistedStats[2]);
+					units[targetIndex].Strength -= floor(calculateDamage(unit.Morale, attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
+					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;					
+					
+					unit.Cooldown = unitCooldown;
+				}
+			}
+			else {
+				// Walk to target
+				var normalized = subtract.normalize();
+				unit.Vec = unit.Vec.add(normalized.scale(unitType.Speed * elapsedSecond));
+			}
+		}
+	}
+}
+
+function animateBattle (timestamp) {
+	if (battle) {
+		var currentTimestamp = Date.now();
+		var elapsed = currentTimestamp - startTimestamp;
+		startTimestamp = currentTimestamp;
+		
+		if (battle[2]) {
+			var attUnits = getDeployedUnits(battle[0]);
+			var defUnits = getDeployedUnits(battle[1]);
+			// Find Target
+			for (var i = 0; i < attUnits.length; i++) if (units[attUnits[i]].Target == null) units[attUnits[i]].Target = getNearestTarget(attUnits[i], defUnits);
+			for (var i = 0; i < defUnits.length; i++) if (units[defUnits[i]].Target == null) units[defUnits[i]].Target = getNearestTarget(defUnits[i], attUnits);
+			
+			animateUnits(attUnits, elapsed);
+			animateUnits(defUnits, elapsed);
+			
+			// Remove defeated units
+			for (var i = 0; i < units.length; i++) {
+				for (var j = 0; j < units.length; j++) if (units[j].Target == i) units[j].Target = null;
+				if (units[i].Strength <= 0) units.splice(i, 1);
+			}
+		}
+		
+		draw();
+		
+		requestAnimationFrame(animateBattle);
+	}
+}
+
+function initBattle (attCommander, defCommander) {
+	battle = [attCommander, defCommander, false];
+	battleImage[attCommander] = newImg("portraits/" + officers[attCommander].Name.split(' ').join('_') + ".jpg");
+	battleImage[defCommander] = newImg("portraits/" + officers[defCommander].Name.split(' ').join('_') + ".jpg");
+	var attUnits = getDeployedUnits(attCommander);
+	var defUnits = getDeployedUnits(defCommander);
+	
+	var attBackRow = [];
+	var defBackRow = [];
+	for (var i = 0; i < attUnits.length; i++) if (unitTypes[units[attUnits[i]].Type].Name == 'Archer') attBackRow.push(attUnits[i]);
+	for (var i = 0; i < defUnits.length; i++) if (unitTypes[units[defUnits[i]].Type].Name == 'Archer') defBackRow.push(defUnits[i]);
+	
+	var backCount = 0;
+	var frontCount = 0;
+	for (var i = 0; i < attUnits.length; i++) {
+		if (attBackRow.includes(attUnits[i])) {
+			units[attUnits[i]].Vec = new Point(
+				battleX + unitSize / 2,
+				battleY + (battleHeight - unitSize * attBackRow.length) / 2 + (backCount++ * unitSize) + unitSize / 2
+			);
+		}
+		else {
+			units[attUnits[i]].Vec = new Point(
+				battleX + unitSize + unitSize / 2,
+				battleY + (battleHeight - unitSize * (attUnits.length - attBackRow.length)) / 2 + (frontCount++ * unitSize) + unitSize / 2
+			);
+		}
+	}
+	
+	backCount = 0;
+	frontCount = 0;
+	for (var i = 0; i < defUnits.length; i++) {
+		if (defBackRow.includes(defUnits[i])) {
+			units[defUnits[i]].Vec = new Point(
+				battleX + battleWidth - unitSize / 2,
+				battleY + (battleHeight - unitSize * defBackRow.length) / 2 + (backCount++ * unitSize) + unitSize / 2
+			);
+		}
+		else {
+			units[defUnits[i]].Vec = new Point(
+				battleX + battleWidth - unitSize - unitSize / 2,
+				battleY + (battleHeight - unitSize * (defUnits.length - defBackRow.length)) / 2 + (frontCount++ * unitSize) + unitSize / 2
+			);
+		}
+	}
+}
+
 function animateMap (timestamp) {
 	mapAnimationStep = (Date.now() - startTimestamp) / animationTime;
 	if (mapAnimationStep < 1) {
@@ -581,7 +716,7 @@ function animateMap (timestamp) {
 							dismissObjective(i);
 							break;
 						case 'Establish':
-							units.push(new Unit(index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-'));
+							units.push(new Unit(index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-', null, null, 0));
 							dismissObjective(i);
 							break;
 						case 'Recurit':
@@ -694,39 +829,65 @@ function animateMap (timestamp) {
 		
 		// Update positions
 		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
-				var cityCollision = positionIncludes(getCities(officers[i].Force, 'enemy').map((x) => getCityPosition(x)), officers[i].Position);
+			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March' && (!battle || !battle.includes(i))) {
+				var cityCollision = deployedCityCollision(i);
 				if (officers[i].Objective[2].Points[1]) {
 					var newPos = officers[i].Objective[2].Points[1]
-					officers[i].Position = newPos;
+					if (!Number.isInteger(cityCollision)) officers[i].Position = newPos;
 					officers[i].Progress += 10;
 					for (var j = 0; j < units.length; j++) {
 						if (units[j].Objective != '-' && units[j].Objective[0] == 'March' && units[j].Objective[1] == i) {
-							units[j].Position = newPos;
+							if (!Number.isInteger(cityCollision)) units[j].Position = newPos;
 							units[j].Progress += 10;
 						}
 					}
 					for (var j = 0; j < officers.length; j++) {
 						if (officers[j].Objective != '-' && officers[j].Objective[0] == 'Assist' && officers[j].Objective[1] == i) {
-							officers[j].Position = newPos;
+							if (!Number.isInteger(cityCollision)) officers[j].Position = newPos;
 							officers[j].Progress += 10;
 						}
 					}
 					officers[i].Objective[2].Points.shift();
+				}
+				
+				// City threatened, attack back
+				cityCollision = deployedCityCollision(i);
+				if (Number.isInteger(cityCollision)) {
+					var viableOfficers = getCityViableOfficers(cityCollision, 'LDR');
+					var viableUnits = getCityViableUnits(cityCollision);
+					if (viableOfficers.length > 0 && viableUnits.length > 0) {
+						var commander = viableOfficers[0];
+						var totalCost = 0;
+						for (var j = 0; j < viableUnits.length; j++) totalCost += units[viableUnits[j]].Strength * marchCost;
+						if (cities[cityCollision].Food >= totalCost) {
+							deploy(commander, officers[i].City, viableUnits, []);
+							cities[cityCollision].Food -= totalCost;
+						}
+					}
+				}
+				
+				// Unit collisions
+				var unitCollision = deployedUnitCollision(i);
+				if (Number.isInteger(unitCollision)) {
+					initBattle(i, unitCollision);
 					
-					// City threatened, attack back
-					
-					// Deployed vs deployed collisions
+					startTimestamp = Date.now();
+					requestAnimationFrame(animateBattle);
+				}
+				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
+					cities[cityCollision].cDefense -= floor(getDeployedStrength(i) * demolishMultiplier);
+					if (cities[cityCollision].cDefense <= 0) {
+						// City taken
+						// Dismiss and return all officers to nearest city
+					}
 				}
 			}
 		}
-		//
-		draw();
+		
 		openInfoCard('City', officers[player].City);
-		//
+		
 		// Save changes to localStorage
-		///
 	}
 }
 
@@ -936,6 +1097,41 @@ function draw () {
 					y -= diff.Y * squareSize * mapAnimationStep;
 				}
 				drawImage(unitImage, x, y, w, h);
+			}
+		}
+		
+		// Draw battle scene
+		if (battle) {
+			closeCard(infoCard);
+			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
+			
+			for (var i = 0; i < units.length; i++) {
+				if (units[i].Vec) {
+					var pad = unitSize / 6;
+					var x = units[i].Vec.X - unitSize / 2 + pad;
+					var y = units[i].Vec.Y - unitSize / 2 + pad;
+					var size = unitSize - pad * 2;
+					
+					ctx.fillStyle = cityColor;
+					ctx.beginPath();
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - pad + 2 , 0, Math.PI * 2);
+					ctx.closePath();
+					ctx.fill();
+					
+					ctx.save();
+					ctx.beginPath();
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - pad, 0, Math.PI * 2);
+					ctx.clip();
+					drawImage(battleImage[units[i].Objective[1]], x, y, size, size);
+					ctx.restore();
+				}
+			}
+			
+			for (var i = 0; i < units.length; i++) {
+				if (units[i].Vec) {
+					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
+					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[units[i].Force].Color);
+				}
 			}
 		}
 	}

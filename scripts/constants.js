@@ -42,28 +42,31 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
 const scaling = 1;
-const animationTime = 5000;
+const animationTime = 500;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const cityIndexStart = 40;
 const marchCost = 1;
 const assistPercentage = 5;
-const enemyTargetLookup = 4;
-const enemyAggresion = 0.2;
+const enemyTargetLookup = 3;
+const enemyAggresion = 0;
 const devCost = 100;
 const devMultiplier = 0.3;
 const incomeMultiplier = 20;
 const harvestMultiplier = 35;
+const demolishMultiplier = 0.1;
 const orderLimit = 100;
 const orderDistrubtion = 5;
 const revoltImpact = 100;
 const strengthLimit = 10000;
 const moraleLimit = 100;
 const establishMorale = 40;
-const unitLimit = 10;
 const recuritCostMultiplier = 0.5;
 const recuritMultiplier = 20;
 const drillMultiplier = 0.3;
+const unitLimit = 10;
+const unitSize = 50;
+const unitCooldown = 1;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
 const objectiveLength = {
 	'Farm': 30,
@@ -82,7 +85,7 @@ const objectiveLength = {
 // Canvas
 const canvasPad = 0;
 const canvasFontSize = (isMobile || isPortrait) ? 9 : 14;
-const canvasFont = canvasFontSize + 'px "Consolas"';
+const canvasFont = 'bold ' + canvasFontSize + 'px "Consolas"';
 const cityPad = 3;
 const unitPad = 3;
 const buttonMargin = 5;

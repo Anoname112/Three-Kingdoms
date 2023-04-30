@@ -92,7 +92,7 @@ function City (name, force, gold, food, farm, trade, tech, defense, cfarm, ctrad
 	this.Speciality = speciality;
 }
 
-function Unit (type, force, city, position, morale, strength, objective, progress) {
+function Unit (type, force, city, position, morale, strength, objective, progress, vec, target, cooldown) {
 	this.Type = type;
 	this.Force = force;
 	this.City = city;
@@ -101,6 +101,9 @@ function Unit (type, force, city, position, morale, strength, objective, progres
 	this.Strength = strength;
 	this.Objective = objective;
 	this.Progress = progress;
+	this.Vec = vec;
+	this.Target = target;
+	this.Cooldown = cooldown;
 }
 
 function UnitType (name, type, attack, defense, speed, range, effectiveness, cost) {
