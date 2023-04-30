@@ -2,8 +2,12 @@
 function openPlayerCard () {
 	var playerContent = getElement('playerContent');
 	
+	var dateArray = date.split('-').map((x) => parseInt(x));
+	dateArray[2] += floor(mapAnimationStep * 10);
+	var displayDate = dateArray.join('-');
+	
 	playerContent.innerHTML = `<div class="timeSpace allyColor">` +
-			date + `&nbsp;
+			displayDate + `&nbsp;
 			<div class="forceSquare" style="background-color: ` + forces[playerForce].Color + `;"></div>&nbsp;` +
 			cities[officers[player].City].Name + `
 		</div>

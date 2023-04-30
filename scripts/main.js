@@ -533,6 +533,7 @@ function animateMap (timestamp) {
 	mapAnimationStep = (Date.now() - startTimestamp) / animationTime;
 	if (mapAnimationStep < 1) {
 		draw();
+		openPlayerCard();
 		requestAnimationFrame(animateMap);
 	}
 	else {
@@ -658,16 +659,30 @@ function animateMap (timestamp) {
 			}
 		}
 		// Revolts
-		///
+		for (var i = 0; i < cities.length; i++) {
+			if (cities[i].cOrder <= orderLimit / 2 && Math.random() * 100 > cities[i].cOrder) {
+				cities[i].cFarm -= revoltImpact + floor(Math.random() * 20 - 5);
+				if (cities[i].cFarm < 0) cities[i].cFarm = 0;
+				cities[i].cTrade -= revoltImpact + floor(Math.random() * 20 - 5);
+				if (cities[i].cTrade < 0) cities[i].cTrade = 0;
+				cities[i].cTech -= revoltImpact + floor(Math.random() * 20 - 5);
+				if (cities[i].cTech < 0) cities[i].cTech = 0;
+				cities[i].cDefense -= revoltImpact + floor(Math.random() * 20 - 5);
+				if (cities[i].cDefense < 0) cities[i].cDefense = 0;
+			}
+		}
 		
 		// Increase date
-		var dateArray = date.split('-').map((x) =>parseInt(x));
+		var dateArray = date.split('-').map((x) => parseInt(x));
 		dateArray[2] += 10;
 		if (dateArray[2] > 30) {
 			dateArray[2] = 1;
 			dateArray[1] += 1;
-			// Tax income, harvest, salary
-			///
+			// Trade income and farm harvest
+			for (var i = 0; i < cities.length; i++) {
+				cities[i].Gold += cities[i].Trade * incomeMultiplier;
+				cities[i].Food += cities[i].cFarm * harvestMultiplier;
+			}
 			
 			if (dateArray[1] > 12) {
 				dateArray[1] = 1;
@@ -680,6 +695,7 @@ function animateMap (timestamp) {
 		// Update positions
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
+				var cityCollision = positionIncludes(getCities(officers[i].Force, 'enemy').map((x) => getCityPosition(x)), officers[i].Position);
 				if (officers[i].Objective[2].Points[1]) {
 					var newPos = officers[i].Objective[2].Points[1]
 					officers[i].Position = newPos;
@@ -698,13 +714,17 @@ function animateMap (timestamp) {
 					}
 					officers[i].Objective[2].Points.shift();
 					
-					// Collisions and Battles
-					///
+					// City threatened, attack back
+					
+					// Deployed vs deployed collisions
+					// Deployed vs City collisions
 				}
 			}
 		}
+		//
 		draw();
-		
+		openInfoCard('City', officers[player].City);
+		//
 		// Save changes to localStorage
 		///
 	}
@@ -904,7 +924,7 @@ function draw () {
 				var h = squareSize - unitPad * 2;
 				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) {
 					var path = officers[i].Objective[2];
-					for (var j = 0; j < path.Points.length; j++) {
+					for (var j = 1; j < path.Points.length; j++) {
 						var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;
 						var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
 						fillRect(pathX, pathY, w, h, finalPathColor);

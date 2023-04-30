@@ -96,6 +96,11 @@ function getTextColor (cityColor) {
 	else return fontDark;
 }
 
+function positionIncludes (points, point) {
+	for (var i = 0; i < points.length; i++) if (points[i].X == point.X && points[i].Y == point.Y) return true;
+	return false;
+}
+
 function getCityIndexByName (cityName) {
 	for (var i = 0; i < cities.length; i++) if (cities[i].Name == cityName) return i;
 	return null;
