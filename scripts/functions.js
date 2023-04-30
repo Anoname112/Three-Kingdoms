@@ -74,7 +74,7 @@ function drawMessage (msg, x, y, align) {
 }
 
 function drawGlowMessage (msg, x, y, align, style) {
-	ctx.fillStyle = fontLight;
+	ctx.fillStyle = style == null ? fontLight : getTextColor(style);
 	drawMessage (msg, x - 1, y, align);
 	drawMessage (msg, x + 1, y, align);
 	drawMessage (msg, x, y - 1, align);

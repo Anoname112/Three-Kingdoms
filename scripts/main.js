@@ -558,7 +558,7 @@ function onMouseMove (e) {
 }
 
 function animateUnits (unitIndexs, elapsed) {
-	var elapsedSecond = elapsed / 1000;
+	var elapsedSecond = elapsed / battleSeconds;
 	for (var i = 0; i < unitIndexs.length; i++) {
 		var unit = units[unitIndexs[i]];
 		var targetIndex = unit.Target;
@@ -815,7 +815,7 @@ function animateMap (timestamp) {
 			dateArray[1] += 1;
 			// Trade income and farm harvest
 			for (var i = 0; i < cities.length; i++) {
-				cities[i].Gold += cities[i].Trade * incomeMultiplier;
+				cities[i].Gold += cities[i].cTrade * incomeMultiplier;
 				cities[i].Food += cities[i].cFarm * harvestMultiplier;
 			}
 			
@@ -876,10 +876,56 @@ function animateMap (timestamp) {
 				}
 				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
+					cities[cityCollision].cOrder -= orderDistrubtion * 2;
+					if (cities[cityCollision].cOrder < 0) cities[cityCollision].cOrder = 0;
 					cities[cityCollision].cDefense -= floor(getDeployedStrength(i) * demolishMultiplier);
 					if (cities[cityCollision].cDefense <= 0) {
-						// City taken
-						// Dismiss and return all officers to nearest city
+						// City Taken
+						var nearestCities = getCities(cities[cityCollision].Force, 'force', [cityCollision, 'near']);
+						for (var j = 0; j < officers.length; j++) {
+							if (officers[j].City == cityCollision) {
+								if (nearestCities.length > 1) {
+									// Return all officers to nearest city
+									if (officers[j].Objective != '-') {
+										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
+										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
+											units[officers[j].Objective[1]].Objective = '-';
+											units[officers[j].Objective[1]].Progress = '-';
+										}
+									}
+									officers[j].City = nearestCities[1];
+									officers[j].Objective = ['Return', nearestCities[1]];
+									officers[j].Progress = 0;
+								}
+								else {
+									// Auto employ
+									if (officers[j].Objective != '-') {
+										if (officers[j].Objective[0] == 'March') dismissDeployed(j, officers[i].Force);
+										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
+											units[officers[j].Objective[1]].Objective = '-';
+											units[officers[j].Objective[1]].Progress = '-';
+										}
+									}
+									officers[j].Force = officers[i].Force;
+									officers[j].City = officers[i].City;
+									officers[j].Objective = ['Return', officers[i].City];
+									officers[j].Progress = 0;
+								}
+							}
+						}
+						// Dismiss units
+						for (var j = 0; j < units.length; j++) {
+							if (units[j].City == cityCollision) {
+								units[j].Force = officers[i].Force;
+								if (units[j].Objective != '-' && units[j].Objective[0] != 'Return') {
+									units[j].Objective = '-';
+									units[j].Progress = '-';
+								}
+							}
+						}
+						
+						cities[cityCollision].Force = officers[i].Force;
+						cities[cityCollision].cDefense = captureDefense;
 					}
 				}
 			}
@@ -1105,6 +1151,7 @@ function draw () {
 			closeCard(infoCard);
 			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
 			
+			// Draw unit images
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec) {
 					var pad = unitSize / 6;
@@ -1127,11 +1174,17 @@ function draw () {
 				}
 			}
 			
+			// Draw unit icon and strength
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec) {
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[units[i].Force].Color);
 				}
+			}
+			
+			// Draw battle info
+			if (!battle[2]) {
+				drawGlowMessage('Paused', battleX + battleWidth / 2, battleY + cardMargin, 'center');
 			}
 		}
 	}
