@@ -41,18 +41,17 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,89, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
-const scaling = 1;
-const animationTime = 500;    // 5000
+const animationTime = 5000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const cityIndexStart = 40;
 const marchCost = 1;
 const assistPercentage = 5;
 const enemyTargetLookup = 3;
-const enemyAggresion = 0.2;
+const enemyAggresion = 0;
 const devCost = 100;
 const devMultiplier = 0.3;
-const incomeMultiplier = 20;
+const incomeMultiplier = 15;
 const harvestMultiplier = 35;
 const demolishMultiplier = 0.1;
 const captureDefense = 1000;
@@ -85,6 +84,7 @@ const objectiveLength = {
 };
 
 // Canvas
+const scaling = 1;
 const canvasPad = 0;
 const canvasFontSize = (isMobile || isPortrait) ? 9 : 14;
 const canvasFont = 'bold ' + canvasFontSize + 'px "Consolas"';
@@ -94,6 +94,7 @@ const buttonMargin = 5;
 const buttonPad = 5;
 const fontDark = '#000000';
 const fontLight = '#FFFFFF';
+const outlineSize = 1;
 const scenarioWidth = 300;
 const roadAlpha = 0.5;
 

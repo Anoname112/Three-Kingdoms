@@ -75,10 +75,10 @@ function drawMessage (msg, x, y, align) {
 
 function drawGlowMessage (msg, x, y, align, style) {
 	ctx.fillStyle = style == null ? fontLight : getTextColor(style);
-	drawMessage (msg, x - 1, y, align);
-	drawMessage (msg, x + 1, y, align);
-	drawMessage (msg, x, y - 1, align);
-	drawMessage (msg, x, y + 1, align);
+	drawMessage (msg, x - outlineSize, y, align);
+	drawMessage (msg, x + outlineSize, y, align);
+	drawMessage (msg, x, y - outlineSize, align);
+	drawMessage (msg, x, y + outlineSize, align);
 	ctx.fillStyle = style == null ? fontDark : style;
 	drawMessage (msg, x, y, align);
 }
@@ -523,4 +523,13 @@ function getNearestTarget (unitIndex, targetUnits) {
 		}
 	}
 	return nearestTarget;
+}
+
+function inBattle (officerIndex) {
+	for (var i = 0; i < battle.length; i++) {
+		for (var j = 0; j < 2; j++) {
+			if (battle[i][j] == officerIndex) return true;
+		}
+	}
+	return false;
 }

@@ -331,8 +331,7 @@ window.onload = function () {
 	
 	mousePos = new Point.Zero();
 	startTimestamp = mapAnimationStep = gState = 0;
-	battle = null;
-	battleImage = [];
+	battle = battleImage = [];
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);
@@ -351,7 +350,7 @@ function init (scenario, officerIndex) {
 	playerForce = officers[player].Force;
 	openPlayerCard();
 	
-	battle = null;
+	battle = [];
 	gState = 1;
 }
 
@@ -450,20 +449,23 @@ function onMouseClick (e) {
 			}
 		}
 	}
-	else if (battle) {
-		var deployed0 = getDeployedUnits(battle[0]);
-		var deployed1 = getDeployedUnits(battle[1]);
+	else if (battle.length > 0) {
+		var deployed0 = getDeployedUnits(battle[0][0]);
+		var deployed1 = getDeployedUnits(battle[0][1]);
 		if (deployed0.length == 0 || deployed1.length == 0) {
-			if (deployed0.length == 0) dismissDeployed(battle[0]);
-			if (deployed1.length == 0) dismissDeployed(battle[1]);
-			battle = null;
-			startTimestamp = 0;
-			openInfoCard('City', officers[player].City);
-			draw();
+			if (deployed0.length == 0) dismissDeployed(battle[0][0]);
+			if (deployed1.length == 0) dismissDeployed(battle[0][1]);
+			battle.shift();
+			if (battle.length > 0) initBattle();
+			else {
+				startTimestamp = 0;
+				draw();
+				openInfoCard('City', officers[player].City);
+			}
 			return;
 		}
 		
-		battle[2] = !battle[2];
+		battle[0][2] = !battle[0][2];
 	}
 }
 
@@ -590,17 +592,25 @@ function animateUnits (unitIndexs, elapsed) {
 }
 
 function animateBattle (timestamp) {
-	if (battle) {
+	if (battle.length > 0) {
 		var currentTimestamp = Date.now();
 		var elapsed = currentTimestamp - startTimestamp;
 		startTimestamp = currentTimestamp;
 		
-		if (battle[2]) {
-			var attUnits = getDeployedUnits(battle[0]);
-			var defUnits = getDeployedUnits(battle[1]);
+		if (battle[0][2]) {
+			var attUnits = getDeployedUnits(battle[0][0]);
+			var defUnits = getDeployedUnits(battle[0][1]);
 			// Find Target
-			for (var i = 0; i < attUnits.length; i++) if (units[attUnits[i]].Target == null) units[attUnits[i]].Target = units[getNearestTarget(attUnits[i], defUnits)].Id;
-			for (var i = 0; i < defUnits.length; i++) if (units[defUnits[i]].Target == null) units[defUnits[i]].Target = units[getNearestTarget(defUnits[i], attUnits)].Id;
+			if (defUnits.length > 0) {
+				for (var i = 0; i < attUnits.length; i++) {
+					if (units[attUnits[i]].Target == null) units[attUnits[i]].Target = units[getNearestTarget(attUnits[i], defUnits)].Id;
+				}
+			}
+			if (attUnits.length > 0) {
+				for (var i = 0; i < defUnits.length; i++) {
+					if (units[defUnits[i]].Target == null) units[defUnits[i]].Target = units[getNearestTarget(defUnits[i], attUnits)].Id;
+				}
+			}
 			
 			animateUnits(attUnits, elapsed);
 			animateUnits(defUnits, elapsed);
@@ -615,13 +625,13 @@ function animateBattle (timestamp) {
 		}
 		
 		draw();
-		
 		requestAnimationFrame(animateBattle);
 	}
 }
 
-function initBattle (attCommander, defCommander) {
-	battle = [attCommander, defCommander, false];
+function initBattle () {
+	var attCommander = battle[0][0];
+	var defCommander = battle[0][1];
 	battleImage[attCommander] = newImg("portraits/" + officers[attCommander].Name.split(' ').join('_') + ".jpg");
 	battleImage[defCommander] = newImg("portraits/" + officers[defCommander].Name.split(' ').join('_') + ".jpg");
 	var attUnits = getDeployedUnits(attCommander);
@@ -665,6 +675,9 @@ function initBattle (attCommander, defCommander) {
 			);
 		}
 	}
+	
+	startTimestamp = Date.now();
+	requestAnimationFrame(animateBattle);
 }
 
 function animateMap (timestamp) {
@@ -835,7 +848,7 @@ function animateMap (timestamp) {
 		
 		// Update positions
 		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March' && (!battle || !battle.includes(i))) {
+			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March' && (battle.length == 0 || !inBattle(i))) {
 				var cityCollision = deployedCityCollision(i);
 				if (officers[i].Objective[2].Points[1]) {
 					var newPos = officers[i].Objective[2].Points[1]
@@ -874,12 +887,7 @@ function animateMap (timestamp) {
 				
 				// Unit collisions
 				var unitCollision = deployedUnitCollision(i);
-				if (Number.isInteger(unitCollision)) {
-					initBattle(i, unitCollision);
-					
-					startTimestamp = Date.now();
-					requestAnimationFrame(animateBattle);
-				}
+				if (Number.isInteger(unitCollision)) battle.push([i, unitCollision, false]);
 				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
 					cities[cityCollision].cOrder -= orderDistrubtion * 2;
@@ -939,7 +947,11 @@ function animateMap (timestamp) {
 			}
 		}
 		
-		openInfoCard('City', officers[player].City);
+		if (battle.length > 0) initBattle();
+		else {
+			draw();
+			openInfoCard('City', officers[player].City);
+		}
 		
 		// Save changes to localStorage
 	}
@@ -1157,13 +1169,13 @@ function draw () {
 		}
 		
 		// Draw battle scene
-		if (battle) {
+		if (battle.length > 0) {
 			closeCard(infoCard);
 			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
 			
 			// Draw unit images
 			for (var i = 0; i < units.length; i++) {
-				if (units[i].Vec) {
+				if (units[i].Vec && (units[i].Objective[1] == battle[0][0] || units[i].Objective[1] == battle[0][1])) {
 					var pad = unitSize / 6;
 					var x = units[i].Vec.X - unitSize / 2 + pad;
 					var y = units[i].Vec.Y - unitSize / 2 + pad;
@@ -1186,15 +1198,15 @@ function draw () {
 			
 			// Draw unit icon and strength
 			for (var i = 0; i < units.length; i++) {
-				if (units[i].Vec) {
+				if (units[i].Vec && (units[i].Objective[1] == battle[0][0] || units[i].Objective[1] == battle[0][1])) {
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
 				}
 			}
 			
 			// Draw battle info
-			if (!battle[2]) {
-				drawGlowMessage('Paused', battleX + battleWidth / 2, battleY + cardMargin, 'center');
+			if (!battle[0][2]) {
+				drawGlowMessage('Paused', battleX + battleWidth / 2, battleY + unitSize / 2, 'center');
 			}
 		}
 	}
