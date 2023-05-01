@@ -96,14 +96,22 @@ function hexToDecimal (decimal) {
 	return parseInt(decimal, 16);
 }
 
-function getTextColor (cityColor) {
-	var r = hexToDecimal(cityColor.slice(1, 3));
-	var g = hexToDecimal(cityColor.slice(3, 5));
-	var b = hexToDecimal(cityColor.slice(5));
+function getTextColor (color) {
+	var r = hexToDecimal(color.slice(1, 3));
+	var g = hexToDecimal(color.slice(3, 5));
+	var b = hexToDecimal(color.slice(5));
 	var average = (r + g + b) / 3;
 	
 	if (average < 80) return fontLight;
 	else return fontDark;
+}
+
+function giveAlpha (color) {
+	var r = hexToDecimal(color.slice(1, 3));
+	var g = hexToDecimal(color.slice(3, 5));
+	var b = hexToDecimal(color.slice(5));
+	
+	return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + roadAlpha + ')';
 }
 
 function getCityIndexByName (cityName) {

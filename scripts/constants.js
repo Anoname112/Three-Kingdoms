@@ -41,14 +41,14 @@ const map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,89, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
-const animationTime = 5000;
+const animationTime = 4000;
 const mapWidth = map.length;
 const mapHeight = map[0].length;
 const cityIndexStart = 40;
 const marchCost = 1;
 const assistPercentage = 5;
 const enemyTargetLookup = 3;
-const enemyAggresion = 0;
+const enemyAggresion = 0.2;
 const devCost = 100;
 const devMultiplier = 0.3;
 const incomeMultiplier = 15;

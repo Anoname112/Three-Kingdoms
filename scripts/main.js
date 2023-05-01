@@ -37,9 +37,9 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
-unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 55, [1.0, 1.0, 1.1], 1200));
-unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 55, [1.1, 1.0, 1.2], 1400));
-unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 165, [0.9, 1.1, 1.0], 1000));
+unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 50, [1.0, 1.0, 1.1], 1200));
+unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 50, [1.1, 1.0, 1.25], 1400));
+unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 155, [0.9, 1.05, 1.0], 1000));
 
 /*
 1. February 184: Revolt Awakens Heroric Ambitions
@@ -376,6 +376,8 @@ function applyScenario (name) {
 						officers[k].Force = scenarios[i].Officers[j][0];
 						officers[k].City = scenarios[i].Officers[j][2];
 						officers[k].Position = getCityPosition(scenarios[i].Officers[j][2]);
+						
+						battleImage[k] = newImg("portraits/" + officers[k].Name.split(' ').join('_') + ".jpg");
 					}
 				}
 			}
@@ -459,8 +461,8 @@ function onMouseClick (e) {
 			if (battle.length > 0) initBattle();
 			else {
 				startTimestamp = 0;
-				draw();
 				openInfoCard('City', officers[player].City);
+				draw();
 			}
 			return;
 		}
@@ -632,8 +634,6 @@ function animateBattle (timestamp) {
 function initBattle () {
 	var attCommander = battle[0][0];
 	var defCommander = battle[0][1];
-	battleImage[attCommander] = newImg("portraits/" + officers[attCommander].Name.split(' ').join('_') + ".jpg");
-	battleImage[defCommander] = newImg("portraits/" + officers[defCommander].Name.split(' ').join('_') + ".jpg");
 	var attUnits = getDeployedUnits(attCommander);
 	var defUnits = getDeployedUnits(defCommander);
 	
@@ -866,7 +866,7 @@ function animateMap (timestamp) {
 							officers[j].Progress += 10;
 						}
 					}
-					officers[i].Objective[2].Points.shift();
+					if (!Number.isInteger(cityCollision)) officers[i].Objective[2].Points.shift();
 				}
 				
 				// City threatened, attack back
@@ -894,7 +894,7 @@ function animateMap (timestamp) {
 					if (cities[cityCollision].cOrder < 0) cities[cityCollision].cOrder = 0;
 					cities[cityCollision].cDefense -= floor(getDeployedStrength(i) * demolishMultiplier);
 					if (cities[cityCollision].cDefense <= 0) {
-						// City Taken
+						// City captured
 						var nearestCities = getCities(cities[cityCollision].Force, 'force', [cityCollision, 'near']);
 						for (var j = 0; j < officers.length; j++) {
 							if (officers[j].City == cityCollision) {
@@ -915,7 +915,7 @@ function animateMap (timestamp) {
 								else {
 									// Auto employ
 									if (officers[j].Objective != '-') {
-										if (officers[j].Objective[0] == 'March') dismissDeployed(j, officers[i].Force);
+										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
 											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
 											units[unitIndex].Objective = '-';
@@ -942,6 +942,10 @@ function animateMap (timestamp) {
 						
 						cities[cityCollision].Force = officers[i].Force;
 						cities[cityCollision].cDefense = captureDefense;
+						// Dismiss all deployed from the same force with i that target the captured city
+						for (var j = 0; j < officers.length; j++) {
+							if (officers[j].Objective != '-' && officers[j].Objective[0] == 'March' && officers[i].Objective[1] == cityCollision) dismissDeployed(i);
+						}
 					}
 				}
 			}
@@ -949,8 +953,8 @@ function animateMap (timestamp) {
 		
 		if (battle.length > 0) initBattle();
 		else {
-			draw();
 			openInfoCard('City', officers[player].City);
+			draw();
 		}
 		
 		// Save changes to localStorage
@@ -1156,7 +1160,7 @@ function draw () {
 					for (var j = 1; j < path.Points.length; j++) {
 						var pathX = canvasPad + path.Points[j].X * squareSize + unitPad;
 						var pathY = canvasPad + path.Points[j].Y * squareSize + unitPad;
-						fillRect(pathX, pathY, w, h, finalPathColor);
+						fillRect(pathX, pathY, w, h, giveAlpha(forces[getForceIndexById(officers[i].Force)].Color));
 					}
 				}
 				if (officers[i].Objective[2].Points[1]) {

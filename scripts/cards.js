@@ -645,7 +645,7 @@ function personel (cityIndex, objective) {
 		else if (objective == 'Dismiss') {
 			for (var i = 0; i < choosenOfficers.length; i++) {
 				var officer = officers[choosenOfficers[i]];
-				if (officer.Objective[0] == 'March') dismissDeployed(choosenOfficers[i]);
+				if (officer.Objective[0] == 'March') dismissDeployed(choosenOfficers[i], true);
 				else if (officer.Objective[0] == 'Assist' || officer.Objective[0] == 'Employ') {
 					officer.Objective = officer.Progress > 0 ? ['Return', cityIndex] : '-';
 					officer.Progress = officer.Progress > 0 ? 0 : '-';
@@ -778,7 +778,7 @@ function openOfficerCard (cityIndex, objective) {
 }
 
 // Deployed card
-function dismissDeployed (commander, newForce) {
+function dismissDeployed (commander, redraw) {
 	closeCard(deployedCard);
 	
 	var cityIndex = officers[commander].City;
@@ -786,24 +786,24 @@ function dismissDeployed (commander, newForce) {
 	if (Number.isInteger(progress)) {
 		officers[commander].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 		officers[commander].Progress = progress > 0 ? 0 : '-';
-		if (newForce) officers[commander].Force = newForce;
 		for (var i = 0; i < units.length; i++) {
 			if (units[i].Objective != '-' && units[i].Objective[0] == 'March'  && units[i].Objective[1] == commander) {
 				units[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 				units[i].Progress = progress > 0 ? 0 : '-';
-				if (newForce) units[i].Force = newForce;
+				units[i].Vec = null;
 			}
 		}
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == commander) {
 				officers[i].Objective = progress > 0 ? ['Return', cityIndex] : '-';
 				officers[i].Progress = progress > 0 ? 0 : '-';
-				if (newForce) officers[i].Force = newForce;
 			}
 		}
 		
-		if (!newForce) openInfoCard('City', officers[commander].City);
-		draw();
+		if (redraw) {
+			openInfoCard('City', officers[commander].City);
+			draw();
+		}
 	}
 }
 
@@ -816,7 +816,7 @@ function openDeployedCard (commander, select) {
 	
 	hoverCard.style.visibility = 'hidden';
 	
-	var buttons = `<input type="button" value="Dismiss" onclick="dismissDeployed(` + commander + `)">
+	var buttons = `<input type="button" value="Dismiss" onclick="dismissDeployed(` + commander + `, true)">
 		<input type="button" value="Cancel" onclick="closeCard(deployedCard)">`;
 	deployedCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[commander].Name + ` Unit</div>
 		<div class="selectContent">` + buttons + `</div>`;
