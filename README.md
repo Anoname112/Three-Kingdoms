@@ -7,4 +7,4 @@ Screenshot:
    <img src="https://raw.githubusercontent.com/Anoname112/Three-Kingdoms/main/ss.png" title="Three Kingdoms">
 </a>
 <br /><br />
-Notes: battle info, enable abilities
+Notes: battle info, enable abilities, bgm
