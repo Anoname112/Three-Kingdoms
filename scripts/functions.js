@@ -111,12 +111,12 @@ function getCityIndexByName (cityName) {
 	return null;
 }
 
-function getCities (forceIndex, alliance, sort) {
+function getCities (forceId, alliance, sort) {
 	var resultCities = [];
 	for (var i = 0; i < cities.length; i++) {
-		if (alliance == 'force' && cities[i].Force == forceIndex) resultCities.push(i);
-		else if (alliance == 'enemy' && cities[i].Force != forceIndex && cities[i].Force != '-') resultCities.push(i);
-		else if (alliance == 'nonForce' && cities[i].Force != forceIndex) resultCities.push(i);
+		if (alliance == 'force' && cities[i].Force == forceId) resultCities.push(i);
+		else if (alliance == 'enemy' && cities[i].Force != forceId && cities[i].Force != '-') resultCities.push(i);
+		else if (alliance == 'nonForce' && cities[i].Force != forceId) resultCities.push(i);
 	}
 	
 	if (sort) {
@@ -293,34 +293,34 @@ function getTransferCities (cityIndex) {
 	return transferCities;
 }
 
-function getForceViableOfficers (forceIndex) {
+function getForceViableOfficers (forceId) {
 	var viableOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
-		if (officers[i].Force == forceIndex && officers[i].Objective == '-') viableOfficers.push(i);
+		if (officers[i].Force == forceId && officers[i].Objective == '-') viableOfficers.push(i);
 	}
 	return viableOfficers;
 }
 
-function getForceViableUnits (forceIndex) {
+function getForceViableUnits (forceId) {
 	var viableUnits = [];
 	for (var i = 0; i < units.length; i++) {
-		if (units[i].Force == forceIndex && units[i].Objective == '-') viableUnits.push(i);
+		if (units[i].Force == forceId && units[i].Objective == '-') viableUnits.push(i);
 	}
 	return viableUnits;
 }
 
-function getForceStrength (forceIndex) {
-	var viableUnits = getForceViableUnits(forceIndex);
+function getForceStrength (forceId) {
+	var viableUnits = getForceViableUnits(forceId);
 	var strength = 0;
 	for (var i = 0; i < viableUnits.length; i++) strength += units[viableUnits[i]].Strength;
 	return strength;
 }
 
-function getForceMarchableCities (forceIndex) {
+function getForceMarchableCities (forceId) {
 	// Cities that have both available officers and available units
 	var marchable = [];
 	for (var i = 0; i < cities.length; i++) {
-		if (cities[i].Force == forceIndex && getCityViableOfficers(i).length > 0 && getCityViableUnits(i).length > 0) marchable.push(i);
+		if (cities[i].Force == forceId && getCityViableOfficers(i).length > 0 && getCityViableUnits(i).length > 0) marchable.push(i);
 	}
 	return marchable;
 }
@@ -340,6 +340,34 @@ function getForceEnemies (forceIndex) {
 		if (i != forceIndex) enemyForces.push(i);
 	}
 	return enemyForces;
+}
+
+function getNewForceId () {
+	var forceIds = forces.map(x => x.Id);
+	var i = 0;
+	while (true) {
+		if (!forceIds.includes(i)) return i;
+		i++;
+	}
+}
+
+function getNewUnitId () {
+	var unitIds = units.map(x => x.Id);
+	var i = 0;
+	while (true) {
+		if (!unitIds.includes(i)) return i;
+		i++;
+	}
+}
+
+function getForceIndexById (forceId) {
+	for (var i = 0; i < forces.length; i++) if (forces[i].Id == forceId) return i;
+	return null;
+}
+
+function getUnitIndexById (unitId) {
+	for (var i = 0; i < units.length; i++) if (units[i].Id == unitId) return i;
+	return null;
 }
 
 function getDeployedUnits (commander) {

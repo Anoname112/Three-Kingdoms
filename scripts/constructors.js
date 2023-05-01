@@ -69,7 +69,8 @@ function Scenario (name, date, forces, officers, units, playables) {
 	this.Playables = playables;
 }
 
-function Force (name, ruler, color) {
+function Force (id, name, ruler, color) {
+	this.Id = id;
 	this.Name = name;
 	this.Ruler = ruler;
 	this.Color = color;
@@ -92,7 +93,8 @@ function City (name, force, gold, food, farm, trade, tech, defense, cfarm, ctrad
 	this.Speciality = speciality;
 }
 
-function Unit (type, force, city, position, morale, strength, objective, progress, vec, target, cooldown) {
+function Unit (id, type, force, city, position, morale, strength, objective, progress, vec, target, cooldown) {
+	this.Id = id;
 	this.Type = type;
 	this.Force = force;
 	this.City = city;

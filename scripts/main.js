@@ -363,7 +363,7 @@ function applyScenario (name) {
 			date = scenarios[i].Date;
 			// Forces & Cities
 			for (var j = 0; j < scenarios[i].Forces.length; j++) {
-				forces.push(new Force(scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
+				forces.push(new Force(j, scenarios[i].Forces[j][0], scenarios[i].Forces[j][1], scenarios[i].Forces[j][2]));
 				for (var k = 0; k < scenarios[i].Forces[j][3].length; k++) {
 					cities[scenarios[i].Forces[j][3][k]].Force = forces.length - 1;
 				}
@@ -383,7 +383,7 @@ function applyScenario (name) {
 			
 			// Units
 			for (var j = 0; j < scenarios[i].Units.length; j++) {
-				units.push(new Unit(scenarios[i].Units[j][0], cities[scenarios[i].Units[j][1]].Force, scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-', null, null, 0));
+				units.push(new Unit(j, scenarios[i].Units[j][0], cities[scenarios[i].Units[j][1]].Force, scenarios[i].Units[j][1], scenarios[i].Units[j][2], scenarios[i].Units[j][3], scenarios[i].Units[j][4], '-', '-', null, null, 0));
 			}
 		}
 	}
@@ -506,7 +506,7 @@ function onMouseMove (e) {
 							<div class="unitInfo">
 								<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
 								<table class="stats">
-									<tr><th colspan="2">` + forces[officers[i].Force].Name + `</th></tr>
+									<tr><th colspan="2">` + forces[getForceIndexById(officers[i].Force)].Name + `</th></tr>
 									<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
 									<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
 								</table>
@@ -538,9 +538,10 @@ function onMouseMove (e) {
 				var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
 				if (cities[index].Force == '-') string += '<table class="cityStats">';
 				else {
-					var forceRulerName = officers[forces[cities[index].Force].Ruler].Name;
+					var forceIndex = getForceIndexById(cities[index].Force);
+					var forceRulerName = officers[forces[forceIndex].Ruler].Name;
 					string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-					string += '<table class="cityStats"><tr><th colspan="2">' + forces[cities[index].Force].Name + '</th></tr>';
+					string += '<table class="cityStats"><tr><th colspan="2">' + forces[forceIndex].Name + '</th></tr>';
 				}
 				string += `<tr><th>Gold</th><td>` + cities[index].Gold + `</td></tr>
 						<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>
@@ -561,7 +562,7 @@ function animateUnits (unitIndexs, elapsed) {
 	var elapsedSecond = elapsed / battleSeconds;
 	for (var i = 0; i < unitIndexs.length; i++) {
 		var unit = units[unitIndexs[i]];
-		var targetIndex = unit.Target;
+		var targetIndex = getUnitIndexById(unit.Target);
 		if (Number.isInteger(targetIndex)) {
 			var unitType = unitTypes[unit.Type];
 			var subtract = units[targetIndex].Vec.subtract(unit.Vec);
@@ -598,16 +599,18 @@ function animateBattle (timestamp) {
 			var attUnits = getDeployedUnits(battle[0]);
 			var defUnits = getDeployedUnits(battle[1]);
 			// Find Target
-			for (var i = 0; i < attUnits.length; i++) if (units[attUnits[i]].Target == null) units[attUnits[i]].Target = getNearestTarget(attUnits[i], defUnits);
-			for (var i = 0; i < defUnits.length; i++) if (units[defUnits[i]].Target == null) units[defUnits[i]].Target = getNearestTarget(defUnits[i], attUnits);
+			for (var i = 0; i < attUnits.length; i++) if (units[attUnits[i]].Target == null) units[attUnits[i]].Target = units[getNearestTarget(attUnits[i], defUnits)].Id;
+			for (var i = 0; i < defUnits.length; i++) if (units[defUnits[i]].Target == null) units[defUnits[i]].Target = units[getNearestTarget(defUnits[i], attUnits)].Id;
 			
 			animateUnits(attUnits, elapsed);
 			animateUnits(defUnits, elapsed);
 			
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
-				for (var j = 0; j < units.length; j++) if (units[j].Target == i) units[j].Target = null;
-				if (units[i].Strength <= 0) units.splice(i, 1);
+				if (units[i].Strength <= 0) {
+					for (var j = 0; j < units.length; j++) if (units[j].Target == units[i].Id) units[j].Target = null;
+					units.splice(i, 1);
+				}
 			}
 		}
 		
@@ -716,10 +719,11 @@ function animateMap (timestamp) {
 							dismissObjective(i);
 							break;
 						case 'Establish':
-							units.push(new Unit(index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-', null, null, 0));
+							units.push(new Unit(getNewUnitId(), index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-', null, null, 0));
 							dismissObjective(i);
 							break;
 						case 'Recurit':
+							index = getUnitIndexById(index);
 							units[index].Strength += floor(officers[i].CHR * recuritMultiplier);
 							if (units[index].Strength > strengthLimit) units[index].Strength = strengthLimit;
 							units[index].Objective = '-';
@@ -727,6 +731,7 @@ function animateMap (timestamp) {
 							dismissObjective(i);
 							break;
 						case 'Drill':
+							index = getUnitIndexById(index);
 							units[index].Morale += floor(officers[i].LDR * drillMultiplier);
 							if (units[index].Morale > moraleLimit) units[index].Morale = moraleLimit;
 							units[index].Objective = '-';
@@ -734,12 +739,13 @@ function animateMap (timestamp) {
 							dismissObjective(i);
 							break;
 						case 'Employ':
-							if (Math.random() * officers[i].CHR > Math.random() * getForceDiligence(officers[index].Force)) {
+							if (Math.random() * officers[i].CHR > Math.random() * getForceDiligence(getForceIndexById(officers[index].Force))) {
 								if (officers[index].Objective != '-') {
 									if (officers[index].Objective[0] == 'March') dismissDeployed(index);
 									else if (officers[index].Objective[0] == 'Recurit' || officers[index].Objective[0] == 'Drill') {
-										units[officers[index].Objective[1]].Objective = '-';
-										units[officers[index].Objective[1]].Progress = '-';
+										var unitIndex = getUnitIndexById(officers[index].Objective[1]);
+										units[unitIndex].Objective = '-';
+										units[unitIndex].Progress = '-';
 									}
 								}
 								officers[index].Force = officers[i].Force;
@@ -889,8 +895,9 @@ function animateMap (timestamp) {
 									if (officers[j].Objective != '-') {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
-											units[officers[j].Objective[1]].Objective = '-';
-											units[officers[j].Objective[1]].Progress = '-';
+											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
+											units[unitIndex].Objective = '-';
+											units[unitIndex].Progress = '-';
 										}
 									}
 									officers[j].City = nearestCities[1];
@@ -902,8 +909,9 @@ function animateMap (timestamp) {
 									if (officers[j].Objective != '-') {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j, officers[i].Force);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
-											units[officers[j].Objective[1]].Objective = '-';
-											units[officers[j].Objective[1]].Progress = '-';
+											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
+											units[unitIndex].Objective = '-';
+											units[unitIndex].Progress = '-';
 										}
 									}
 									officers[j].Force = officers[i].Force;
@@ -941,13 +949,14 @@ function playClick (e) {
 	if (startTimestamp > 0) return;
 	
 	for (var i = 0; i < forces.length; i++) {
-		if (i != playerForce) {
+		if (i != getForceIndexById(playerForce)) {
+			var forceId = forces[i].Id;
 			var diligence = getForceDiligence(i);
 			// Enemies march
-			var marchableCities = getForceMarchableCities(i);
+			var marchableCities = getForceMarchableCities(forceId);
 			for (var j = 0; j < marchableCities.length; j++) {
 				var source = marchableCities[j];
-				var targetCities = getCities(i, 'enemy', [source, 'near']);
+				var targetCities = getCities(forceId, 'enemy', [source, 'near']);
 				var targetLookup = enemyTargetLookup > targetCities.length ? targetCities.length : enemyTargetLookup;
 				for (var k = 0; k < targetLookup; k++) {
 					var target = targetCities[k];
@@ -968,7 +977,7 @@ function playClick (e) {
 			}
 			
 			// Enemies development and military
-			var enemyCities = getCities(i, 'force');
+			var enemyCities = getCities(forceId, 'force');
 			for (var j = 0; j < enemyCities.length; j++) {
 				var city = cities[enemyCities[j]];
 				var viableOfficers = getCityViableOfficers(enemyCities[j]);
@@ -1014,7 +1023,7 @@ function playClick (e) {
 									if (recuritable && city.Gold >= getCityHighestRecuritCost(enemyCities[j])) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Strength < strengthLimit && units[viableUnits[l]].Objective == '-') {
-												officers[viableOfficers[k]].Objective = ['Recurit', viableUnits[l]];
+												officers[viableOfficers[k]].Objective = ['Recurit', units[viableUnits[l]].Id];
 												officers[viableOfficers[k]].Progress = 0;
 												units[viableUnits[l]].Objective = ['Recurit', viableOfficers[k]];
 												units[viableUnits[l]].Progress = 0;
@@ -1029,7 +1038,7 @@ function playClick (e) {
 									if (drillable) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Morale < moraleLimit && units[viableUnits[l]].Objective == '-') {
-												officers[viableOfficers[k]].Objective = ['Drill', viableUnits[l]];
+												officers[viableOfficers[k]].Objective = ['Drill', units[viableUnits[l]].Id];
 												officers[viableOfficers[k]].Progress = 0;
 												units[viableUnits[l]].Objective = ['Drill', viableOfficers[k]];
 												units[viableUnits[l]].Progress = 0;
@@ -1114,9 +1123,10 @@ function draw () {
 						fillRect(emptyX, emptyY, emptySize, emptySize, cityColor);
 					}
 					else {
-						fillRect(x, y, squareSize, squareSize, forces[cities[index].Force].Color);
-						ctx.fillStyle = getTextColor(forces[cities[index].Force].Color);
-						drawMessage(forces[cities[index].Force].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
+						var forceIndex = getForceIndexById(cities[index].Force);
+						fillRect(x, y, squareSize, squareSize, forces[forceIndex].Color);
+						ctx.fillStyle = getTextColor(forces[forceIndex].Color);
+						drawMessage(forces[forceIndex].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
 					}
 				}
 			}
@@ -1178,7 +1188,7 @@ function draw () {
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec) {
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
-					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[units[i].Force].Color);
+					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
 				}
 			}
 			

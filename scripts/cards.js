@@ -6,16 +6,17 @@ function openPlayerCard () {
 	dateArray[2] += floor(mapAnimationStep * 10);
 	var displayDate = dateArray.join('-');
 	
+	var forceIndex = getForceIndexById(playerForce);
 	playerContent.innerHTML = `<div class="timeSpace allyColor">` +
 			displayDate + `&nbsp;
-			<div class="forceSquare" style="background-color: ` + forces[playerForce].Color + `;"></div>&nbsp;` +
+			<div class="forceSquare" style="background-color: ` + forces[forceIndex].Color + `;"></div>&nbsp;` +
 			cities[officers[player].City].Name + `
 		</div>
 		<div class="playerContent">
 			<div class="playerPortrait"><img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg"></div>
 			<div class="playerProfile">
 				<div class="playerName allyColor">` + officers[player].Name + `</div>
-				<b>` + forces[playerForce].Name + `</b>
+				<b>` + forces[forceIndex].Name + `</b>
 				` + createStatsTable(player) + `
 			</div>
 		</div>`;
@@ -493,7 +494,7 @@ function military (cityIndex, objective) {
 				
 				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritCostMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
-					officers[officer].Objective = [objective, unitIndex];
+					officers[officer].Objective = [objective, units[unitIndex].Id];
 					officers[officer].Progress = 0;
 					units[unitIndex].Objective = [objective, officer];
 					units[unitIndex].Progress = 0;
@@ -651,8 +652,9 @@ function personel (cityIndex, objective) {
 				}
 				else {
 					if (officer.Objective[0] == 'Recurit' || officer.Objective[0] == 'Drill') {
-						units[officer.Objective[1]].Objective = '-';
-						units[officer.Objective[1]].Progress = '-';
+						var unitIndex = getUnitIndexById(officer.Objective[1]);
+						units[unitIndex].Objective = '-';
+						units[unitIndex].Progress = '-';
 					}
 					officer.Objective = '-';
 					officer.Progress = '-';
@@ -829,7 +831,8 @@ function openDeployedCard (commander, select) {
 // Info card
 function createCityTable (cityIndex) {
 	var city = cities[cityIndex];
-	var forceName = forces[city.Force] ? forces[city.Force].Name : '-'
+	var forceIndex = getForceIndexById(city.Force);
+	var forceName = forces[forceIndex] ? forces[forceIndex].Name : '-'
 	return `<table class="stats">
 			<tr><th colspan="2">` + forceName + `</th><th>Farm</th><td>` + city.cFarm + `/` + city.Farm + `</td></tr>
 			<tr><th>Gold</th><td>` + city.Gold + `</td><th>Trade</th><td>` + city.cTrade + `/` + city.Trade + `</td></tr>
@@ -936,7 +939,7 @@ function openInfoCard (mode, index) {
 		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
 			<div class="deployedContent">
 				<table class="stats">
-					<tr><th colspan="2">` + forces[officers[index].Force].Name + `</th></tr>
+					<tr><th colspan="2">` + forces[getForceIndexById(officers[index].Force)].Name + `</th></tr>
 					<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(index) + `</td></tr>
 					<tr><th>Target</th><td style="text-align: center;">` + cities[officers[index].Objective[1]].Name + `</td></tr>
 				</table><br />` +
