@@ -1209,9 +1209,15 @@ function draw () {
 			}
 			
 			// Draw battle info
-			if (!battle[0][2]) {
-				drawGlowMessage('Paused', battleX + battleWidth / 2, battleY + unitSize / 2, 'center');
-			}
+			var attX = battleX + battleWidth * 0.25;
+			var defX = battleX + battleWidth * 0.75;
+			var forceY = battleY + unitSize / 4;
+			var strY = battleY + unitSize / 2;
+			drawGlowMessage(officers[battle[0][0]].Name + ' Unit', attX, forceY, 'center');
+			drawGlowMessage(officers[battle[0][1]].Name + ' Unit', defX, forceY, 'center');
+			drawGlowMessage(getDeployedStrength(battle[0][0]), attX, strY, 'center');
+			drawGlowMessage(getDeployedStrength(battle[0][1]), defX, strY, 'center');
+			if (!battle[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, strY, 'center');
 		}
 	}
 	
