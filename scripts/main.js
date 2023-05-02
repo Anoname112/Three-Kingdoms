@@ -1103,7 +1103,7 @@ function draw () {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				var w = scenarioWidth;
 				var h = buttonHeight;
-				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, finalPathColor);
+				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 				drawRect(x, y, w, h, fontDark);
 				ctx.fillStyle = fontDark;
 				drawMessage(
