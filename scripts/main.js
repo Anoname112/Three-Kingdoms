@@ -690,7 +690,7 @@ function animateMap (timestamp) {
 	}
 	else {
 		startTimestamp = mapAnimationStep = 0;
-		// Development and military progress
+		// Development progress
 		var redirected = [];
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && !redirected.includes(i)) {
@@ -791,6 +791,7 @@ function animateMap (timestamp) {
 				}
 			}
 		}
+		// Military progress
 		for (var i = 0; i < units.length; i++) {
 			if (units[i].Objective != '-') {
 				var objective = units[i].Objective[0];
@@ -815,7 +816,7 @@ function animateMap (timestamp) {
 		}
 		// Revolts
 		for (var i = 0; i < cities.length; i++) {
-			if (cities[i].cOrder <= orderLimit / 2 && Math.random() * 100 > cities[i].cOrder) {
+			if (cities[i].cOrder <= orderLimit / 2 && Math.random() * orderLimit / 2 > cities[i].cOrder) {
 				cities[i].cFarm -= revoltImpact + floor(Math.random() * 20 - 5);
 				if (cities[i].cFarm < 0) cities[i].cFarm = 0;
 				cities[i].cTrade -= revoltImpact + floor(Math.random() * 20 - 5);
@@ -847,7 +848,7 @@ function animateMap (timestamp) {
 		date = dateArray.join('-');
 		openPlayerCard();
 		
-		// Update positions
+		// Update positions of commander and units
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March' && (battle.length == 0 || !inBattle(i))) {
 				var cityCollision = deployedCityCollision(i);
@@ -924,7 +925,7 @@ function animateMap (timestamp) {
 									officers[j].Progress = 0;
 								}
 								else {
-									// Auto employ
+									// Auto employ officers of captured city
 									if (officers[j].Objective != '-') {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
@@ -940,7 +941,7 @@ function animateMap (timestamp) {
 								}
 							}
 						}
-						// Dismiss units
+						// Dismiss units of captured city
 						for (var j = 0; j < units.length; j++) {
 							if (units[j].City == cityCollision) {
 								units[j].Force = officers[i].Force;
@@ -968,8 +969,6 @@ function animateMap (timestamp) {
 			draw();
 			saveData();
 		}
-		
-		// Save changes to localStorage
 	}
 }
 
