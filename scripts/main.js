@@ -1232,14 +1232,14 @@ function draw () {
 			// Draw battle info
 			var attX = battleX + battleWidth * 0.25;
 			var defX = battleX + battleWidth * 0.75;
-			var forceY = battleY + unitSize * 0.2;
+			var forceY = battleY + unitSize * 0.15;
 			var statsY = battleY + unitSize * 0.5;
-			var strengthY = battleY + unitSize * 0.8;
+			var strengthY = battleY + unitSize * 0.85;
 			fillRect(battleX, battleY, battleWidth, unitSize, highlightColor);
 			drawGlowMessage(officers[battle[0][0]].Name + ' Unit', attX, forceY, 'center');
 			drawGlowMessage(officers[battle[0][1]].Name + ' Unit', defX, forceY, 'center');
-			drawGlowMessage('ATK: ' + battle[0][3][0] + ' DEF: ' + battle[0][3][1], attX, statsY, 'center');
-			drawGlowMessage('ATK: ' + battle[0][4][0] + ' DEF: ' + battle[0][4][1], defX, statsY, 'center');
+			drawGlowMessage('🗡' + battle[0][3][0] + ' ⛨' + battle[0][3][1], attX, statsY, 'center');
+			drawGlowMessage('🗡' + battle[0][4][0] + ' ⛨' + battle[0][4][1], defX, statsY, 'center');
 			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][0]), attX, strengthY, 'center');
 			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][1]), defX, strengthY, 'center');
 			if (!battle[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, statsY, 'center');
