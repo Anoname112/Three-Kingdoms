@@ -1123,11 +1123,7 @@ function draw () {
 			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
 			drawRect(x, y, w, h, fontDark);
 			ctx.fillStyle = fontDark;
-			drawMessage(
-				"LOAD SAVE DATA",
-				x + buttonPad,
-				y + buttonHeight / 2
-			);
+			drawMessage("LOAD DATA", x + buttonPad, y + buttonHeight / 2);
 		}
 	}
 	else if (gState == 1) {
