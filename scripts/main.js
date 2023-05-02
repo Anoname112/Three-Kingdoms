@@ -955,7 +955,7 @@ function animateMap (timestamp) {
 						cities[cityCollision].cDefense = captureDefense;
 						// Dismiss all deployed from the same force with i that target the captured city
 						for (var j = 0; j < officers.length; j++) {
-							if (officers[j].Objective != '-' && officers[j].Objective[0] == 'March' && officers[i].Objective[1] == cityCollision) dismissDeployed(i);
+							if (officers[j].Force == officers[i].Force && officers[j].Objective != '-' && officers[j].Objective[0] == 'March' && officers[j].Objective[1] == cityCollision) dismissDeployed(j);
 						}
 					}
 				}
