@@ -903,7 +903,7 @@ function animateMap (timestamp) {
 					// Deployed vs City collisions
 					cities[cityCollision].cOrder -= orderDistrubtion;
 					if (cities[cityCollision].cOrder < 0) cities[cityCollision].cOrder = 0;
-					cities[cityCollision].cDefense -= floor(getDeployedStrength(i) * demolishMultiplier);
+					cities[cityCollision].cDefense -= demolishFixed + floor(getDeployedStrength(i) * demolishMultiplier);
 					if (cities[cityCollision].cDefense <= 0) {
 						// City captured
 						var nearestCities = getCities(cities[cityCollision].Force, 'force', [cityCollision, 'near']);

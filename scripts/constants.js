@@ -53,6 +53,7 @@ const devCost = 100;
 const devMultiplier = 0.3;
 const incomeMultiplier = 15;
 const harvestMultiplier = 35;
+const demolishFixed = 100;
 const demolishMultiplier = 0.1;
 const captureDefense = 1000;
 const orderLimit = 100;
