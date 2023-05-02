@@ -900,7 +900,7 @@ function animateMap (timestamp) {
 				}
 				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
-					cities[cityCollision].cOrder -= orderDistrubtion * 2;
+					cities[cityCollision].cOrder -= orderDistrubtion;
 					if (cities[cityCollision].cOrder < 0) cities[cityCollision].cOrder = 0;
 					cities[cityCollision].cDefense -= floor(getDeployedStrength(i) * demolishMultiplier);
 					if (cities[cityCollision].cDefense <= 0) {
@@ -1103,7 +1103,7 @@ function draw () {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				var w = scenarioWidth;
 				var h = buttonHeight;
-				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
+				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
 				drawRect(x, y, w, h, fontDark);
 				ctx.fillStyle = fontDark;
 				drawMessage(
@@ -1221,9 +1221,10 @@ function draw () {
 			// Draw battle info
 			var attX = battleX + battleWidth * 0.25;
 			var defX = battleX + battleWidth * 0.75;
-			var forceY = battleY + unitSize * 0.3;
-			var statsY = battleY + unitSize * 0.6;
-			var strengthY = battleY + unitSize * 0.9;
+			var forceY = battleY + unitSize * 0.2;
+			var statsY = battleY + unitSize * 0.5;
+			var strengthY = battleY + unitSize * 0.8;
+			fillRect(battleX, battleY, battleWidth, unitSize, highlightColor);
 			drawGlowMessage(officers[battle[0][0]].Name + ' Unit', attX, forceY, 'center');
 			drawGlowMessage(officers[battle[0][1]].Name + ' Unit', defX, forceY, 'center');
 			drawGlowMessage('ATK: ' + battle[0][3][0] + ' DEF: ' + battle[0][3][1], attX, statsY, 'center');

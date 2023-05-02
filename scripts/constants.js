@@ -110,7 +110,7 @@ const buttonWidth = 100;
 // Pathfingding
 const roadColor = '#FFFFFF';
 const cityColor = '#888888';
-const buttonColor = 'rgba(34, 34, 204, 0.5)';
+const highlightColor = 'rgba(34, 34, 204, 0.5)';
 
 // Images
 const images = [];
