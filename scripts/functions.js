@@ -6,11 +6,6 @@ function isNumeric (value) {
 	return /^\d+$/.test(value);
 }
 
-function updateCanvasSize () {
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-}
-
 function pause () {
 	gState = 0;
 	bgm.pause();
@@ -47,15 +42,6 @@ function drawImage (image, x, y, w, h) {
 function fillRect (x, y, w, h, s) {
 	ctx.fillStyle = s == null ? "#000" : s;
 	ctx.fillRect(x, y, w, h);
-}
-
-function drawLine (x1, y1, x2, y2, s) {
-	ctx.strokeStyle = (s == null) ? "#000" : s;
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.closePath();
-	ctx.stroke();
 }
 
 function drawRect (x, y, w, h, s) {
@@ -540,4 +526,45 @@ function inBattle (officerIndex) {
 		}
 	}
 	return false;
+}
+
+function saveData () {
+	localStorage.setItem('date', JSON.stringify(date));
+	localStorage.setItem('player', JSON.stringify(player));
+	localStorage.setItem('playerForce', JSON.stringify(playerForce));
+	localStorage.setItem('forces', JSON.stringify(forces));
+	localStorage.setItem('cities', JSON.stringify(cities));
+	localStorage.setItem('officers', JSON.stringify(officers));
+	localStorage.setItem('units', JSON.stringify(units));
+}
+
+function loadData () {
+	date = JSON.parse(localStorage.getItem('date'));
+	player = JSON.parse(localStorage.getItem('player'));
+	playerForce = JSON.parse(localStorage.getItem('playerForce'));
+	forces = JSON.parse(localStorage.getItem('forces'));
+	cities = JSON.parse(localStorage.getItem('cities'));
+	officers = JSON.parse(localStorage.getItem('officers'));
+	units = JSON.parse(localStorage.getItem('units'));
+	
+	// Fix points and prepare battle images
+	for (var i = 0; i < officers.length; i++) {
+		officers[i].Position = new Point(officers[i].Position.X, officers[i].Position.Y);
+		if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
+			for (var j = 0; j < officers[i].Objective[2].Points.length; j++) {
+				officers[i].Objective[2].Points[j] = new Point(officers[i].Objective[2].Points[j].X, officers[i].Objective[2].Points[j].Y);
+			}
+		}
+		if (Number.isInteger(officers[i].City)) battleImage[i] = newImg("portraits/" + officers[i].Name.split(' ').join('_') + ".jpg");
+	}
+	for (var i = 0; i < units.length; i++) units[i].Position = new Point(units[i].Position.X, units[i].Position.Y);
+	
+	startPoint = new Point.Zero();
+	endPoint = new Point.Zero();
+	mousePos = new Point.Zero();
+	openPlayerCard();
+	battle = [];
+	gState = 1;
+	
+	draw();
 }
