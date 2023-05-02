@@ -108,14 +108,6 @@ const hoverMarginY = 0;
 const buttonWidth = 100;
 
 // Pathfingding
-const buttonColor = '#4444FF';
-const roadColor = '#FFFFFF';
-const wallColor = '#000000';
-const cityColor = '#888888';
-const startColor = '#22CC22';
-const exploredColor = '#880000';
-const opensetColor = '#CCCC22';
-const endColor = '#FF2222';
 const finalPathColor = 'rgba(34, 34, 204, 0.5)';
 
 // Images

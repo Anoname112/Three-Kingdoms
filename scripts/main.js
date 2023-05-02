@@ -887,7 +887,17 @@ function animateMap (timestamp) {
 				
 				// Unit collisions
 				var unitCollision = deployedUnitCollision(i);
-				if (Number.isInteger(unitCollision)) battle.push([i, unitCollision, false]);
+				if (Number.isInteger(unitCollision)) {
+					var attStats = getAssistedStats(i);
+					var defStats = getAssistedStats(unitCollision);
+					battle.push([
+						i,
+						unitCollision,
+						false,
+						[calculateAttack(attStats[0], attStats[1]).toFixed(1), calculateDefense(attStats[0], attStats[2]).toFixed(1)],
+						[calculateAttack(defStats[0], defStats[1]).toFixed(1), calculateDefense(defStats[0], defStats[2]).toFixed(1)]
+					]);
+				}
 				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
 					cities[cityCollision].cOrder -= orderDistrubtion * 2;
@@ -1211,13 +1221,16 @@ function draw () {
 			// Draw battle info
 			var attX = battleX + battleWidth * 0.25;
 			var defX = battleX + battleWidth * 0.75;
-			var forceY = battleY + unitSize / 4;
-			var strY = battleY + unitSize / 2;
+			var forceY = battleY + unitSize * 0.3;
+			var statsY = battleY + unitSize * 0.6;
+			var strengthY = battleY + unitSize * 0.9;
 			drawGlowMessage(officers[battle[0][0]].Name + ' Unit', attX, forceY, 'center');
 			drawGlowMessage(officers[battle[0][1]].Name + ' Unit', defX, forceY, 'center');
-			drawGlowMessage(getDeployedStrength(battle[0][0]), attX, strY, 'center');
-			drawGlowMessage(getDeployedStrength(battle[0][1]), defX, strY, 'center');
-			if (!battle[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, strY, 'center');
+			drawGlowMessage('ATK: ' + battle[0][3][0] + ' DEF: ' + battle[0][3][1], attX, statsY, 'center');
+			drawGlowMessage('ATK: ' + battle[0][4][0] + ' DEF: ' + battle[0][4][1], defX, statsY, 'center');
+			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][0]), attX, strengthY, 'center');
+			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][1]), defX, strengthY, 'center');
+			if (!battle[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, statsY, 'center');
 		}
 	}
 	
