@@ -283,7 +283,7 @@ window.onload = function () {
 	playerCard.style.height = ((window.innerHeight - infoY) / 4 - (cardMargin * 2)) + 'px';
 	
 	battleX = infoX;
-	battleY = 0;
+	battleY = infoY;
 	//battleY = infoY + playerCard.clientHeight + cardMargin * 2;
 	battleWidth = window.innerWidth - battleX;
 	battleHeight = window.innerHeight - battleY;
