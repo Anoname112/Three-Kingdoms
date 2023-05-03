@@ -283,7 +283,8 @@ window.onload = function () {
 	playerCard.style.height = ((window.innerHeight - infoY) / 4 - (cardMargin * 2)) + 'px';
 	
 	battleX = infoX;
-	battleY = infoY + playerCard.clientHeight + cardMargin * 2;
+	battleY = 0;
+	//battleY = infoY + playerCard.clientHeight + cardMargin * 2;
 	battleWidth = window.innerWidth - battleX;
 	battleHeight = window.innerHeight - battleY;
 	infoCard.style.left = (infoX + cardMargin) + 'px';
@@ -552,6 +553,7 @@ function onMouseClick (e) {
 			if (battle.length > 0) initBattle();
 			else {
 				startTimestamp = 0;
+				openPlayerCard();
 				openInfoCard('City', officers[player].City);
 				draw();
 				saveData();
@@ -1195,6 +1197,7 @@ function draw () {
 		
 		// Draw battle scene
 		if (battle.length > 0) {
+			closeCard(playerCard);
 			closeCard(infoCard);
 			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
 			

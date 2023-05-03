@@ -958,5 +958,5 @@ function openInfoCard (mode, index) {
 
 function closeCard (card) {
 	card.style.visibility = 'hidden';
-	card.innerHTML = '';
+	if (card != playerCard) card.innerHTML = '';
 }
