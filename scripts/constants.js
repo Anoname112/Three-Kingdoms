@@ -66,7 +66,7 @@ const recuritCostMultiplier = 0.5;
 const recuritMultiplier = 20;
 const drillMultiplier = 0.3;
 const unitLimit = 10;
-const unitSize = 50;
+const unitSize = isMobile || isPortrait ? 30 : 50;
 const unitCooldown = 1;
 const battleSeconds = 1000;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
@@ -87,7 +87,7 @@ const objectiveLength = {
 // Canvas
 const scaling = 1;
 const canvasPad = 0;
-const canvasFontSize = (isMobile || isPortrait) ? 9 : 14;
+const canvasFontSize = isMobile || isPortrait ? 9 : 14;
 const canvasFont = 'bold ' + canvasFontSize + 'px "Consolas"';
 const cityPad = 3;
 const unitPad = 3;

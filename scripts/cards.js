@@ -116,7 +116,7 @@ function openCityCard (cityIndex, select) {
 	}
 	else {
 		if (city.Force == '-') backColor = 'neutralColor';
-		var disabled = (getForceMarchableCities(playerForce).length > 0) ? '' : ' disabled';
+		var disabled = getForceMarchableCities(playerForce).length > 0 ? '' : ' disabled';
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + disabled + `>
 			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
 	}
@@ -812,7 +812,7 @@ function openDeployedCard (commander, select) {
 	if (select) closeCard(selectCard);
 	openInfoCard('Unit', commander);
 	
-	var backColor = (officers[commander].Force == playerForce) ? 'allyColor' : 'enemyColor';
+	var backColor = officers[commander].Force == playerForce ? 'allyColor' : 'enemyColor';
 	
 	hoverCard.style.visibility = 'hidden';
 	

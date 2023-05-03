@@ -34,8 +34,8 @@ function newImg (path) {
 }
 
 function drawImage (image, x, y, w, h) {
-	w = (w == null) ? image.width : w;
-	h = (h == null) ? image.height : h;
+	w = w == null ? image.width : w;
+	h = h == null ? image.height : h;
 	ctx.drawImage(image, x, y, w, h);
 }
 
@@ -45,7 +45,7 @@ function fillRect (x, y, w, h, s) {
 }
 
 function drawRect (x, y, w, h, s) {
-	ctx.strokeStyle = (s == null) ? "#000" : s;
+	ctx.strokeStyle = s == null ? "#000" : s;
 	ctx.lineWidth = scaling;
 	ctx.beginPath();
 	ctx.strokeRect(x, y, w, h);
@@ -55,7 +55,7 @@ function drawRect (x, y, w, h, s) {
 
 function drawMessage (msg, x, y, align) {
 	ctx.textBaseline = 'middle';
-	ctx.textAlign = (align == null) ? "start" : align;
+	ctx.textAlign = align == null ? "start" : align;
 	ctx.fillText(msg, x, y);
 }
 
@@ -337,7 +337,7 @@ function getForceEnemies (forceIndex) {
 }
 
 function getNewForceId () {
-	var forceIds = forces.map(x => x.Id);
+	var forceIds = forces.map((x) => x.Id);
 	var i = 0;
 	while (true) {
 		if (!forceIds.includes(i)) return i;
@@ -346,7 +346,7 @@ function getNewForceId () {
 }
 
 function getNewUnitId () {
-	var unitIds = units.map(x => x.Id);
+	var unitIds = units.map((x) => x.Id);
 	var i = 0;
 	while (true) {
 		if (!unitIds.includes(i)) return i;
