@@ -30,14 +30,14 @@ function openSelectCard (clickedObjects) {
 	for (var i = 0; i < clickedObjects.length; i++) {
 		if (clickedObjects[i][0] == cityCard) {
 			var cityName = cities[clickedObjects[i][1]].Name;
-			buttons += '<input type="button" value="' + cityName + '" onclick="openCityCard(' + clickedObjects[i][1] + ', true)">';
+			buttons += '<input type="button" value="' + cityName + '" onclick="openCityCard(' + clickedObjects[i][1] + ', true); playAudio(clickSound);">';
 		}
 		else if (clickedObjects[i][0] == deployedCard) {
 			var commanderName = officers[clickedObjects[i][1]].Name;
-			buttons += '<input type="button" value="' + commanderName + '" onclick="openDeployedCard(' + clickedObjects[i][1] + ', true)">';
+			buttons += '<input type="button" value="' + commanderName + '" onclick="openDeployedCard(' + clickedObjects[i][1] + ', true); playAudio(clickSound);">';
 		}
 	}
-	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard)"></div>`;
+	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard); playAudio(clickSound);"></div>`;
 	
 	selectCard.style.visibility = 'visible';
 	if (mousePos.X + selectCard.clientWidth > mapSize) selectCard.style.left = (mousePos.X - selectCard.clientWidth) + 'px';
@@ -84,41 +84,41 @@ function openCityCard (cityIndex, select) {
 		var dismissDisabled = getCityNonViableOfficers(cityIndex, true).length > 0 ? '' : ' disabled';
 		var oTransferDisabled = viableOfficers.length > 0 && getCities(city.Force, 'force').length > 1 ? '' : ' disabled';
 		
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + marchDisabled + `>
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `); playAudio(clickSound);"` + marchDisabled + `>
 			<div class="buttonsGroup">
 				<div class="label">Development &#9654;</div>
 				<div class="buttons">
-					<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm')"` + farmDisabled + `>
-					<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade')"` + tradeDisabled + `>
-					<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech')"` + techDisabled + `>
-					<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense')"` + defenseDisabled + `>
-					<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order')"` + orderDisabled + `>
+					<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm'); playAudio(clickSound);"` + farmDisabled + `>
+					<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade'); playAudio(clickSound);"` + tradeDisabled + `>
+					<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech'); playAudio(clickSound);"` + techDisabled + `>
+					<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense'); playAudio(clickSound);"` + defenseDisabled + `>
+					<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order'); playAudio(clickSound);"` + orderDisabled + `>
 				</div>
 			</div>
 			<div class="buttonsGroup">
 				<div class="label">Military &#9654;</div>
 				<div class="buttons">
-					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish')"` + establishDisabled + `>
-					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit')"` + recuritDisabled + `>
-					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill')"` + drillDisabled + `>
-					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer')"` + uTransferDisabled + `>
+					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish'); playAudio(clickSound);"` + establishDisabled + `>
+					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit'); playAudio(clickSound);"` + recuritDisabled + `>
+					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill'); playAudio(clickSound);"` + drillDisabled + `>
+					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + uTransferDisabled + `>
 				</div>
 			</div>
 			<div class="buttonsGroup">
 				<div class="label">Personel &#9654;</div>
 				<div class="buttons">
-					<input type="button" value="Employ" onclick="openOfficerCard(` + cityIndex + `, 'Employ')"` + employDisabled + `>
-					<input type="button" value="Dismiss" onclick="openOfficerCard(` + cityIndex + `, 'Dismiss')"` + dismissDisabled + `>
-					<input type="button" value="Transfer" onclick="openOfficerCard(` + cityIndex + `, 'Transfer')"` + oTransferDisabled + `>
+					<input type="button" value="Employ" onclick="openOfficerCard(` + cityIndex + `, 'Employ'); playAudio(clickSound);"` + employDisabled + `>
+					<input type="button" value="Dismiss" onclick="openOfficerCard(` + cityIndex + `, 'Dismiss'); playAudio(clickSound);"` + dismissDisabled + `>
+					<input type="button" value="Transfer" onclick="openOfficerCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + oTransferDisabled + `>
 				</div>
 			</div>
-			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+			<input type="button" value="Cancel" onclick="closeCard(cityCard); playAudio(clickSound);">`;
 	}
 	else {
 		if (city.Force == '-') backColor = 'neutralColor';
 		var disabled = getForceMarchableCities(playerForce).length > 0 ? '' : ' disabled';
-		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `)"` + disabled + `>
-			<input type="button" value="Cancel" onclick="closeCard(cityCard)">`;
+		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `); playAudio(clickSound);"` + disabled + `>
+			<input type="button" value="Cancel" onclick="closeCard(cityCard); playAudio(clickSound);">`;
 	}
 	
 	var string = `<div class="cityName ` + backColor + `">` + city.Name + `</div>
@@ -355,7 +355,10 @@ function openMarchCard (cityIndex) {
 					<td><div id="assistedStats"></div></td>
 				</tr>
 				<tr>
-					<td><input type="button" value="March" onclick="march()"> <input type="button" value="Cancel" onclick="closeCard(marchCard)"></td>
+					<td>
+						<input type="button" value="March" onclick="march(); playAudio(confirmSound);">
+						<input type="button" value="Cancel" onclick="closeCard(marchCard); playAudio(clickSound);">
+					</td>
 				</tr>
 			</table>
 		</div>`;
@@ -436,8 +439,8 @@ function openDevCard (cityIndex, objective) {
 					</tr>
 					<tr>
 						<td>
-							<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `')">
-							<input type="button" value="Cancel" onclick="closeCard(devCard)">
+							<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+							<input type="button" value="Cancel" onclick="closeCard(devCard); playAudio(clickSound);">
 						</td>
 					</tr>
 				</table>
@@ -544,8 +547,8 @@ function openUnitCard (cityIndex, objective) {
 					</tr>
 					<tr>
 						<td>
-							<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `')">
-							<input type="button" value="Cancel" onclick="closeCard(unitCard)">
+							<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+							<input type="button" value="Cancel" onclick="closeCard(unitCard); playAudio(clickSound);">
 						</td>
 					</tr>
 				</table>
@@ -608,8 +611,8 @@ function openUnitCard (cityIndex, objective) {
 						</tr>
 						<tr>
 							<td>
-								<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `')">
-								<input type="button" value="Cancel" onclick="closeCard(unitCard)">
+								<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+								<input type="button" value="Cancel" onclick="closeCard(unitCard); playAudio(clickSound);">
 							</td>
 						</tr>
 					</table>
@@ -765,8 +768,8 @@ function openOfficerCard (cityIndex, objective) {
 					secondRowHTML +
 					`<tr>
 						<td>
-							<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `')">
-							<input type="button" value="Cancel" onclick="closeCard(officerCard)">
+							<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+							<input type="button" value="Cancel" onclick="closeCard(officerCard); playAudio(clickSound);">
 						</td>
 					</tr>
 				</table>
@@ -816,8 +819,8 @@ function openDeployedCard (commander, select) {
 	
 	hoverCard.style.visibility = 'hidden';
 	
-	var buttons = `<input type="button" value="Dismiss" onclick="dismissDeployed(` + commander + `, true)">
-		<input type="button" value="Cancel" onclick="closeCard(deployedCard)">`;
+	var buttons = `<input type="button" value="Dismiss" onclick="dismissDeployed(` + commander + `, true); playAudio(confirmSound);">
+		<input type="button" value="Cancel" onclick="closeCard(deployedCard); playAudio(clickSound);">`;
 	deployedCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[commander].Name + ` Unit</div>
 		<div class="selectContent">` + buttons + `</div>`;
 	

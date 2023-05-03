@@ -10,6 +10,12 @@ var unitCard;
 var officerCard;
 var deployedCard;
 var infoCard;
+var hidden;
+var clickSound;
+var confirmSound;
+var mainSound;
+var battleSound;
+var playSvg;
 
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var battle;
@@ -215,9 +221,9 @@ window.onload = function () {
 	canvas.onmousemove = onMouseMove;
 	canvas.width = window.innerWidth * ratio;
 	canvas.height = window.innerHeight * ratio;
-	canvas.style.width = window.innerWidth + "px";
-    canvas.style.height = window.innerHeight + "px";
-    canvas.getContext("2d").scale(ratio, ratio);
+	canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.getContext('2d').scale(ratio, ratio);
 	ctx = canvas.getContext('2d');
 	
 	// Define cards
@@ -261,6 +267,29 @@ window.onload = function () {
 	infoCard.classList.add('infoCard');
 	document.body.appendChild(infoCard);
 	
+	hidden = document.createElement('div');
+	hidden.style.visibility = 'hidden';
+	document.body.appendChild(hidden);
+	
+	// Prepare audio
+	hidden.innerHTML += `<audio id="clickSound"><source src="bgm/click.mp3" /></audio>
+		<audio id="confirmSound"><source src="bgm/confirm.mp3" /></audio>
+		<audio id="mainSound"><source src="bgm/main` + floor(Math.random() * 2) + `.mp3" /></audio>
+		<audio id="battleSound"><source src="bgm/battle.mp3" /></audio>`;
+	clickSound = getElement('clickSound');
+	confirmSound = getElement('confirmSound');
+	mainSound = getElement('mainSound');
+	mainSound.addEventListener('ended', function () {
+		this.currentTime = 0;
+		this.play();
+	}, false);
+	battleSound = getElement('battleSound');
+	battleSound.addEventListener('ended', function () {
+		this.currentTime = 0;
+		this.play();
+	}, false);
+	clickSound.style.visibility = confirmSound.style.visibility = mainSound.style.visibility = battleSound.style.visibility = 'hidden';
+	
 	// Init sizes
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
@@ -292,9 +321,9 @@ window.onload = function () {
 	infoCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
 	infoCard.style.height = (window.innerHeight - infoY - playerCard.clientHeight - (cardMargin * 3)) + 'px';
 	
-	playSvg = getElement("playSvg");
+	playSvg = getElement('playSvg');
 	playSvg.onclick = playClick;
-	playSvg.style.position = "absolute";
+	playSvg.style.position = 'absolute';
 	playSvg.style.top = playSvgPad;
 	playSvg.style.right = playSvgPad;
 	playSvg.style.width = playerCard.clientHeight - playSvgPad * 2;
@@ -352,6 +381,7 @@ function init (scenario, officerIndex) {
 	
 	battle = [];
 	gState = 1;
+	playAudio(mainSound);
 }
 
 function applyScenario (name) {
@@ -501,13 +531,17 @@ function onMouseClick (e) {
 				if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
 					init(scenarios[i].Name, scenarios[i].Playables[j]);
 					draw();
+					playAudio(confirmSound);
 				}
 			}
 		}
 		
 		if (localStorage['player']) {
 			var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-			if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) loadData();
+			if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
+				loadData();
+				playAudio(confirmSound);
+			}
 		}
 	}
 	else if (gState == 1 && startTimestamp == 0) {
@@ -541,6 +575,8 @@ function onMouseClick (e) {
 				}
 				else openSelectCard(clickedObjects);
 			}
+			
+			playAudio(clickSound);
 		}
 	}
 	else if (battle.length > 0) {
@@ -557,6 +593,8 @@ function onMouseClick (e) {
 				openInfoCard('City', officers[player].City);
 				draw();
 				saveData();
+				stopAudio(battleSound);
+				playAudio(mainSound);
 			}
 			return;
 		}
@@ -965,7 +1003,11 @@ function animateMap (timestamp) {
 			}
 		}
 		
-		if (battle.length > 0) initBattle();
+		if (battle.length > 0) {
+			initBattle();
+			stopAudio(mainSound);
+			playAudio(battleSound);
+		}
 		else {
 			openInfoCard('City', officers[player].City);
 			draw();

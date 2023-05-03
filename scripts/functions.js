@@ -565,6 +565,6 @@ function loadData () {
 	openPlayerCard();
 	battle = [];
 	gState = 1;
-	
+	playAudio(mainSound);
 	draw();
 }
