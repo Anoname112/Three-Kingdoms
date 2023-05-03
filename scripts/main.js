@@ -1238,8 +1238,8 @@ function draw () {
 			fillRect(battleX, battleY, battleWidth, unitSize, highlightColor);
 			drawGlowMessage(officers[battle[0][0]].Name + ' Unit', attX, forceY, 'center');
 			drawGlowMessage(officers[battle[0][1]].Name + ' Unit', defX, forceY, 'center');
-			drawGlowMessage('🗡' + battle[0][3][0] + ' ⛨' + battle[0][3][1], attX, statsY, 'center');
-			drawGlowMessage('🗡' + battle[0][4][0] + ' ⛨' + battle[0][4][1], defX, statsY, 'center');
+			drawGlowMessage('⚔' + battle[0][3][0] + ' ⛨' + battle[0][3][1], attX, statsY, 'center');
+			drawGlowMessage('⚔' + battle[0][4][0] + ' ⛨' + battle[0][4][1], defX, statsY, 'center');
 			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][0]), attX, strengthY, 'center');
 			drawGlowMessage('☗ ' + getDeployedStrength(battle[0][1]), defX, strengthY, 'center');
 			if (!battle[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, statsY, 'center');
