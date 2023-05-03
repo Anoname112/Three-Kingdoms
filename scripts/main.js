@@ -574,9 +574,8 @@ function onMouseClick (e) {
 					else if (clickedObjects[0][0] == deployedCard) openDeployedCard(clickedObjects[0][1]);
 				}
 				else openSelectCard(clickedObjects);
+				playAudio(clickSound);
 			}
-			
-			playAudio(clickSound);
 		}
 	}
 	else if (battle.length > 0) {
