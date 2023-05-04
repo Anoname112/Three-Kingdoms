@@ -20,6 +20,7 @@ var playSvg;
 var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
 var battle;
 var battleImage;
+var damages;
 var mousePos;
 var startTimestamp;
 var mapAnimationStep;
@@ -360,7 +361,9 @@ window.onload = function () {
 	
 	mousePos = new Point.Zero();
 	startTimestamp = mapAnimationStep = gState = 0;
-	battle = battleImage = [];
+	battle = [];
+	battleImage = [];
+	damages = [];
 	/*
 	// Play Warlord scenario as Cao Cao right of the bat
 	init('Warlords', 15);
@@ -618,8 +621,10 @@ function animateUnits (unitIndexs, elapsed) {
 					var assistedStats = getAssistedStats(unit.Objective[1]);
 					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
 					var defense = calculateDefense(assistedStats[0], assistedStats[2]);
-					units[targetIndex].Strength -= floor(calculateDamage(unit.Morale, attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
-					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;					
+					var damage = floor(calculateDamage(unit.Morale, attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
+					units[targetIndex].Strength -= damage;
+					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;			
+					damages[units[targetIndex].Id] = [damage, startTimestamp];
 					
 					unit.Cooldown = unitCooldown;
 				}
@@ -661,9 +666,13 @@ function animateBattle (timestamp) {
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Strength <= 0) {
 					for (var j = 0; j < units.length; j++) if (units[j].Target == units[i].Id) units[j].Target = null;
+					if (damages[units[i].Id]) damages[units[i].Id] = null;
 					units.splice(i, 1);
 				}
 			}
+			
+			// Remove damage info
+			for (var i = 0; i < damages.length; i++) if (damages[i] && startTimestamp - damages[i][2] > battleSeconds) damages[i] = null;
 		}
 		
 		draw();
@@ -1262,12 +1271,19 @@ function draw () {
 					ctx.clip();
 					drawImage(battleImage[units[i].Objective[1]], x, y, size, size);
 					ctx.restore();
+					
+					
 				}
 			}
 			
-			// Draw unit icon and strength
+			// Draw unit icon, strength and damage info
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battle[0][0] || units[i].Objective[1] == battle[0][1])) {
+					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
+						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
+						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + size / 2, 'center', '#FF0000');
+						ctx.font = canvasFont;
+					}
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
 				}
