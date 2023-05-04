@@ -1,8 +1,5 @@
 # Three-Kingdoms
-TO DO:
-Damage info
-Correct stats
-Enable abilities
+TO DO: Damage info, Correct stats, Enable abilities
 
 <!--
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
