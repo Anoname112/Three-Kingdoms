@@ -86,9 +86,9 @@ function getTextColor (color) {
 	var r = hexToDecimal(color.slice(1, 3));
 	var g = hexToDecimal(color.slice(3, 5));
 	var b = hexToDecimal(color.slice(5));
-	var average = (r + g + b) / 3;
+	var lumosity = (r * 0.99 + g * 1.02 + b * 0.99) / 3;
 	
-	if (average < 80) return fontLight;
+	if (lumosity < 85) return fontLight;
 	else return fontDark;
 }
 
