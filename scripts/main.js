@@ -1271,8 +1271,6 @@ function draw () {
 					ctx.clip();
 					drawImage(battleImages[units[i].Objective[1]], x, y, size, size);
 					ctx.restore();
-					
-					
 				}
 			}
 			
