@@ -1073,7 +1073,7 @@ function playClick (e) {
 					
 					for (var k = 0; k < viableOfficers.length; k++) {
 						if (Math.random() * 100 < diligence) {
-							switch (parseInt(Math.random() * (viableUnits.length > 0 ? 10 : 7))) {
+							switch (parseInt(Math.random() * (viableUnits.length > 0 ? 11 : 8))) {
 								case 0:
 									if (city.cFarm < city.Farm && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Farm', enemyCities[j]]);
 									break;
@@ -1099,6 +1099,16 @@ function playClick (e) {
 									}
 									break;
 								case 7:
+									var cityOfficersCount = getCities(officers[viableOfficers[k]].Force, 'force').map((x) => [x, getCityOfficers(x).length]).sort(function (a, b) {
+										if (a[1] == b[1]) return 0;
+										else return (a[1] < b[1]) ? -1 : 1;
+									});
+									if (getCityOfficers(officers[viableOfficers[k]].City).length - cityOfficersCount[0][1] > 1) {
+										officers[viableOfficers[k]].Objective = ['Transfer', cityOfficersCount[0][0]];
+										officers[viableOfficers[k]].Progress = 0;
+									}
+									break;
+								case 8:
 									if (recuritable && city.Gold >= getCityHighestRecuritCost(enemyCities[j])) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Strength < strengthLimit && units[viableUnits[l]].Objective == '-') {
@@ -1113,7 +1123,7 @@ function playClick (e) {
 										}
 									}
 									break;
-								case 8: case 9:
+								case 9: case 10:
 									if (drillable) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Morale < moraleLimit && units[viableUnits[l]].Objective == '-') {
