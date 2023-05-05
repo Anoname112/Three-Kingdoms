@@ -520,9 +520,9 @@ function getNearestTarget (unitIndex, targetUnits) {
 }
 
 function inBattle (officerIndex) {
-	for (var i = 0; i < battle.length; i++) {
+	for (var i = 0; i < battles.length; i++) {
 		for (var j = 0; j < 2; j++) {
-			if (battle[i][j] == officerIndex) return true;
+			if (battles[i][j] == officerIndex) return true;
 		}
 	}
 	return false;
@@ -555,7 +555,7 @@ function loadData () {
 				officers[i].Objective[2].Points[j] = new Point(officers[i].Objective[2].Points[j].X, officers[i].Objective[2].Points[j].Y);
 			}
 		}
-		if (Number.isInteger(officers[i].City)) battleImage[i] = newImg("portraits/" + officers[i].Name.split(' ').join('_') + ".jpg");
+		if (Number.isInteger(officers[i].City)) battleImages[i] = newImg("portraits/" + officers[i].Name.split(' ').join('_') + ".jpg");
 	}
 	for (var i = 0; i < units.length; i++) units[i].Position = new Point(units[i].Position.X, units[i].Position.Y);
 	
@@ -563,7 +563,7 @@ function loadData () {
 	endPoint = new Point.Zero();
 	mousePos = new Point.Zero();
 	openPlayerCard();
-	battle = [];
+	battles = [];
 	gState = 1;
 	playAudio(mainSound);
 	draw();
