@@ -345,6 +345,11 @@ function getNewForceId () {
 	}
 }
 
+function getForceIndexById (forceId) {
+	for (var i = 0; i < forces.length; i++) if (forces[i].Id == forceId) return i;
+	return null;
+}
+
 function getNewUnitId () {
 	var unitIds = units.map((x) => x.Id);
 	var i = 0;
@@ -352,11 +357,6 @@ function getNewUnitId () {
 		if (!unitIds.includes(i)) return i;
 		i++;
 	}
-}
-
-function getForceIndexById (forceId) {
-	for (var i = 0; i < forces.length; i++) if (forces[i].Id == forceId) return i;
-	return null;
 }
 
 function getUnitIndexById (unitId) {
@@ -385,6 +385,13 @@ function getDeployedStrength (commander) {
 	var strength = 0;
 	for (var i = 0; i < deployedUnits.length; i++) strength += units[deployedUnits[i]].Strength;
 	return strength;
+}
+
+function giveBattleBonus (unitIndexes) {
+	for (var i = 0; i < unitIndexes.length; i++) {
+		units[unitIndexes[i]].Morale += moraleBonus;
+		if (units[unitIndexes[i]].Morale > moraleLimit) units[unitIndexes[i]].Morale = moraleLimit;
+	}
 }
 
 function getOfficerIndexByName (officerName) {

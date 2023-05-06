@@ -587,19 +587,11 @@ function onMouseClick (e) {
 		// If battle ended, init another battle if there are any
 		if (deployed0.length == 0 || deployed1.length == 0) {
 			if (deployed0.length == 0) {
-				// Battle bonus
-				for (var i = 0; i < deployed1.length; i++) {
-					units[deployed1[i]].Morale += moraleBonus;
-					if (units[deployed1[i]].Morale > moraleLimit) units[deployed1[i]].Morale = moraleLimit;
-				}
+				giveBattleBonus(deployed1);
 				dismissDeployed(battles[0][0]);
 			}
 			if (deployed1.length == 0) {
-				// Battle bonus
-				for (var i = 0; i < deployed0.length; i++) {
-					units[deployed0[i]].Morale += moraleBonus;
-					if (units[deployed0[i]].Morale > moraleLimit) units[deployed0[i]].Morale = moraleLimit;
-				}
+				giveBattleBonus(deployed0);
 				dismissDeployed(battles[0][1]);
 			}
 			battles.shift();
@@ -680,6 +672,7 @@ function animateBattle (timestamp) {
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Strength <= 0) {
+					// Unlock all targeting enemies
 					for (var j = 0; j < units.length; j++) if (units[j].Target == units[i].Id) units[j].Target = null;
 					if (damages[units[i].Id]) damages[units[i].Id] = null;
 					units.splice(i, 1);
@@ -830,6 +823,7 @@ function animateMap (timestamp) {
 								officers[index].Objective = ['Return', officers[i].City];
 								officers[index].Progress = 0;
 								redirected.push(index);
+								// Dismiss all employer
 								for (var j = 0; j < officers.length; j++) {
 									if (officers[j].Objective != '-' && officers[j].Objective[0] == 'Employ' && officers[j].Objective[1] == index) {
 										officers[j].Objective = ['Return', officers[j].City];
