@@ -92,12 +92,12 @@ function getTextColor (color) {
 	else return fontDark;
 }
 
-function giveAlpha (color) {
+function giveAlpha (color, alpha) {
 	var r = hexToDecimal(color.slice(1, 3));
 	var g = hexToDecimal(color.slice(3, 5));
 	var b = hexToDecimal(color.slice(5));
 	
-	return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + roadAlpha + ')';
+	return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + (alpha ? alpha : roadAlpha) + ')';
 }
 
 function getCityIndexByName (cityName) {
@@ -371,6 +371,14 @@ function getDeployedUnits (commander) {
 	}
 	return deployedUnits;
 }
+
+function getDeployedAssistOfficers (commander) {
+	var assistOfficers = [];
+	for (var i = 0; i < officers.length; i++) {
+		if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == commander) assistOfficers.push(i);
+	}
+	return assistOfficers;
+}	
 
 function getDeployedStrength (commander) {
 	var deployedUnits = getDeployedUnits(commander);

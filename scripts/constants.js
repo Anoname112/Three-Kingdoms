@@ -61,6 +61,7 @@ const orderDistrubtion = 5;
 const revoltImpact = 100;
 const strengthLimit = 10000;
 const moraleLimit = 100;
+const moraleBonus = 5;
 const establishMorale = 40;
 const recuritCostMultiplier = 0.5;
 const recuritMultiplier = 20;
@@ -99,6 +100,10 @@ const fontLight = '#FFFFFF';
 const outlineSize = 1;
 const scenarioWidth = 300;
 const roadAlpha = 0.5;
+const roadColor = '#FFFFFF';
+const cityColor = '#888888';
+const highlightColor = 'rgba(221, 221, 221, 0.5)';
+const damageColor = '#FF0000';
 
 // Control
 const playSvgPad = 10;
@@ -108,12 +113,6 @@ const cardMargin = 10;
 const hoverMarginX = 10;
 const hoverMarginY = 0;
 const buttonWidth = 100;
-
-// Pathfingding
-const roadColor = '#FFFFFF';
-const cityColor = '#888888';
-const highlightColor = 'rgba(221, 221, 221, 0.5)';
-const damageColor = '#FF0000';
 
 // Images
 const images = [];

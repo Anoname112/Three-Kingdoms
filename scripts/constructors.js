@@ -115,6 +115,7 @@ function UnitType (name, type, attack, defense, speed, range, effectiveness, cos
 	this.Defense = defense;
 	this.Speed = speed;
 	this.Range = range;
-	this.Effectiveness = effectiveness;	// [Spearmen, Horsemen, Archer]
+	// [Spearmen, Horsemen, Archer]
+	this.Effectiveness = effectiveness;
 	this.Cost = cost;
 }

@@ -478,6 +478,7 @@ function military (cityIndex, objective) {
 		officer = getOfficerIndexByName(officer);
 		if (officer != null) {
 			if (getElement('unitType')) {
+				// Establish
 				var unitTypeIndex = parseInt(getElement('unitType').value);
 				
 				var cost = unitTypes[unitTypeIndex].Cost;
@@ -493,6 +494,7 @@ function military (cityIndex, objective) {
 				}
 			}
 			else if (getElement('unit')) {
+				// Recurit or Drill
 				var unitIndex = parseInt(getElement('unit').value);
 				
 				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritCostMultiplier : 0;
@@ -934,10 +936,7 @@ function openInfoCard (mode, index) {
 		if (officers[index].Force == playerForce) backColor = 'allyColor';
 		
 		var deployedUnits = getDeployedUnits(index);
-		var assistOfficers = [];
-		for (var i = 0; i < officers.length; i++) {
-			if (officers[i].Objective != '-' && officers[i].Objective[0] == 'Assist' && officers[i].Objective[1] == index) assistOfficers.push(i);
-		}
+		var assistOfficers = getDeployedAssistOfficers(index);
 		
 		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
 			<div class="deployedContent">
@@ -952,8 +951,8 @@ function openInfoCard (mode, index) {
 				<div id="infoStats"></div>
 			</div>`;
 		
-		var assisted = getAssistedStats(index);
-		calculatedStatsTable('infoStats', assisted[0], assisted[1], assisted[2]);
+		var assistedStats = getAssistedStats(index);
+		calculatedStatsTable('infoStats', assistedStats[0], assistedStats[1], assistedStats[2]);
 	}
 	
 	infoCard.style.visibility = 'visible';

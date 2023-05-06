@@ -584,9 +584,24 @@ function onMouseClick (e) {
 	else if (battles.length > 0) {
 		var deployed0 = getDeployedUnits(battles[0][0]);
 		var deployed1 = getDeployedUnits(battles[0][1]);
+		// If battle ended, init another battle if there are any
 		if (deployed0.length == 0 || deployed1.length == 0) {
-			if (deployed0.length == 0) dismissDeployed(battles[0][0]);
-			if (deployed1.length == 0) dismissDeployed(battles[0][1]);
+			if (deployed0.length == 0) {
+				// Battle bonus
+				for (var i = 0; i < deployed1.length; i++) {
+					units[deployed1[i]].Morale += moraleBonus;
+					if (units[deployed1[i]].Morale > moraleLimit) units[deployed1[i]].Morale = moraleLimit;
+				}
+				dismissDeployed(battles[0][0]);
+			}
+			if (deployed1.length == 0) {
+				// Battle bonus
+				for (var i = 0; i < deployed0.length; i++) {
+					units[deployed0[i]].Morale += moraleBonus;
+					if (units[deployed0[i]].Morale > moraleLimit) units[deployed0[i]].Morale = moraleLimit;
+				}
+				dismissDeployed(battles[0][1]);
+			}
 			battles.shift();
 			if (battles.length > 0) initBattle();
 			else {
@@ -630,7 +645,7 @@ function animateUnits (unitIndexs, elapsed) {
 				}
 			}
 			else {
-				// Walk to target
+				// Move closer to target
 				var normalized = subtract.normalize();
 				unit.Vec = unit.Vec.add(normalized.scale(unitType.Speed * elapsedSecond));
 			}
@@ -1011,6 +1026,7 @@ function animateMap (timestamp) {
 			}
 		}
 		
+		// Init battle if there are battles, or end turn
 		if (battles.length > 0) {
 			initBattle();
 			stopAudio(mainSound);
@@ -1099,10 +1115,12 @@ function playClick (e) {
 									}
 									break;
 								case 7:
+									// Get force's cities and sort ascending by officers count
 									var cityOfficersCount = getCities(officers[viableOfficers[k]].Force, 'force').map((x) => [x, getCityOfficers(x).length]).sort(function (a, b) {
 										if (a[1] == b[1]) return 0;
 										else return (a[1] < b[1]) ? -1 : 1;
 									});
+									// Transfer if the city count minus the lowest count is bigger than 1
 									if (getCityOfficers(officers[viableOfficers[k]].City).length - cityOfficersCount[0][1] > 1) {
 										officers[viableOfficers[k]].Objective = ['Transfer', cityOfficersCount[0][0]];
 										officers[viableOfficers[k]].Progress = 0;
