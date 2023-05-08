@@ -1,7 +1,7 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Damage info, Correct stats, Enable abilities
+TO DO: Damage info, Correct stats, Enable abilities, Transfer Gold-Food
 
 <!--
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
