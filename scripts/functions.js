@@ -389,8 +389,11 @@ function getDeployedStrength (commander) {
 
 function giveBattleBonus (unitIndexes) {
 	for (var i = 0; i < unitIndexes.length; i++) {
+		// Increase morale
 		units[unitIndexes[i]].Morale += moraleBonus;
 		if (units[unitIndexes[i]].Morale > moraleLimit) units[unitIndexes[i]].Morale = moraleLimit;
+		// Reset cooldown
+		units[unitIndexes[i]].Cooldown = 0;
 	}
 }
 

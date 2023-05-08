@@ -1106,13 +1106,13 @@ function animateMap (timestamp) {
 		for (var i = 0; i < cities.length; i++) {
 			if (cities[i].cOrder <= orderLimit / 2 && Math.random() * orderLimit / 2 > cities[i].cOrder) {
 				cities[i].cFarm -= revoltImpact + floor(Math.random() * 20 - 5);
-				if (cities[i].cFarm < 0) cities[i].cFarm = 0;
+				if (cities[i].cFarm < devMinimum) cities[i].cFarm = devMinimum;
 				cities[i].cTrade -= revoltImpact + floor(Math.random() * 20 - 5);
-				if (cities[i].cTrade < 0) cities[i].cTrade = 0;
+				if (cities[i].cTrade < devMinimum) cities[i].cTrade = devMinimum;
 				cities[i].cTech -= revoltImpact + floor(Math.random() * 20 - 5);
-				if (cities[i].cTech < 0) cities[i].cTech = 0;
+				if (cities[i].cTech < devMinimum) cities[i].cTech = devMinimum;
 				cities[i].cDefense -= revoltImpact + floor(Math.random() * 20 - 5);
-				if (cities[i].cDefense < 0) cities[i].cDefense = 0;
+				if (cities[i].cDefense < devMinimum) cities[i].cDefense = devMinimum;
 			}
 		}
 		
@@ -1126,7 +1126,9 @@ function animateMap (timestamp) {
 			for (var i = 0; i < cities.length; i++) {
 				if (cities[i].Force != '-') {
 					cities[i].Gold += cities[i].cTrade * incomeMultiplier;
+					if (cities[i].Gold > maxGold) cities[i].Gold = maxGold;
 					cities[i].Food += cities[i].cFarm * harvestMultiplier;
+					if (cities[i].Food > maxFood) cities[i].Food = maxFood;
 				}
 			}
 			
