@@ -181,6 +181,11 @@ select {
 	height: $inputSize;
 }
 
+.marchContent, .devContent, .unitContent, .officerContent {
+	display: grid;
+	place-items: center;
+}
+
 .buttonsGroup {
 	position: relative;
 }

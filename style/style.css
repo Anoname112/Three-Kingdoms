@@ -152,6 +152,11 @@ select {
   height: 21px;
 }
 
+.marchContent, .devContent, .unitContent, .officerContent {
+  display: grid;
+  place-items: center;
+}
+
 .buttonsGroup {
   position: relative;
 }
