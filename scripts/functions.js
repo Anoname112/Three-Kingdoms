@@ -601,7 +601,7 @@ function loadData (_date, _player, _playerForce, _forces, _cities, _officers, _u
 }
 
 function importData () {
-	if (importTextarea.value.length <= 0) return;
+	if (importTextarea.value.length == 0) return;
 	
 	var storage = JSON.parse(importTextarea.value);
 	if (storage) {
