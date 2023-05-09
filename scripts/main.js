@@ -10,11 +10,9 @@ var unitCard;
 var officerCard;
 var deployedCard;
 var infoCard;
+var importCard;
+var importTextarea;
 var hidden;
-var importDiv;
-var importContent;
-var importButton;
-var importCancel;
 var clickSound;
 var confirmSound;
 var mainSound;
@@ -503,15 +501,31 @@ window.onload = function () {
 	infoCard.classList.add('infoCard');
 	document.body.appendChild(infoCard);
 	
+	importCard = document.createElement('div');
+	importCard.classList.add('importCard');
+	importCard.innerHTML = `<div class="title allyColor">Import</div>
+		<div class="importContent">
+			<table>
+				<tr><td><textarea id="importTextarea" cols="40" rows="10"></textarea><br /></td></tr>
+				<tr>
+					<td>
+						<input type="button" id="importButton" onclick="importData()" value="Import">
+						<input type="button" id="importCancel" onclick="closeImportCard()" value="Cancel">
+					</td>
+				</tr>
+			</table>
+		</div>`;
+	document.body.appendChild(importCard);
+	importTextarea = getElement('importTextarea');
+	
 	hidden = document.createElement('div');
 	hidden.style.visibility = 'hidden';
-	document.body.appendChild(hidden);
-	
-	// Prepare audio
 	hidden.innerHTML += `<audio id="clickSound"><source src="bgm/click.mp3" /></audio>
 		<audio id="confirmSound"><source src="bgm/confirm.mp3" /></audio>
 		<audio id="mainSound"><source src="bgm/main` + floor(Math.random() * 2) + `.mp3" /></audio>
 		<audio id="battleSound"><source src="bgm/battle.mp3" /></audio>`;
+	document.body.appendChild(hidden);
+	// Prepare audio
 	clickSound = getElement('clickSound');
 	confirmSound = getElement('confirmSound');
 	mainSound = getElement('mainSound');
@@ -526,12 +540,6 @@ window.onload = function () {
 	}, false);
 	clickSound.style.visibility = confirmSound.style.visibility = mainSound.style.visibility = battleSound.style.visibility = 'hidden';
 	
-	// Prepare import
-	importDiv = getElement('importDiv');
-	importContent = getElement('importContent');
-	importButton = getElement('importButton');
-	importCancel = getElement('importCancel');
-	
 	// Init sizes
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
@@ -543,10 +551,10 @@ window.onload = function () {
 	infoXHalf = infoX + (window.innerWidth - infoX) / 2;
 	infoYHalf = infoY + (window.innerHeight - infoY) / 2;
 	
-	marchCard.style.left = devCard.style.left = unitCard.style.left = officerCard.style.left = (canvasPad + cardMargin) + 'px';
-	marchCard.style.top = devCard.style.top = unitCard.style.top = officerCard.style.top = (canvasPad + cardMargin) + 'px';
-	marchCard.style.width = devCard.style.width = unitCard.style.width = officerCard.style.width = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
-	marchCard.style.height = devCard.style.height = unitCard.style.height = officerCard.style.height = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
+	marchCard.style.left = devCard.style.left = unitCard.style.left = officerCard.style.left = importCard.style.left = (canvasPad + cardMargin) + 'px';
+	marchCard.style.top = devCard.style.top = unitCard.style.top = officerCard.style.top = importCard.style.top = (canvasPad + cardMargin) + 'px';
+	marchCard.style.width = devCard.style.width = unitCard.style.width = officerCard.style.width = importCard.style.width = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
+	marchCard.style.height = devCard.style.height = unitCard.style.height = officerCard.style.height = importCard.style.height = (mapSize - (canvasPad + cardMargin) * 2) + 'px';
 	
 	playerCard.style.left = (infoX + cardMargin) + 'px';
 	playerCard.style.top = (infoY + cardMargin) + 'px';
@@ -782,7 +790,7 @@ function onMouseClick (e) {
 		
 		// Import data
 		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-		if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) openImportDiv();
+		if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) openImportCard();
 		
 		// Load data
 		if (localStorage['player']) {

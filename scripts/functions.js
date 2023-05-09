@@ -600,18 +600,10 @@ function loadData (_date, _player, _playerForce, _forces, _cities, _officers, _u
 	draw();
 }
 
-function openImportDiv () {
-	importDiv.style.visibility = 'visible';
-	importContent.focus();
-}
-
-function closeImportDiv () {
-	importDiv.style.visibility = 'hidden';
-	importContent.value = '';
-}
-
 function importData () {
-	var storage = JSON.parse(importContent.value);
+	if (importTextarea.value.length <= 0) return;
+	
+	var storage = JSON.parse(importTextarea.value);
 	if (storage) {
 		if (storage['player']) {
 			loadData(
@@ -630,4 +622,14 @@ function importData () {
 	}
 	
 	alert("Error: Invalid import data.");
+}
+
+function openImportCard () {
+	importCard.style.visibility = 'visible';
+	importTextarea.focus();
+}
+
+function closeImportCard () {
+	importCard.style.visibility = 'hidden';
+	importTextarea.value = '';
 }

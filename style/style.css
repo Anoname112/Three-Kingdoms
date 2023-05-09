@@ -35,45 +35,7 @@ select {
   visibility: hidden;
 }
 
-#importDiv {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #000000;
-  background-color: #DDDDDD;
-  display: grid;
-  visibility: hidden;
-}
-
-.importContentDiv, .importButtonDiv {
-  padding: 10px;
-  justify-self: center;
-  align-self: center;
-}
-
-#importContent {
-  padding: 5px;
-  width: 80vw;
-  height: 60vh;
-  font-family: "Consolas";
-}
-
-#importButton, #importCancel {
-  padding: 5px;
-  border: 1px solid #92290E;
-  background-color: #D2691E;
-}
-
-#importButton:hover, #importCancel:hover {
-  background-color: #E2792E;
-  cursor: pointer;
-}
-
-.playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .officerCard, .deployedCard, .infoCard {
+.playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .officerCard, .deployedCard, .infoCard, .importCard {
   position: fixed;
   border: 1px solid #333333;
   border-radius: 5px;
@@ -83,7 +45,7 @@ select {
   opacity: 0.95;
 }
 
-.playerCard, .hoverCard, .marchCard, .devCard, .unitCard, .officerCard, .infoCard {
+.playerCard, .hoverCard, .marchCard, .devCard, .unitCard, .officerCard, .infoCard, .importCard {
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -164,7 +126,7 @@ select {
   text-align: right;
 }
 
-.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent {
+.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent, .importContent {
   padding: 5px;
   font-size: 13px;
 }
@@ -190,7 +152,7 @@ select {
   height: 21px;
 }
 
-.marchContent, .devContent, .unitContent, .officerContent {
+.marchContent, .devContent, .unitContent, .officerContent, .importContent {
   display: grid;
   place-items: center;
 }
