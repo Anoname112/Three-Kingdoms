@@ -616,7 +616,7 @@ function importData () {
 				JSON.parse(storage['units'])
 			);
 			
-			closeImportDiv();
+			closeImportCard();
 			return;
 		}
 	}
