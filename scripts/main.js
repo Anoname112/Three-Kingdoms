@@ -11,6 +11,10 @@ var officerCard;
 var deployedCard;
 var infoCard;
 var hidden;
+var importDiv;
+var importContent;
+var importButton;
+var importCancel;
 var clickSound;
 var confirmSound;
 var mainSound;
@@ -522,6 +526,12 @@ window.onload = function () {
 	}, false);
 	clickSound.style.visibility = confirmSound.style.visibility = mainSound.style.visibility = battleSound.style.visibility = 'hidden';
 	
+	// Prepare import
+	importDiv = getElement('importDiv');
+	importContent = getElement('importContent');
+	importButton = getElement('importButton');
+	importCancel = getElement('importCancel');
+	
 	// Init sizes
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
@@ -770,10 +780,15 @@ function onMouseClick (e) {
 			}
 		}
 		
+		// Import data
+		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+		if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) openImportDiv();
+		
+		// Load data
 		if (localStorage['player']) {
-			var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 			if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
-				loadData();
+				loadDataFromStorage();
 				playAudio(confirmSound);
 			}
 		}
@@ -1414,8 +1429,8 @@ function draw () {
 				var w = scenarioWidth;
 				var h = buttonHeight;
 				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
-				drawRect(x, y, w, h, fontDark);
 				ctx.fillStyle = fontDark;
+				drawRect(x, y, w, h, fontDark);
 				drawMessage(
 					'[' + scenarios[i].Date + '] ' + scenarios[i].Name + ': ' + officers[scenarios[i].Playables[j]].Name,
 					x + buttonPad,
@@ -1424,13 +1439,21 @@ function draw () {
 			}
 		}
 		
+		// Import data
+		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+		var w = scenarioWidth;
+		var h = buttonHeight;
+		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+		ctx.fillStyle = fontDark;
+		drawRect(x, y, w, h, fontDark);
+		drawMessage("IMPORT DATA", x + buttonPad, y + buttonHeight / 2);
+		
+		// Load data
 		if (localStorage['player']) {
-			var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-			var w = scenarioWidth;
-			var h = buttonHeight;
+			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
-			drawRect(x, y, w, h, fontDark);
 			ctx.fillStyle = fontDark;
+			drawRect(x, y, w, h, fontDark);
 			drawMessage("LOAD DATA", x + buttonPad, y + buttonHeight / 2);
 		}
 	}

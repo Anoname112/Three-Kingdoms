@@ -554,16 +554,29 @@ function saveData () {
 	localStorage.setItem('cities', JSON.stringify(cities));
 	localStorage.setItem('officers', JSON.stringify(officers));
 	localStorage.setItem('units', JSON.stringify(units));
+	navigator.clipboard.writeText(JSON.stringify(localStorage));
 }
 
-function loadData () {
-	date = JSON.parse(localStorage.getItem('date'));
-	player = JSON.parse(localStorage.getItem('player'));
-	playerForce = JSON.parse(localStorage.getItem('playerForce'));
-	forces = JSON.parse(localStorage.getItem('forces'));
-	cities = JSON.parse(localStorage.getItem('cities'));
-	officers = JSON.parse(localStorage.getItem('officers'));
-	units = JSON.parse(localStorage.getItem('units'));
+function loadDataFromStorage () {
+	loadData(
+		JSON.parse(localStorage.getItem('date')),
+		JSON.parse(localStorage.getItem('player')),
+		JSON.parse(localStorage.getItem('playerForce')),
+		JSON.parse(localStorage.getItem('forces')),
+		JSON.parse(localStorage.getItem('cities')),
+		JSON.parse(localStorage.getItem('officers')),
+		JSON.parse(localStorage.getItem('units'))
+	);
+}
+
+function loadData (_date, _player, _playerForce, _forces, _cities, _officers, _units) {
+	date = _date;
+	player = _player;
+	playerForce = _playerForce;
+	forces = _forces;
+	cities = _cities;
+	officers = _officers;
+	units = _units;
 	
 	// Fix points and prepare battle images
 	for (var i = 0; i < officers.length; i++) {
@@ -585,4 +598,36 @@ function loadData () {
 	gState = 1;
 	playAudio(mainSound);
 	draw();
+}
+
+function openImportDiv () {
+	importDiv.style.visibility = 'visible';
+	importContent.focus();
+}
+
+function closeImportDiv () {
+	importDiv.style.visibility = 'hidden';
+	importContent.value = '';
+}
+
+function importData () {
+	var storage = JSON.parse(importContent.value);
+	if (storage) {
+		if (storage['player']) {
+			loadData(
+				JSON.parse(storage['date']),
+				JSON.parse(storage['player']),
+				JSON.parse(storage['playerForce']),
+				JSON.parse(storage['forces']),
+				JSON.parse(storage['cities']),
+				JSON.parse(storage['officers']),
+				JSON.parse(storage['units'])
+			);
+			
+			closeImportDiv();
+			return;
+		}
+	}
+	
+	alert("Error: Invalid import data.");
 }
