@@ -69,17 +69,15 @@ select {
 	top: 0; bottom: 0;
 	left: 0; right: 0;
 	margin: 10px;
-	padding: 10px;
 	border: 1px solid #000000;
+	border-radius: $cardRadius;
 	background-color: #DDDDDD;
-	display: grid;
 	visibility: hidden;
 }
 
 .importContentDiv, .importButtonDiv {
 	padding: 10px;
-	justify-self: center;
-	align-self: center;
+	text-align: center;
 }
 
 #importContent {
@@ -91,13 +89,6 @@ select {
 
 #importButton, #importCancel {
 	padding: 5px;
-	border: 1px solid #92290E;
-	background-color: #D2691E;
-}
-
-#importButton:hover, #importCancel:hover {
-	background-color: #E2792E;
-	cursor: pointer;
 }
 
 .playerCard, .hoverCard, .selectCard, .cityCard, .marchCard, .devCard, .unitCard, .officerCard, .deployedCard, .infoCard {
