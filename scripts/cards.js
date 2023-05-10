@@ -874,11 +874,11 @@ function createOfficersTable (officersIndex, cityIndex) {
 		return `<table class="stats">
 		<tr>
 			<th onclick="openInfoCard('City', ` + cityIndex + `)">Officers (` + officersIndex.length + `)</th>
-			<th onclick="openInfoCard('City', ` + cityIndex + `, 'LDR')">LDR</th>
-			<th onclick="openInfoCard('City', ` + cityIndex + `, 'WAR')">WAR</th>
-			<th onclick="openInfoCard('City', ` + cityIndex + `, 'INT')">INT</th>
-			<th onclick="openInfoCard('City', ` + cityIndex + `, 'POL')">POL</th>
-			<th onclick="openInfoCard('City', ` + cityIndex + `, 'CHR')">CHR</th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'LDR')"><span>LDR</span></th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'WAR')"><span>WAR</span></th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'INT')"><span>INT</span></th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'POL')"><span>POL</span></th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'CHR')"><span>CHR</span></th>
 			<th>Objective</th>
 			<th>Progress</th>
 		</tr>` + officersHTML + `</table>`;

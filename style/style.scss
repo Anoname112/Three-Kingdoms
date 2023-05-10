@@ -163,7 +163,7 @@ select {
 .playerContent {
 	display: grid;
 	grid-template-columns: $imageSize * 2 auto;
-	grid-template-areas: 'portrait profile';
+	grid-template-areas: "portrait profile";
 }
 
 .playerPortrait {
@@ -224,6 +224,14 @@ select {
 	border: $statsBorder;
 	min-width: $statsMinWidth;
 	text-align: right;
+}
+
+.sortable:hover span {
+	display: none;
+}
+
+.sortable:hover:before {
+	content: "🞃";
 }
 
 .checkboxes {
