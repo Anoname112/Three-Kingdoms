@@ -100,6 +100,27 @@ function giveAlpha (color, alpha) {
 	return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + (alpha ? alpha : roadAlpha) + ')';
 }
 
+function sortOfficers (officerIndexes, sort) {
+	for (var i = 0; i < officerIndexes.length; i++) {
+		for (var j = i + 1; j < officerIndexes.length; j++) {
+			var swap = false;
+			switch (sort) {
+				case 'LDR': if (officers[officerIndexes[i]].LDR < officers[officerIndexes[j]].LDR) swap = true; break;
+				case 'WAR': if (officers[officerIndexes[i]].WAR < officers[officerIndexes[j]].WAR) swap = true; break;
+				case 'INT': if (officers[officerIndexes[i]].INT < officers[officerIndexes[j]].INT) swap = true; break;
+				case 'POL': if (officers[officerIndexes[i]].POL < officers[officerIndexes[j]].POL) swap = true; break;
+				case 'CHR': if (officers[officerIndexes[i]].CHR < officers[officerIndexes[j]].CHR) swap = true; break;
+			}
+			if (swap) {
+				var temp = officerIndexes[i];
+				officerIndexes[i] = officerIndexes[j];
+				officerIndexes[j] = temp;
+			}
+		}
+	}
+	return officerIndexes;
+}
+
 function getCityIndexByName (cityName) {
 	for (var i = 0; i < cities.length; i++) if (cities[i].Name == cityName) return i;
 	return null;
@@ -166,11 +187,13 @@ function getCityUnitCount (cityIndex, includeEstablishTransfer) {
 	return count;
 }
 
-function getCityOfficers (cityIndex) {
+function getCityOfficers (cityIndex, sort) {
 	var cityOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
 		if (officers[i].City == cityIndex) cityOfficers.push(i);
 	}
+	
+	if (sort) return sortOfficers(cityOfficers, sort);
 	return cityOfficers;
 }
 
@@ -188,26 +211,7 @@ function getCityViableOfficers (cityIndex, sort) {
 		if (officers[i].City == cityIndex && officers[i].Objective == '-') viableOfficers.push(i);
 	}
 	
-	if (sort) {
-		for (var i = 0; i < viableOfficers.length; i++) {
-			for (var j = i + 1; j < viableOfficers.length; j++) {
-				var swap = false;
-				switch (sort) {
-					case 'LDR': if (officers[viableOfficers[i]].LDR < officers[viableOfficers[j]].LDR) swap = true; break;
-					case 'WAR': if (officers[viableOfficers[i]].WAR < officers[viableOfficers[j]].WAR) swap = true; break;
-					case 'INT': if (officers[viableOfficers[i]].INT < officers[viableOfficers[j]].INT) swap = true; break;
-					case 'POL': if (officers[viableOfficers[i]].POL < officers[viableOfficers[j]].POL) swap = true; break;
-					case 'CHR': if (officers[viableOfficers[i]].CHR < officers[viableOfficers[j]].CHR) swap = true; break;
-				}
-				if (swap) {
-					var temp = viableOfficers[i];
-					viableOfficers[i] = viableOfficers[j];
-					viableOfficers[j] = temp;
-				}
-			}
-		}
-	}
-	
+	if (sort) return sortOfficers(viableOfficers, sort);
 	return viableOfficers;
 }
 

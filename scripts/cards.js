@@ -854,7 +854,7 @@ function createCityTable (cityIndex) {
 }
 
 // Info card
-function createOfficersTable (officersIndex) {
+function createOfficersTable (officersIndex, cityIndex) {
 	var officersHTML = '';
 	for (var i = 0; i < officersIndex.length; i++) {
 		var officer = officers[officersIndex[i]];
@@ -869,6 +869,19 @@ function createOfficersTable (officersIndex) {
 				<td>` + objective + `</td>
 				<td>` + officer.Progress + `</td>
 			</tr>`;
+	}
+	if (cityIndex) {
+		return `<table class="stats">
+		<tr>
+			<th onclick="openInfoCard('City', ` + cityIndex + `)">Officers (` + officersIndex.length + `)</th>
+			<th onclick="openInfoCard('City', ` + cityIndex + `, 'LDR')">LDR</th>
+			<th onclick="openInfoCard('City', ` + cityIndex + `, 'WAR')">WAR</th>
+			<th onclick="openInfoCard('City', ` + cityIndex + `, 'INT')">INT</th>
+			<th onclick="openInfoCard('City', ` + cityIndex + `, 'POL')">POL</th>
+			<th onclick="openInfoCard('City', ` + cityIndex + `, 'CHR')">CHR</th>
+			<th>Objective</th>
+			<th>Progress</th>
+		</tr>` + officersHTML + `</table>`;
 	}
 	return `<table class="stats">
 		<tr>
@@ -921,19 +934,19 @@ function createUnitsTable (unitsIndex) {
 }
 
 // Info card
-function openInfoCard (mode, index) {
+function openInfoCard (mode, index, sort) {
 	if (mode == 'City') {
 		var backColor = 'enemyColor';
 		if (cities[index].Force == '-') backColor = 'neutralColor';
 		else if (cities[index].Force == playerForce) backColor = 'allyColor';
 		
-		var cityOfficers = getCityOfficers(index);
+		var cityOfficers = sort ? getCityOfficers(index, sort) : getCityOfficers(index);
 		var cityUnits = getCityUnits(index);
 		
 		infoCard.innerHTML = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
 			<div class="cityContent">` +
 				createCityTable(index) + `<br />` +
-				createOfficersTable(cityOfficers) + `<br />` +
+				createOfficersTable(cityOfficers, index) + `<br />` +
 				createUnitsTable(cityUnits) + `
 			</div>`;
 	}
