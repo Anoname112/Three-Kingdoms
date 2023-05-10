@@ -365,6 +365,8 @@ function openMarchCard (cityIndex) {
 	
 	marchCard.innerHTML = string;
 	marchCard.style.visibility = 'visible';
+	if (city.Force == playerForce) getElement('target').focus();
+	else getElement('source').focus();
 }
 
 // Dev card
@@ -557,6 +559,7 @@ function openUnitCard (cityIndex, objective) {
 			</div>`;
 		
 		unitCard.style.visibility = 'visible';
+		getElement('target').focus();
 	}
 	else {
 		var viableOfficers = getCityViableOfficers(cityIndex, objective == 'Drill' ? 'LDR' : 'CHR');
@@ -622,6 +625,8 @@ function openUnitCard (cityIndex, objective) {
 			
 			unitCard.style.visibility = 'visible';
 			if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
+			if (objective == 'Establish') getElement('unitType').focus();
+			else getElement('unit').focus();
 		}
 	}
 }
@@ -779,6 +784,7 @@ function openOfficerCard (cityIndex, objective) {
 		
 		officerCard.style.visibility = 'visible';
 		if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
+		if (getElement('target')) getElement('target').focus();
 	}
 }
 
@@ -958,7 +964,51 @@ function openInfoCard (mode, index) {
 	infoCard.style.visibility = 'visible';
 }
 
-function closeCard (card) {
+// Import card
+function importData () {
+	var data = getElement('importTextarea') ? getElement('importTextarea').value : '';
+	
+	if (data.length == 0) return;
+	
+	var json = JSON.parse(data);
+	if (json && json['player']) {
+		loadData(
+			JSON.parse(json['date']),
+			JSON.parse(storage['player']),
+			JSON.parse(storage['playerForce']),
+			JSON.parse(storage['forces']),
+			JSON.parse(storage['cities']),
+			JSON.parse(storage['officers']),
+			JSON.parse(storage['units'])
+		);
+		
+		closeCard(importCard);
+		return;
+	}
+	
+	alert("Error: Invalid import data.");
+}
+
+// Import card
+function openImportCard () {
+	importCard.innerHTML = `<div class="title allyColor">Import</div>
+		<div class="importContent">
+			<table>
+				<tr><td><textarea id="importTextarea" cols="40" rows="10"></textarea><br /></td></tr>
+				<tr>
+					<td>
+						<input type="button" id="importButton" onclick="importData()" value="Import">
+						<input type="button" id="importCancel" onclick="closeCard(importCard)" value="Cancel">
+					</td>
+				</tr>
+			</table>
+		</div>`;
+	
+	importCard.style.visibility = 'visible';
+	getElement('importTextarea').focus();
+}
+
+function closeCard (card, dontEmpty) {
 	card.style.visibility = 'hidden';
-	if (card != playerCard) card.innerHTML = '';
+	if (!dontEmpty) card.innerHTML = '';
 }

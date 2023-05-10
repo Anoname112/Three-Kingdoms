@@ -11,7 +11,6 @@ var officerCard;
 var deployedCard;
 var infoCard;
 var importCard;
-var importTextarea;
 var hidden;
 var clickSound;
 var confirmSound;
@@ -503,20 +502,7 @@ window.onload = function () {
 	
 	importCard = document.createElement('div');
 	importCard.classList.add('importCard');
-	importCard.innerHTML = `<div class="title allyColor">Import</div>
-		<div class="importContent">
-			<table>
-				<tr><td><textarea id="importTextarea" cols="40" rows="10"></textarea><br /></td></tr>
-				<tr>
-					<td>
-						<input type="button" id="importButton" onclick="importData()" value="Import">
-						<input type="button" id="importCancel" onclick="closeImportCard()" value="Cancel">
-					</td>
-				</tr>
-			</table>
-		</div>`;
 	document.body.appendChild(importCard);
-	importTextarea = getElement('importTextarea');
 	
 	hidden = document.createElement('div');
 	hidden.style.visibility = 'hidden';
@@ -1535,7 +1521,7 @@ function draw () {
 		
 		// Draw battle scene
 		if (battles.length > 0) {
-			closeCard(playerCard);
+			closeCard(playerCard, true);
 			closeCard(infoCard);
 			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
 			
