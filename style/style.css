@@ -200,12 +200,18 @@ select {
   white-space: nowrap;
 }
 
+.sortable {
+  position: relative;
+}
+
 .sortable:hover span {
   visibility: hidden;
 }
 
 .sortable:hover:before {
-  position: fixed;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
   content: "🞃";
 }
 
