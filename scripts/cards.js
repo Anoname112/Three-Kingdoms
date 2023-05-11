@@ -870,7 +870,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 				<td>` + officer.Progress + `</td>
 			</tr>`;
 	}
-	if (cityIndex) {
+	if (Number.isInteger(cityIndex)) {
 		return `<table class="stats">
 		<tr>
 			<th onclick="openInfoCard('City', ` + cityIndex + `)">Officers (` + officersIndex.length + `)</th>
@@ -972,6 +972,27 @@ function openInfoCard (mode, index, sort) {
 		
 		var assistedStats = getAssistedStats(index);
 		calculatedStatsTable('infoStats', assistedStats[0], assistedStats[1], assistedStats[2]);
+	}
+	else if (mode == 'Global') {
+		var forcesHTML = '';
+		for (var i = 0; i < forces.length; i++) {
+			forcesHTML += `<tr>
+					<td>` + officers[forces[i].Ruler].Name + ` Forces</td>
+					<td>` + getCities(forces[i].Id, 'force').length + `</td>
+					<td>` + getOfficers(forces[i].Id, 'force').length + `</td>
+					<td>` + getForceStrength(forces[i].Id, true) + `</td>
+				</tr>`;
+		}
+		
+		infoCard.innerHTML = `<div class="title allyColor">Info</div>
+			<div class="playerContent">
+				<table class="stats">
+					<tr>
+						<th>Forces</th><th>Cities</th><th>Officers</th><th>Strength</th>
+					</tr>
+					` + forcesHTML + `
+				</table>
+			</div>`;
 	}
 	
 	infoCard.style.visibility = 'visible';

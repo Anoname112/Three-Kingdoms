@@ -217,6 +217,7 @@ select {
 	min-width: $statsMinWidth;
 	background-color: $statsBackColor;
 	text-align: center;
+	white-space: nowrap;
 }
 
 .stats td {
@@ -224,6 +225,7 @@ select {
 	border: $statsBorder;
 	min-width: $statsMinWidth;
 	text-align: right;
+	white-space: nowrap;
 }
 
 .sortable:hover span {

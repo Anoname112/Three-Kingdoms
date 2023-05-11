@@ -675,8 +675,12 @@ function onMouseMove (e) {
 	}
 	else if (gState == 1) {
 		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
-			var indexX = parseInt((eX - canvasPad) / squareSize);
-			var indexY = parseInt((eY - canvasPad) / squareSize);
+			// Hovering info icon
+			if (eX >= canvasPad + squareSize && eX < canvasPad + squareSize * 2 && eY >= canvasPad + squareSize && eY < canvasPad + squareSize * 2) {
+				openInfoCard('Global');
+				draw();
+				return;
+			}
 			
 			// Hovering a unit
 			for (var i = 0; i < officers.length; i++) {
@@ -716,6 +720,8 @@ function onMouseMove (e) {
 			}
 			
 			// Hovering a city
+			var indexX = parseInt((eX - canvasPad) / squareSize);
+			var indexY = parseInt((eY - canvasPad) / squareSize);
 			if (map[indexX][indexY] >= cityIndexStart) {
 				var index = map[indexX][indexY] - cityIndexStart;
 				var backColor = 'enemyColor';
@@ -1518,6 +1524,9 @@ function draw () {
 				drawImage(unitImage, x, y, w, h);
 			}
 		}
+		
+		// Draw info icon
+		drawMessage('ℹ', canvasPad + squareSize * 1.5, canvasPad + squareSize * 1.5, 'center');
 		
 		// Draw battle scene
 		if (battles.length > 0) {

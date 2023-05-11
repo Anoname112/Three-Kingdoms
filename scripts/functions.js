@@ -307,10 +307,10 @@ function getForceViableUnits (forceId) {
 	return viableUnits;
 }
 
-function getForceStrength (forceId) {
-	var viableUnits = getForceViableUnits(forceId);
+function getForceStrength (forceId, includeNonViable) {
+	var resultUnits = includeNonViable ? getUnits(forceId, 'force') : getForceViableUnits(forceId);
 	var strength = 0;
-	for (var i = 0; i < viableUnits.length; i++) strength += units[viableUnits[i]].Strength;
+	for (var i = 0; i < resultUnits.length; i++) strength += units[resultUnits[i]].Strength;
 	return strength;
 }
 
@@ -368,6 +368,15 @@ function getUnitIndexById (unitId) {
 	return null;
 }
 
+function getUnits (forceId, alliance) {
+	var resultUnits = [];
+	for (var i = 0; i < units.length; i++) {
+		if (alliance == 'force' && units[i].Force == forceId) resultUnits.push(i);
+		else if (alliance == 'nonForce' && units[i].Force != forceId) resultUnits.push(i);
+	}
+	return resultUnits;
+}
+
 function getDeployedUnits (commander) {
 	var deployedUnits = [];
 	for (var i = 0; i < units.length; i++) {
@@ -406,15 +415,13 @@ function getOfficerIndexByName (officerName) {
 	return null;
 }
 
-function getOfficers (forceIndex, alliance, sort) {
+function getOfficers (forceId, alliance, sort) {
 	var resultOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
-		if (alliance == 'force' && officers[i].Force == forceIndex) resultOfficers.push(i);
-		else if (alliance == 'nonForce' && officers[i].Force != forceIndex) resultOfficers.push(i);
+		if (alliance == 'force' && officers[i].Force == forceId) resultOfficers.push(i);
+		else if (alliance == 'nonForce' && officers[i].Force != forceId) resultOfficers.push(i);
 	}
-	if (sort) {
-		
-	}
+	if (sort) return sortOfficers(resultOfficers, sort);
 	return resultOfficers;
 }
 

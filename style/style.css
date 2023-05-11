@@ -189,6 +189,7 @@ select {
   min-width: 32px;
   background-color: #CCCCCC;
   text-align: center;
+  white-space: nowrap;
 }
 
 .stats td {
@@ -196,6 +197,7 @@ select {
   border: 1px solid #AAAAAA;
   min-width: 32px;
   text-align: right;
+  white-space: nowrap;
 }
 
 .sortable:hover span {
