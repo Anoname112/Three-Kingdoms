@@ -1,4 +1,3 @@
-@charset "UTF-8";
 *::-webkit-scrollbar {
   width: 0;
 }
@@ -212,7 +211,11 @@ select {
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  content: "▾";
+  content: "";
+  background-image: url("../images/sort.png");
+  background-size: 15px 15px;
+  width: 15px;
+  height: 15px;
 }
 
 .checkboxes {

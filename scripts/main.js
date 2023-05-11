@@ -1526,8 +1526,7 @@ function draw () {
 		}
 		
 		// Draw info icon
-		ctx.fillStyle = fontDark;
-		drawMessage('ℹ', canvasPad + squareSize * 1.5, canvasPad + squareSize * 1.5, 'center');
+		drawImage(infoImage, canvasPad + squareSize, canvasPad + squareSize, squareSize, squareSize);
 		
 		// Draw battle scene
 		if (battles.length > 0) {

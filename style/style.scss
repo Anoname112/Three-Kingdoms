@@ -240,7 +240,11 @@ select {
 	position: absolute;
 	left: 50%;
 	transform: translate(-50%);
-	content: "▾";
+	content: "";
+	background-image: url('../images/sort.png');
+	background-size: $titleFontSize $titleFontSize;
+	width: $titleFontSize;
+	height: $titleFontSize;
 }
 
 .checkboxes {
