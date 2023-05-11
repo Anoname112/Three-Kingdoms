@@ -873,7 +873,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 	if (Number.isInteger(cityIndex)) {
 		return `<table class="stats">
 		<tr>
-			<th onclick="openInfoCard('City', ` + cityIndex + `)">Officers (` + officersIndex.length + `)</th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `)"><span>Officers (` + officersIndex.length + `)</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'LDR')"><span>LDR</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'WAR')"><span>WAR</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'INT')"><span>INT</span></th>
@@ -974,21 +974,50 @@ function openInfoCard (mode, index, sort) {
 		calculatedStatsTable('infoStats', assistedStats[0], assistedStats[1], assistedStats[2]);
 	}
 	else if (mode == 'Global') {
-		var forcesHTML = '';
+		var forcesData = [];
 		for (var i = 0; i < forces.length; i++) {
-			forcesHTML += `<tr>
-					<td>` + officers[forces[i].Ruler].Name + ` Forces</td>
-					<td>` + getCities(forces[i].Id, 'force').length + `</td>
-					<td>` + getOfficers(forces[i].Id, 'force').length + `</td>
-					<td>` + getForceStrength(forces[i].Id, true) + `</td>
-				</tr>`;
+			var citiesCount = getCities(forces[i].Id, 'force').length;
+			if (citiesCount > 0) {
+				forcesData.push([
+					officers[forces[i].Ruler].Name + ' Forces',
+					citiesCount,
+					getOfficers(forces[i].Id, 'force').length,
+					getForceStrength(forces[i].Id, true)
+				]);
+			}
+		}
+		
+		if (sort) {
+			for (var i = 0; i < forcesData.length; i++) {
+				for (var j = i + 1; j < forcesData.length; j++) {
+					var swap = false;
+					if (sort == 'Cities' && forcesData[i][1] < forcesData[j][1]) swap = true;
+					else if (sort == 'Officers' && forcesData[i][2] < forcesData[j][2]) swap = true;
+					else if (sort == 'Strength' && forcesData[i][3] < forcesData[j][3]) swap = true;
+					if (swap) {
+						var temp = forcesData[i];
+						forcesData[i] = forcesData[j];
+						forcesData[j] = temp;
+					}
+				}
+			}
+		}
+		
+		var forcesHTML = '';
+		for (var i = 0; i < forcesData.length; i++) {
+			forcesHTML += '<tr>';
+			for (var j = 0; j < forcesData[i].length; j++) forcesHTML += '<td>' + forcesData[i][j] + '</td>';
+			forcesHTML += '</tr>';
 		}
 		
 		infoCard.innerHTML = `<div class="title allyColor">Info</div>
 			<div class="playerContent">
 				<table class="stats">
 					<tr>
-						<th>Forces</th><th>Cities</th><th>Officers</th><th>Strength</th>
+						<th class="sortable" onclick="openInfoCard('Global', ` + index + `)"><span>Forces</span></th>
+						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Cities')"><span>Cities</span></th>
+						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Officers')"><span>Officers</span></th>
+						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Strength')"><span>Strength</span></th>
 					</tr>
 					` + forcesHTML + `
 				</table>

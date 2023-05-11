@@ -677,7 +677,7 @@ function onMouseMove (e) {
 		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
 			// Hovering info icon
 			if (eX >= canvasPad + squareSize && eX < canvasPad + squareSize * 2 && eY >= canvasPad + squareSize && eY < canvasPad + squareSize * 2) {
-				openInfoCard('Global');
+				openInfoCard('Global', playerForce);
 				draw();
 				return;
 			}

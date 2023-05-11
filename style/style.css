@@ -201,10 +201,11 @@ select {
 }
 
 .sortable:hover span {
-  display: none;
+  visibility: hidden;
 }
 
 .sortable:hover:before {
+  position: fixed;
   content: "🞃";
 }
 
