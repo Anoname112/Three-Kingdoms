@@ -80,6 +80,11 @@ select {
   background-color: #888888;
 }
 
+.miniPortrait {
+  height: 25px;
+  border-radius: 25%;
+}
+
 .smallPortrait {
   height: 30px;
   border-radius: 50%;
@@ -208,7 +213,7 @@ select {
   position: absolute;
   left: 100%;
   top: 50%;
-  transform: translate(0, -50%);
+  transform: translate(0, -45%);
   visibility: hidden;
 }
 

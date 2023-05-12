@@ -866,7 +866,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 				<td>` + officer.INT + `</td>
 				<td>` + officer.POL + `</td>
 				<td>` + officer.CHR + `</td>
-				<td>` + objective + `<div class="float">` + getPortrait(officer.Name, 'small') + `</div></td>
+				<td>` + objective + `<div class="float">` + getPortrait(officer.Name, 'mini') + `</div></td>
 				<td>` + officer.Progress + `</td>
 			</tr>`;
 	}
