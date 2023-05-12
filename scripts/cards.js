@@ -1011,7 +1011,7 @@ function openInfoCard (mode, index, sort) {
 		}
 		
 		infoCard.innerHTML = `<div class="title allyColor">Info</div>
-			<div class="playerContent">
+			<div class="forceContent">
 				<table class="stats">
 					<tr>
 						<th class="sortable" onclick="openInfoCard('Global', ` + index + `)"><span>Forces</span></th>

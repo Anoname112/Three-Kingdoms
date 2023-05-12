@@ -155,7 +155,7 @@ select {
 	text-align: right;
 }
 
-.playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent, .importContent {
+.forceContent, .playerContent, .selectContent, .cityContent, .marchContent, .devContent, .unitContent, .officerContent, .deployedContent, .importContent {
 	padding: $cardPadding;
 	font-size: $contentFontSize;
 }
