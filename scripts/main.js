@@ -702,8 +702,8 @@ function onMouseMove (e) {
 						else hoverCard.style.top = hoverY + 'px';
 						
 						var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
-							<div class="unitInfo">
-								<img class="smallPortrait" src="portraits/` + officers[i].Name.split(' ').join('_') + `.jpg"><br />
+							<div class="unitInfo">` +
+								getPortrait(officers[i].Name, 'small') + `<br />
 								<table class="stats">
 									<tr><th colspan="2">` + forces[getForceIndexById(officers[i].Force)].Name + `</th></tr>
 									<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
@@ -741,8 +741,7 @@ function onMouseMove (e) {
 				else {
 					var forceIndex = getForceIndexById(cities[index].Force);
 					var forceRulerName = officers[forces[forceIndex].Ruler].Name;
-					string += '<img class="smallPortrait" src="portraits/' + forceRulerName.split(' ').join('_') + '.jpg"><br />';
-					string += '<table class="cityStats"><tr><th colspan="2">' + forces[forceIndex].Name + '</th></tr>';
+					string += getPortrait(forceRulerName, 'small') + '<br /><table class="cityStats"><tr><th colspan="2">' + forces[forceIndex].Name + '</th></tr>';
 				}
 				string += `<tr><th>Gold</th><td>` + cities[index].Gold + `</td></tr>
 						<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>

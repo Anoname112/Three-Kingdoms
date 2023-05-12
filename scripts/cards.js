@@ -13,7 +13,7 @@ function openPlayerCard () {
 			cities[officers[player].City].Name + `
 		</div>
 		<div class="playerContent">
-			<div class="playerPortrait"><img class="bigPortrait" src="portraits/` + officers[player].Name.split(' ').join('_') + `.jpg"></div>
+			<div class="playerPortrait">` + getPortrait(officers[player].Name, 'big') + `</div>
 			<div class="playerProfile">
 				<div class="playerName allyColor">` + officers[player].Name + `</div>
 				<b>` + forces[forceIndex].Name + `</b>
@@ -866,7 +866,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 				<td>` + officer.INT + `</td>
 				<td>` + officer.POL + `</td>
 				<td>` + officer.CHR + `</td>
-				<td>` + objective + `</td>
+				<td>` + objective + `<div class="float">` + getPortrait(officer.Name, 'small') + `</div></td>
 				<td>` + officer.Progress + `</td>
 			</tr>`;
 	}

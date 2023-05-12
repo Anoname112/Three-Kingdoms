@@ -415,6 +415,10 @@ function getOfficerIndexByName (officerName) {
 	return null;
 }
 
+function getPortrait (officerName, size) {
+	return '<img class="' + size + 'Portrait" src="portraits/' + officerName.split(' ').join('_') + '.jpg">';
+}
+
 function getOfficers (forceId, alliance, sort) {
 	var resultOfficers = [];
 	for (var i = 0; i < officers.length; i++) {
