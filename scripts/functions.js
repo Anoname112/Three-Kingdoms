@@ -6,16 +6,6 @@ function isNumeric (value) {
 	return /^\d+$/.test(value);
 }
 
-function pause () {
-	gState = 0;
-	bgm.pause();
-}
-
-function resume () {
-	gState = 1;
-	bgm.play();
-}
-
 function playAudio (audio) {
 	audio.currentTime = 0;
 	audio.play();

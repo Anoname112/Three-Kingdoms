@@ -1,43 +1,3 @@
-function Point (x, y) {
-	this.X = x;
-	this.Y = y;
-}
-
-Point.prototype.length = function () {
-	return Math.sqrt(this.X * this.X + this.Y * this.Y);
-};
-
-Point.prototype.normalize = function () {
-	var length = this.length();
-	return new Point(this.X / length, this.Y / length);
-}
-
-Point.prototype.add = function (point) {
-	return new Point(this.X + point.X, this.Y + point.Y);
-}
-
-Point.prototype.subtract = function (point) {
-	return new Point(this.X - point.X, this.Y - point.Y);
-}
-
-Point.prototype.scale = function (scale) {
-	return new Point(this.X * scale, this.Y * scale);
-}
-
-Point.Zero = function () {
-	return new Point(0, 0);
-}
-
-function Path (points) {
-	this.Points = points;
-	this.Cost = function () {
-		return this.Points.length - 1;
-	}
-	this.Tail = function () {
-		return this.Points[this.Points.length - 1];
-	}
-}
-
 function Officer (name, force, city, position, leadership, war, intelligence, politic, charisma, objective, progress) {
 	this.Name = name;
 	this.Force = force;
@@ -118,4 +78,44 @@ function UnitType (name, type, attack, defense, speed, range, effectiveness, cos
 	// [Spearmen, Horsemen, Archer]
 	this.Effectiveness = effectiveness;
 	this.Cost = cost;
+}
+
+function Path (points) {
+	this.Points = points;
+	this.Cost = function () {
+		return this.Points.length - 1;
+	}
+	this.Tail = function () {
+		return this.Points[this.Points.length - 1];
+	}
+}
+
+function Point (x, y) {
+	this.X = x;
+	this.Y = y;
+}
+
+Point.prototype.length = function () {
+	return Math.sqrt(this.X * this.X + this.Y * this.Y);
+}
+
+Point.prototype.normalize = function () {
+	var length = this.length();
+	return new Point(this.X / length, this.Y / length);
+}
+
+Point.prototype.add = function (point) {
+	return new Point(this.X + point.X, this.Y + point.Y);
+}
+
+Point.prototype.subtract = function (point) {
+	return new Point(this.X - point.X, this.Y - point.Y);
+}
+
+Point.prototype.scale = function (scale) {
+	return new Point(this.X * scale, this.Y * scale);
+}
+
+Point.Zero = function () {
+	return new Point(0, 0);
 }

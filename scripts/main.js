@@ -18,7 +18,8 @@ var mainSound;
 var battleSound;
 var playSvg;
 
-var gState;		// 0: Pick scenario, 1: Playing, 2: Win, 3: Lose
+// 0 is picking scenario, 1 is playing
+var gState;
 var battles;
 var battleImages;
 var damages;
@@ -66,25 +67,25 @@ scenarios.push(new Scenario(
 	'194-3-1', [
 		// Forces
 		// name, ruler, color, cities
-		['Cao Cao Forces', 15, '#0000FF', [8, 9]],			// 0	
-		['Liu Bei Forces', 247, '#00FF00', [10]],			// 1
-		['Sun Ce Forces', 382, '#FF0000', [45]],			// 2
-		['Lu Bu Forces', 277, '#666666', [7]],				// 3
-		['Tao Qian Forces', 415, '#AAFFAA', [11]],			// 4
-		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],		// 5
-		['Kong Rong Forces', 217, '#AAFFAA', [18]],			// 6
-		['Yuan Shao Forces', 551, '#FFFF00', [15, 19, 20]],	// 7
-		['Gongsun Zan Forces', 124, '#E33A10', [21, 22]],	// 8
-		['Gongsun Du Forces', 117, '#925DF5', [23]],		// 9
-		['Zhang Yang Forces', 596, '#3B1604', [17]],		// 10
-		['Ma Teng Forces', 303, '#572A03', [0, 1]],			// 11
-		['Liu Yong Forces', 269, '#130A45', [44]],			// 12
-		['Yan Baihu Forces', 510, '#7A4B1C', [43]],			// 13
-		['Wang Lang Forces', 434, '#CCCCCC', [46]],			// 14
-		['Shi Xie Forces', 364, '#7A283E', [49]],			// 15
-		['Liu Biao Forces', 248, '#2BC8F0', [34, 35, 37]],	// 16
-		['Zhang Lu Forces', 580, '#5BF55B', [24]],			// 17
-		['Liu Zhang Forces', 272, '#0D0D47', [26, 27, 28]]	// 18
+		['Cao Cao Forces', 15, '#0000FF', [8, 9]],          // 0	
+		['Liu Bei Forces', 247, '#00FF00', [10]],           // 1
+		['Sun Ce Forces', 382, '#FF0000', [45]],            // 2
+		['Lu Bu Forces', 277, '#666666', [7]],              // 3
+		['Tao Qian Forces', 415, '#AAFFAA', [11]],          // 4
+		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],      // 5
+		['Kong Rong Forces', 217, '#AAFFAA', [18]],         // 6
+		['Yuan Shao Forces', 551, '#FFFF00', [15, 19, 20]], // 7
+		['Gongsun Zan Forces', 124, '#E33A10', [21, 22]],   // 8
+		['Gongsun Du Forces', 117, '#925DF5', [23]],        // 9
+		['Zhang Yang Forces', 596, '#3B1604', [17]],        // 10
+		['Ma Teng Forces', 303, '#572A03', [0, 1]],         // 11
+		['Liu Yong Forces', 269, '#130A45', [44]],          // 12
+		['Yan Baihu Forces', 510, '#7A4B1C', [43]],         // 13
+		['Wang Lang Forces', 434, '#CCCCCC', [46]],         // 14
+		['Shi Xie Forces', 364, '#7A283E', [49]],           // 15
+		['Liu Biao Forces', 248, '#2BC8F0', [34, 35, 37]],  // 16
+		['Zhang Lu Forces', 580, '#5BF55B', [24]],          // 17
+		['Liu Zhang Forces', 272, '#0D0D47', [26, 27, 28]]  // 18
 	], [
 		// Officers
 		// force, name, position
@@ -437,7 +438,7 @@ cities[47] = new City('Jian An', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 
 cities[48] = new City('Nan Hai', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 200, 600, 2800, 80, '-');
 cities[49] = new City('Jiao Zhi', '-', 12000, 70000, 3200, 3200, 2800, 4000, 500, 510, 600, 2800, 80, '-');
 
-var abilities = [];		// 4: morale, 5: strength, 
+var abilities = [];    // 4: morale, 5: strength
 abilities[0] = new Ability('True Leader', '', 0, [[4, 30]], [[4, 30]]);
 abilities[1] = new Ability('Benevolence', '', 10, [[5, 800]], []);
 abilities[3] = new Ability('Tiger', '', 0, [[4, 50]], []);
