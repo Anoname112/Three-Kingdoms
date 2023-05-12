@@ -1358,14 +1358,14 @@ function playClick (e) {
 									}
 									break;
 								case 7:
-									// Get force's cities and sort ascending by officers count
-									var cityOfficersCount = getCities(officers[viableOfficers[k]].Force, 'force').map((x) => [x, getCityOfficers(x).length]).sort(function (a, b) {
+									// Get force's cities and sort ascending by officer count
+									var citiesOfficerCount = getCities(officers[viableOfficers[k]].Force, 'force').map((x) => [x, getCityOfficers(x).length]).sort(function (a, b) {
 										if (a[1] == b[1]) return 0;
 										else return (a[1] < b[1]) ? -1 : 1;
 									});
-									// Transfer if the city count minus the lowest count is bigger than 1
-									if (getCityOfficers(officers[viableOfficers[k]].City).length - cityOfficersCount[0][1] > 1) {
-										officers[viableOfficers[k]].Objective = ['Transfer', cityOfficersCount[0][0]];
+									// Transfer if the city officer count minus the lowest officer count is bigger than 1
+									if (getCityOfficers(officers[viableOfficers[k]].City).length - citiesOfficerCount[0][1] > 1) {
+										officers[viableOfficers[k]].Objective = ['Transfer', citiesOfficerCount[0][0]];
 										officers[viableOfficers[k]].Progress = 0;
 									}
 									break;
