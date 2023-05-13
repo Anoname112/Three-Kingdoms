@@ -120,13 +120,13 @@ select {
 }
 
 .cityStats tr th {
-  padding: 0 2px 2px 2px;
+  padding: 1px 2px 2px 2px;
   border: 1px solid #AAAAAA;
   background-color: #CCCCCC;
 }
 
 .cityStats tr td {
-  padding: 0 2px 2px 2px;
+  padding: 1px 2px 2px 2px;
   border: 1px solid #AAAAAA;
   text-align: right;
 }
@@ -187,8 +187,12 @@ select {
   border-collapse: collapse;
 }
 
+.stats tr {
+  vertical-align: middle;
+}
+
 .stats th {
-  padding: 0 2px 2px 2px;
+  padding: 1px 2px 2px 2px;
   border: 1px solid #AAAAAA;
   min-width: 32px;
   background-color: #CCCCCC;
@@ -198,7 +202,7 @@ select {
 
 .stats td {
   position: relative;
-  padding: 0 2px 2px 2px;
+  padding: 1px 2px 2px 2px;
   border: 1px solid #AAAAAA;
   min-width: 32px;
   text-align: right;
