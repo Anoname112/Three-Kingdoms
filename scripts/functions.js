@@ -551,6 +551,10 @@ function inBattle (officerIndex) {
 	return false;
 }
 
+function copyData () {
+	navigator.clipboard.writeText(JSON.stringify(localStorage));
+}
+
 function saveData () {
 	localStorage.setItem('date', JSON.stringify(date));
 	localStorage.setItem('player', JSON.stringify(player));
@@ -559,7 +563,7 @@ function saveData () {
 	localStorage.setItem('cities', JSON.stringify(cities));
 	localStorage.setItem('officers', JSON.stringify(officers));
 	localStorage.setItem('units', JSON.stringify(units));
-	navigator.clipboard.writeText(JSON.stringify(localStorage));
+	copyData();
 }
 
 function loadDataFromStorage () {

@@ -20,6 +20,7 @@ var playSvg;
 
 // 0 is picking scenario, 1 is playing
 var gState;
+var copyString;
 var battles;
 var battleImages;
 var damages;
@@ -597,6 +598,7 @@ window.onload = function () {
 	
 	mousePos = new Point.Zero();
 	startTimestamp = mapAnimationStep = gState = 0;
+	copyString = 'COPY DATA';
 	battles = [];
 	battleImages = [];
 	damages = [];
@@ -783,6 +785,14 @@ function onMouseClick (e) {
 		// Import data
 		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 		if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) openImportCard();
+		
+		// Copy data
+		y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+		if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
+			copyData();
+			copyString = 'DATA COPIED';
+			draw();
+		}
 		
 		// Load data
 		if (localStorage['player']) {
@@ -1449,6 +1459,14 @@ function draw () {
 		ctx.fillStyle = fontDark;
 		drawRect(x, y, w, h, fontDark);
 		drawMessage('IMPORT DATA', x + buttonPad, y + buttonHeight / 2);
+		
+		// Copy data
+		y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+		fillRect(x, y, w, h, highlightColor);
+		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+		ctx.fillStyle = fontDark;
+		drawRect(x, y, w, h, fontDark);
+		drawMessage(copyString, x + buttonPad, y + buttonHeight / 2);
 		
 		// Load data
 		if (localStorage['player']) {
