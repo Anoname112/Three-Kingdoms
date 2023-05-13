@@ -6,7 +6,7 @@ $contentFontSize: 13px;
 $inputSize: 21px;
 $imageSize: 30px;
 $imageRadius: 50%;
-$statsPadding: 2px;
+$statsPadding: 0 2px 2px 2px;
 $statsBorder: 1px solid #AAAAAA;
 $statsBackColor: #CCCCCC;
 $statsMinWidth: 32px;
@@ -242,7 +242,7 @@ select {
 	position: absolute;
 	left: 100%;
 	top: 50%;
-	transform: translate(0, -45%);
+	transform: translate(0, -43%);
 	visibility: hidden;
 }
 
