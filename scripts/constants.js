@@ -122,5 +122,4 @@ const images = [];
 const infoImage = newImg("images/info.png");
 const mapImage = newImg("images/map.png");
 const unitImage = newImg("images/unit.png");
-const scene1Image = newImg("images/scene1.png");
-const scene2Image = newImg("images/scene2.png");
+const sceneImage = newImg("images/scene.png");

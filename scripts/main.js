@@ -1422,6 +1422,7 @@ function draw () {
 	
 	if (gState == 0) {
 		var line = 0;
+		// Scenarios
 		var x = canvasPad + buttonMargin;
 		for (var i = 0; i < scenarios.length; i++) {
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
@@ -1443,18 +1444,20 @@ function draw () {
 		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 		var w = scenarioWidth;
 		var h = buttonHeight;
+		fillRect(x, y, w, h, highlightColor);
 		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
 		ctx.fillStyle = fontDark;
 		drawRect(x, y, w, h, fontDark);
-		drawMessage("IMPORT DATA", x + buttonPad, y + buttonHeight / 2);
+		drawMessage('IMPORT DATA', x + buttonPad, y + buttonHeight / 2);
 		
 		// Load data
 		if (localStorage['player']) {
 			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+			fillRect(x, y, w, h, highlightColor);
 			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
 			ctx.fillStyle = fontDark;
 			drawRect(x, y, w, h, fontDark);
-			drawMessage("LOAD DATA", x + buttonPad, y + buttonHeight / 2);
+			drawMessage('LOAD DATA', x + buttonPad, y + buttonHeight / 2);
 		}
 	}
 	else if (gState == 1) {
@@ -1532,7 +1535,7 @@ function draw () {
 		if (battles.length > 0) {
 			closeCard(playerCard, true);
 			closeCard(infoCard);
-			drawImage(scene1Image, battleX, battleY, battleWidth, battleHeight);
+			drawImage(sceneImage, battleX, battleY, battleWidth, battleHeight);
 			
 			// Draw unit images
 			for (var i = 0; i < units.length; i++) {
