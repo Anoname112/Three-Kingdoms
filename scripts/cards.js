@@ -1037,12 +1037,12 @@ function importData () {
 	if (json && json['player']) {
 		loadData(
 			JSON.parse(json['date']),
-			JSON.parse(storage['player']),
-			JSON.parse(storage['playerForce']),
-			JSON.parse(storage['forces']),
-			JSON.parse(storage['cities']),
-			JSON.parse(storage['officers']),
-			JSON.parse(storage['units'])
+			JSON.parse(json['player']),
+			JSON.parse(json['playerForce']),
+			JSON.parse(json['forces']),
+			JSON.parse(json['cities']),
+			JSON.parse(json['officers']),
+			JSON.parse(json['units'])
 		);
 		
 		closeCard(importCard);
