@@ -248,7 +248,7 @@ function unitsSelect () {
 		if (getElement('unit' + i) && getElement('unit' + i).checked) totalStrength += units[i].Strength;
 	}
 	
-	if (totalStrength > 0) getElement('unitsStats').innerHTML = `<table class="stats"><tr><th>Strength</th><td>` + totalStrength + `</td></tr></table>`;
+	if (totalStrength > 0) getElement('unitsStats').innerHTML = '<table class="stats"><tr><th>Strength</th><td>' + totalStrength + '</td></tr></table>';
 }
 
 // March & Unit card
@@ -408,6 +408,18 @@ function develop (cityIndex, objective) {
 }
 
 // Dev card
+function officersSelect () {
+	getElement('devStats').innerHTML = '';
+	
+	var totalCost = 0;
+	for (var i = 0; i < officers.length; i++) {
+		if (getElement('officer' + i) && getElement('officer' + i).checked) totalCost += devCost;
+	}
+	
+	if (totalCost > 0) getElement('devStats').innerHTML = '<table class="stats"><tr><th>Cost</th><td>' + totalCost + '</td></tr></table>';
+}
+
+// Dev card
 function openDevCard (cityIndex, objective) {
 	closeCard(cityCard);
 	
@@ -429,7 +441,7 @@ function openDevCard (cityIndex, objective) {
 		for (var i = 0; i < viableOfficers.length; i++) {
 			var officer = officers[viableOfficers[i]];
 			officersHTML += `<label for="officer` + viableOfficers[i] + `">
-					<input type="checkbox" id="officer` + viableOfficers[i] + `">
+					<input type="checkbox" id="officer` + viableOfficers[i] + `" onclick="officersSelect()">
 					<span>` + officer.Name + ` | `;
 			switch (objective) {
 				case 'Farm': officersHTML += officer.POL; break;
@@ -452,6 +464,7 @@ function openDevCard (cityIndex, objective) {
 					</tr>
 					<tr>
 						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
+						<td><div id="devStats"></div></td>
 					</tr>
 					<tr>
 						<td>
