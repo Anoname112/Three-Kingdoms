@@ -239,6 +239,7 @@ function commanderChanged (source) {
 	}
 }
 
+// March & Unit card
 function unitsSelect () {
 	getElement('unitsStats').innerHTML = '';
 	
