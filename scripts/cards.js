@@ -239,6 +239,17 @@ function commanderChanged (source) {
 	}
 }
 
+function unitsSelect () {
+	getElement('unitsStats').innerHTML = '';
+	
+	var totalStrength = 0;
+	for (var i = 0; i < units.length; i++) {
+		if (getElement('unit' + i) && getElement('unit' + i).checked) totalStrength += units[i].Strength;
+	}
+	
+	if (totalStrength > 0) getElement('unitsStats').innerHTML = `<table class="stats"><tr><th>Strength</th><td>` + totalStrength + `</td></tr></table>`;
+}
+
 // March & Unit card
 function createUnitDivInnerHTML (cityIndex) {
 	var viableUnits = getCityViableUnits(cityIndex);
@@ -246,7 +257,7 @@ function createUnitDivInnerHTML (cityIndex) {
 	for (var i = 0; i < viableUnits.length; i++) {
 		var unit = units[viableUnits[i]];
 		unitsHTML += `<label for="unit` + viableUnits[i] + `">
-				<input type="checkbox" id="unit` + viableUnits[i] + `">
+				<input type="checkbox" id="unit` + viableUnits[i] + `" onclick="unitsSelect()">
 				<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
 			</label>`;
 	}
@@ -259,6 +270,7 @@ function sourceChanged () {
 	getElement('commanderDiv').innerHTML = '';
 	getElement('relevantStats').innerHTML = '';
 	getElement('unitsDiv').innerHTML = '';
+	getElement('unitsStats').innerHTML = '';
 	getElement('assistDiv').innerHTML = '';
 	getElement('assistDiv').style.visibility = 'hidden';
 	getElement('assistedStats').innerHTML = '';
@@ -349,6 +361,7 @@ function openMarchCard (cityIndex) {
 				</tr>
 				<tr>
 					<td>` + unitsDiv + `</td>
+					<td><div id="unitsStats"></div></td>
 				</tr>
 				<tr>
 					<td><div id="assistDiv" class="checkboxes"></div></td>
@@ -547,7 +560,7 @@ function openUnitCard (cityIndex, objective) {
 					</tr>
 					<tr>
 						<td><div id="unitsDiv">` + createUnitDivInnerHTML(cityIndex) + `</div></td>
-						<td></td>
+						<td><div id="unitsStats"></div></td>
 					</tr>
 					<tr>
 						<td>
