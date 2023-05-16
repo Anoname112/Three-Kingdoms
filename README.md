@@ -1,7 +1,7 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Damage info, Enable abilities, Transfer Gold-Food
+TO DO: Damage info, Enable abilities, Transfer Gold-Food, Button color
 
 <!--
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
