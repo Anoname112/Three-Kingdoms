@@ -105,7 +105,8 @@ const scenarioWidth = 300;
 const roadAlpha = 0.5;
 const roadColor = '#FFFFFF';
 const cityColor = '#888888';
-const highlightColor = 'rgba(221, 221, 221, 0.5)';
+const buttonColor = '#DCDCDC';
+const highlightColor = giveAlpha(buttonColor, 0.4);
 const damageColor = '#FF0000';
 
 // Control

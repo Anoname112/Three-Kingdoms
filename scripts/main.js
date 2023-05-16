@@ -1439,7 +1439,7 @@ function draw () {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 				var w = scenarioWidth;
 				var h = buttonHeight;
-				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 				drawRect(x, y, w, h, fontDark);
 				ctx.fillStyle = fontDark;
 				drawMessage(
@@ -1455,7 +1455,7 @@ function draw () {
 		var w = scenarioWidth;
 		var h = buttonHeight;
 		fillRect(x, y, w, h, highlightColor);
-		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 		drawRect(x, y, w, h, fontDark);
 		ctx.fillStyle = fontDark;
 		drawMessage('IMPORT DATA', x + buttonPad, y + buttonHeight / 2);
@@ -1463,7 +1463,7 @@ function draw () {
 		// Copy data
 		y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 		fillRect(x, y, w, h, highlightColor);
-		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 		drawRect(x, y, w, h, fontDark);
 		ctx.fillStyle = fontDark;
 		drawMessage(copyString, x + buttonPad, y + buttonHeight / 2);
@@ -1472,7 +1472,7 @@ function draw () {
 		if (localStorage['player']) {
 			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 			fillRect(x, y, w, h, highlightColor);
-			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, highlightColor);
+			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 			drawRect(x, y, w, h, fontDark);
 			ctx.fillStyle = fontDark;
 			drawMessage('LOAD DATA', x + buttonPad, y + buttonHeight / 2);
