@@ -368,8 +368,8 @@ function openMarchCard (cityIndex) {
 					<td><div id="assistDiv" class="checkboxes"></div></td>
 					<td><div id="assistedStats"></div></td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="center">
+					<td colspan="2">
 						<input type="button" value="March" onclick="march(); playAudio(confirmSound);">
 						<input type="button" value="Cancel" onclick="closeCard(marchCard); playAudio(clickSound);">
 					</td>
@@ -466,8 +466,8 @@ function openDevCard (cityIndex, objective) {
 						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
 						<td><div id="devStats"></div></td>
 					</tr>
-					<tr>
-						<td>
+					<tr class="center">
+						<td colspan="2">
 							<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
 							<input type="button" value="Cancel" onclick="closeCard(devCard); playAudio(clickSound);">
 						</td>
@@ -576,8 +576,8 @@ function openUnitCard (cityIndex, objective) {
 						<td><div id="unitsDiv">` + createUnitDivInnerHTML(cityIndex) + `</div></td>
 						<td><div id="unitsStats"></div></td>
 					</tr>
-					<tr>
-						<td>
+					<tr class="center">
+						<td colspan="2">
 							<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
 							<input type="button" value="Cancel" onclick="closeCard(unitCard); playAudio(clickSound);">
 						</td>
@@ -641,8 +641,8 @@ function openUnitCard (cityIndex, objective) {
 							<td><div id="officersDiv">Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged()"></div></td>
 							<td><div id="relevantStats"></div></td>
 						</tr>
-						<tr>
-							<td>
+						<tr class="center">
+							<td colspan="2">
 								<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
 								<input type="button" value="Cancel" onclick="closeCard(unitCard); playAudio(clickSound);">
 							</td>
@@ -800,8 +800,8 @@ function openOfficerCard (cityIndex, objective) {
 				<table>` +
 					firstRowHTML +
 					secondRowHTML +
-					`<tr>
-						<td>
+					`<tr class="center">
+						<td colspan="2">
 							<input type="button" value="` + objective + `" onclick="personel(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
 							<input type="button" value="Cancel" onclick="closeCard(officerCard); playAudio(clickSound);">
 						</td>
@@ -1085,7 +1085,7 @@ function openImportCard () {
 		<div class="importContent">
 			<table>
 				<tr><td><textarea id="importTextarea" cols="40" rows="10"></textarea><br /></td></tr>
-				<tr>
+				<tr class="center">
 					<td>
 						<input type="button" id="importButton" onclick="importData()" value="Import">
 						<input type="button" id="importCancel" onclick="closeCard(importCard)" value="Cancel">
