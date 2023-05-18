@@ -953,13 +953,13 @@ function initBattle () {
 	var attUnits = getDeployedUnits(attCommander);
 	var defUnits = getDeployedUnits(defCommander);
 	
-	// Back row units based on unit type
+	// Assign back row position based on unit type
 	var attBackRow = [];
 	var defBackRow = [];
 	for (var i = 0; i < attUnits.length; i++) if (unitTypes[units[attUnits[i]].Type].Name == 'Archer') attBackRow.push(attUnits[i]);
 	for (var i = 0; i < defUnits.length; i++) if (unitTypes[units[defUnits[i]].Type].Name == 'Archer') defBackRow.push(defUnits[i]);
 	
-	// Attack units battle position or vector
+	// Attacking units battle position or vector
 	var backCount = 0;
 	var frontCount = 0;
 	for (var i = 0; i < attUnits.length; i++) {
@@ -977,7 +977,7 @@ function initBattle () {
 		}
 	}
 	
-	// Defense units battle position or vector
+	// Defending units battle position or vector
 	backCount = 0;
 	frontCount = 0;
 	for (var i = 0; i < defUnits.length; i++) {
@@ -995,7 +995,7 @@ function initBattle () {
 		}
 	}
 	
-	// Start battle
+	// Start battle animation
 	startTimestamp = Date.now();
 	requestAnimationFrame(animateBattle);
 }
