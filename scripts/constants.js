@@ -121,6 +121,7 @@ const buttonWidth = 100;
 // Images
 const images = [];
 const infoImage = newImg("images/info.png");
+const sortImage = newImg("images/sort.png");
 const mapImage = newImg("images/map.png");
 const unitImage = newImg("images/unit.png");
 const sceneImage = newImg("images/scene.png");

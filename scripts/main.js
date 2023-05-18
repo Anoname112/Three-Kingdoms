@@ -1543,6 +1543,9 @@ function draw () {
 					y -= diff.Y * squareSize * mapAnimationStep;
 				}
 				drawImage(unitImage, x, y, w, h);
+				
+				// Battle indicator on map
+				if (battles.length > 0 && (i == battles[0][0] || i == battles[0][1])) drawImage(sortImage, x, y - h, w, h);
 			}
 		}
 		
