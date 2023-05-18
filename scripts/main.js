@@ -925,8 +925,7 @@ function animateBattle (timestamp) {
 				}
 			}
 			
-			animateUnits(attUnits, elapsed);
-			animateUnits(defUnits, elapsed);
+			animateUnits(attUnits.concat(defUnits), elapsed);
 			
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
@@ -938,7 +937,7 @@ function animateBattle (timestamp) {
 				}
 			}
 			
-			// Remove damage info
+			// Remove elapsed damage info
 			for (var i = 0; i < damages.length; i++) if (damages[i] && startTimestamp - damages[i][2] > battleSeconds) damages[i] = null;
 		}
 		
@@ -1003,6 +1002,7 @@ function initBattle () {
 function animateMap (timestamp) {
 	mapAnimationStep = (Date.now() - startTimestamp) / animationTime;
 	if (mapAnimationStep < 1) {
+		// Continue map animation
 		draw();
 		openPlayerCard();
 		requestAnimationFrame(animateMap);
@@ -1423,7 +1423,7 @@ function playClick (e) {
 		}
 	}
 	
-	// Animate
+	// Start map animation
 	startTimestamp = Date.now();
 	requestAnimationFrame(animateMap);
 }
