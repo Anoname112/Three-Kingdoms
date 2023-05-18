@@ -864,6 +864,7 @@ function onMouseClick (e) {
 			return;
 		}
 		
+		// Pause or resume battle
 		battles[0][2] = !battles[0][2];
 	}
 }
@@ -903,10 +904,12 @@ function animateUnits (unitIndexs, elapsed) {
 
 function animateBattle (timestamp) {
 	if (battles.length > 0) {
+		// Calculate elapsed time
 		var currentTimestamp = Date.now();
 		var elapsed = currentTimestamp - startTimestamp;
 		startTimestamp = currentTimestamp;
 		
+		// Animate when battle is not paused
 		if (battles[0][2]) {
 			var attUnits = getDeployedUnits(battles[0][0]);
 			var defUnits = getDeployedUnits(battles[0][1]);
@@ -950,11 +953,13 @@ function initBattle () {
 	var attUnits = getDeployedUnits(attCommander);
 	var defUnits = getDeployedUnits(defCommander);
 	
+	// Back row units based on unit type
 	var attBackRow = [];
 	var defBackRow = [];
 	for (var i = 0; i < attUnits.length; i++) if (unitTypes[units[attUnits[i]].Type].Name == 'Archer') attBackRow.push(attUnits[i]);
 	for (var i = 0; i < defUnits.length; i++) if (unitTypes[units[defUnits[i]].Type].Name == 'Archer') defBackRow.push(defUnits[i]);
 	
+	// Attack units battle position or vector
 	var backCount = 0;
 	var frontCount = 0;
 	for (var i = 0; i < attUnits.length; i++) {
@@ -972,6 +977,7 @@ function initBattle () {
 		}
 	}
 	
+	// Defense units battle position or vector
 	backCount = 0;
 	frontCount = 0;
 	for (var i = 0; i < defUnits.length; i++) {
@@ -989,6 +995,7 @@ function initBattle () {
 		}
 	}
 	
+	// Start battle
 	startTimestamp = Date.now();
 	requestAnimationFrame(animateBattle);
 }
@@ -1487,8 +1494,8 @@ function draw () {
 		ctx.globalAlpha = roadAlpha;
 		for (var i = 0; i < map.length; i++) {
 			for (var j = 0; j < map[i].length; j++) {
-				var x = canvasPad + i * squareSize;
-				var y = canvasPad + j * squareSize;
+				x = canvasPad + i * squareSize;
+				y = canvasPad + j * squareSize;
 				
 				if (map[i][j] != 1) {
 					drawRect(x, y, squareSize, squareSize, cityColor);
@@ -1501,8 +1508,8 @@ function draw () {
 		// Draw cities
 		for (var i = 0; i < map.length; i++) {
 			for (var j = 0; j < map[i].length; j++) {
-				var x = canvasPad + i * squareSize;
-				var y = canvasPad + j * squareSize;
+				x = canvasPad + i * squareSize;
+				y = canvasPad + j * squareSize;
 				
 				if (map[i][j] >= cityIndexStart) {
 					var index = map[i][j] - cityIndexStart;
@@ -1525,8 +1532,8 @@ function draw () {
 		// Draw deployed units
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
-				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
-				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
+				x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+				y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
 				var w = squareSize - unitPad * 2;
 				var h = squareSize - unitPad * 2;
 				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) {
@@ -1562,8 +1569,8 @@ function draw () {
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
 					var pad = unitSize / 6;
-					var x = units[i].Vec.X - unitSize / 2 + pad;
-					var y = units[i].Vec.Y - unitSize / 2 + pad;
+					x = units[i].Vec.X - unitSize / 2 + pad;
+					y = units[i].Vec.Y - unitSize / 2 + pad;
 					var size = unitSize - pad * 2;
 					
 					ctx.fillStyle = cityColor;
