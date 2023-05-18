@@ -1545,7 +1545,7 @@ function draw () {
 				drawImage(unitImage, x, y, w, h);
 				
 				// Battle indicator on map
-				if (battles.length > 0 && (i == battles[0][0] || i == battles[0][1])) drawImage(sortImage, x, y - h, w, h);
+				if (battles.length > 0 && (i == battles[0][0] || i == battles[0][1])) drawImage(downImage, x, y - h, w, h);
 			}
 		}
 		
