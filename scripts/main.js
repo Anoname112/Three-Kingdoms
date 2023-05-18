@@ -864,8 +864,36 @@ function onMouseClick (e) {
 			return;
 		}
 		
-		// Pause or resume battle
-		battles[0][2] = !battles[0][2];
+		if (battles[0][2]) {
+			// Focus a target
+			var playerDeployed = null;
+			var enemyDeployed = null;
+			if (playerForce == officers[battles[0][0]].Force) {
+				playerDeployed = deployed0;
+				enemyDeployed = deployed1;
+			}
+			else if (playerForce == officers[battles[0][1]].Force) {
+				playerDeployed = deployed1;
+				enemyDeployed = deployed0;
+			}
+			if (playerDeployed != null && enemyDeployed != null) {
+				var radius = unitSize / 3;
+				for (var i = 0; i < enemyDeployed.length; i++) {
+					var distance = units[enemyDeployed[i]].Vec.subtract(mousePos).length();
+					if (distance < radius) {
+						for (var j = 0; j < playerDeployed.length; j++) units[playerDeployed[j]].Target = units[enemyDeployed[i]].Id;
+						return;
+					}
+				}
+			}
+			
+			// Pause battle
+			battles[0][2] = false;
+		}
+		else {
+			// Resume battle
+			battles[0][2] = true;
+		}
 	}
 }
 
