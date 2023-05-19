@@ -262,7 +262,7 @@ function createUnitDivInnerHTML (cityIndex) {
 				<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
 			</label>`;
 	}
-	return `Units: (type | strength | morale)<br /><div class="checkboxes">` + unitsHTML + `</div>`;
+	return `Units:<br /><div class="checkboxes">` + unitsHTML + `</div>`;
 }
 
 // March card
@@ -598,7 +598,7 @@ function openUnitCard (cityIndex, objective) {
 					for (var i = 0; i < unitTypes.length; i++) {
 						options += '<option value="' + i + '">' + unitTypes[i].Name + ' | ' + unitTypes[i].Cost + '</option>';
 					}
-					objectiveHTML += 'Unit Type: <select id="unitType">' + options + '</select>';
+					objectiveHTML += 'Type: <select id="unitType">' + options + '</select>';
 					break;
 				case 'Recurit':
 					var options = '';

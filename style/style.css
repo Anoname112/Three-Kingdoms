@@ -239,6 +239,7 @@ select {
 .checkboxes {
   border: 1px solid #000000;
   background-color: #FFFFFF;
+  overflow-x: hidden;
 }
 
 .checkboxes label {
