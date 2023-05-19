@@ -39,6 +39,7 @@ var infoY;
 var infoXHalf;
 var infoYHalf;
 
+var scenario;
 var date;
 var player;
 var playerForce;
@@ -71,7 +72,7 @@ scenarios.push(new Scenario(
 		['Cao Cao Forces', 15, '#0000FF', [8, 9]],          // 0	
 		['Liu Bei Forces', 247, '#00FF00', [10]],           // 1
 		['Sun Ce Forces', 382, '#FF0000', [45]],            // 2
-		['Lu Bu Forces', 277, '#777777', [7]],              // 3
+		['Lu Bu Forces', 277, '#545454', [7]],              // 3
 		['Tao Qian Forces', 415, '#AAFFAA', [11]],          // 4
 		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],      // 5
 		['Kong Rong Forces', 217, '#AAFFAA', [18]],         // 6
@@ -630,6 +631,7 @@ function applyScenario (name) {
 		if (scenarios[i].Name == name) {
 			forces = [];
 			units = [];
+			scenario = i;
 			date = scenarios[i].Date;
 			// Forces & Cities
 			for (var j = 0; j < scenarios[i].Forces.length; j++) {

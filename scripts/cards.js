@@ -1063,10 +1063,10 @@ function importData () {
 	var json = JSON.parse(data);
 	if (json && json['player']) {
 		loadData(
+			JSON.parse(json['scenario']),
 			JSON.parse(json['date']),
 			JSON.parse(json['player']),
 			JSON.parse(json['playerForce']),
-			JSON.parse(json['forces']),
 			JSON.parse(json['cities']),
 			JSON.parse(json['officers']),
 			JSON.parse(json['units'])

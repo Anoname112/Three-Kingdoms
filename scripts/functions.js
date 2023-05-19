@@ -566,10 +566,10 @@ function copyData () {
 }
 
 function saveData () {
+	localStorage.setItem('scenario', JSON.stringify(scenario));
 	localStorage.setItem('date', JSON.stringify(date));
 	localStorage.setItem('player', JSON.stringify(player));
 	localStorage.setItem('playerForce', JSON.stringify(playerForce));
-	localStorage.setItem('forces', JSON.stringify(forces));
 	localStorage.setItem('cities', JSON.stringify(cities));
 	localStorage.setItem('officers', JSON.stringify(officers));
 	localStorage.setItem('units', JSON.stringify(units));
@@ -578,35 +578,53 @@ function saveData () {
 
 function loadDataFromStorage () {
 	loadData(
+		JSON.parse(localStorage.getItem('scenario')),
 		JSON.parse(localStorage.getItem('date')),
 		JSON.parse(localStorage.getItem('player')),
 		JSON.parse(localStorage.getItem('playerForce')),
-		JSON.parse(localStorage.getItem('forces')),
 		JSON.parse(localStorage.getItem('cities')),
 		JSON.parse(localStorage.getItem('officers')),
 		JSON.parse(localStorage.getItem('units'))
 	);
 }
 
-function loadData (_date, _player, _playerForce, _forces, _cities, _officers, _units) {
+function loadData (_scenario, _date, _player, _playerForce, _cities, _officers, _units) {
+	applyScenario(scenarios[_scenario].Name);
+	
 	date = _date;
 	player = _player;
 	playerForce = _playerForce;
-	forces = _forces;
-	cities = _cities;
-	officers = _officers;
-	units = _units;
 	
-	// Fix points and prepare battle images
+	// Cities
+	for (var i = 0; i < cities.length; i++) {
+		cities[i].Force = _cities[i].Force;
+		cities[i].Gold = _cities[i].Gold;
+		cities[i].Food = _cities[i].Food;
+		cities[i].cFarm = _cities[i].cFarm;
+		cities[i].cTrade = _cities[i].cTrade;
+		cities[i].cTech = _cities[i].cTech;
+		cities[i].cDefense = _cities[i].cDefense;
+		cities[i].cOrder = _cities[i].cOrder;
+	}
+	
+	// Officers
 	for (var i = 0; i < officers.length; i++) {
-		officers[i].Position = new Point(officers[i].Position.X, officers[i].Position.Y);
+		officers[i].Force = _officers[i].Force;
+		officers[i].City = _officers[i].City;
+		officers[i].Position = new Point(_officers[i].Position.X, _officers[i].Position.Y);
+		officers[i].Objective = _officers[i].Objective;
 		if (officers[i].Objective != '-' && officers[i].Objective[0] == 'March') {
 			for (var j = 0; j < officers[i].Objective[2].Points.length; j++) {
 				officers[i].Objective[2].Points[j] = new Point(officers[i].Objective[2].Points[j].X, officers[i].Objective[2].Points[j].Y);
 			}
 		}
+		officers[i].Progress = _officers[i].Progress;
+		// Battle image
 		if (Number.isInteger(officers[i].City)) battleImages[i] = newImg("portraits/" + officers[i].Name.split(' ').join('_') + ".jpg");
 	}
+	
+	// Units
+	units = _units;
 	for (var i = 0; i < units.length; i++) units[i].Position = new Point(units[i].Position.X, units[i].Position.Y);
 	
 	startPoint = new Point.Zero();
