@@ -71,7 +71,7 @@ scenarios.push(new Scenario(
 		['Cao Cao Forces', 15, '#0000FF', [8, 9]],          // 0	
 		['Liu Bei Forces', 247, '#00FF00', [10]],           // 1
 		['Sun Ce Forces', 382, '#FF0000', [45]],            // 2
-		['Lu Bu Forces', 277, '#666666', [7]],              // 3
+		['Lu Bu Forces', 277, '#777777', [7]],              // 3
 		['Tao Qian Forces', 415, '#AAFFAA', [11]],          // 4
 		['Yuan Shu Forces', 552, '#F516ED', [12, 13]],      // 5
 		['Kong Rong Forces', 217, '#AAFFAA', [18]],         // 6
@@ -1593,45 +1593,42 @@ function draw () {
 			closeCard(infoCard);
 			drawImage(sceneImage, battleX, battleY, battleWidth, battleHeight);
 			
-			// Draw unit images
-			var pad = unitSize / 6;
-			var size = unitSize - pad * 2;
+			// Draw unit portrait
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
-					x = units[i].Vec.X - unitSize / 2 + pad;
-					y = units[i].Vec.Y - unitSize / 2 + pad;
-					
+					x = units[i].Vec.X - unitSize / 2 + portraitPad;
+					y = units[i].Vec.Y - unitSize / 2 + portraitPad;
+					// Draw portrait border
 					ctx.fillStyle = cityColor;
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - pad + 2 , 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - portraitPad + 2 , 0, Math.PI * 2);
 					ctx.closePath();
 					ctx.fill();
-					
+					// Draw portrait
 					ctx.save();
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - pad, 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - portraitPad, 0, Math.PI * 2);
 					ctx.clip();
-					drawImage(battleImages[units[i].Objective[1]], x, y, size, size);
+					drawImage(battleImages[units[i].Objective[1]], x, y, portraitSize, portraitSize);
 					ctx.restore();
 				}
 			}
 			
 			// Draw unit icon, strength and damage info
-			var barSize = unitSize * 0.8;
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
-						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + size / 2, 'center', damageColor);
+						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitSize / 2, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
 					
 					// Draw morale bar
-					var startPoint = units[i].Vec.add(new Point(-barSize / 2, unitSize * 0.65));
-					drawLine(startPoint, startPoint.add(new Point(barSize, 0)));
-					drawLine(startPoint, startPoint.add(new Point(barSize * units[i].Morale / moraleLimit, 0)), roadColor);
+					var startPoint = units[i].Vec.add(new Point(-moraleBarSize / 2, unitSize * 0.65));
+					drawLine(startPoint, startPoint.add(new Point(moraleBarSize, 0)));
+					drawLine(startPoint, startPoint.add(new Point(moraleBarSize * units[i].Morale / moraleLimit, 0)), roadColor);
 				}
 			}
 			
