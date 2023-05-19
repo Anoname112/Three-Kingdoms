@@ -879,7 +879,7 @@ function onMouseClick (e) {
 				enemyDeployed = deployed0;
 			}
 			if (playerDeployed != null && enemyDeployed != null) {
-				var radius = unitSize / 3;
+				var radius = portraitSize / 2;
 				for (var i = 0; i < enemyDeployed.length; i++) {
 					var distance = units[enemyDeployed[i]].Vec.subtract(mousePos).length();
 					if (distance < radius) {
@@ -1598,18 +1598,18 @@ function draw () {
 			// Draw unit portrait
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
-					x = units[i].Vec.X - unitSize / 2 + portraitPad;
-					y = units[i].Vec.Y - unitSize / 2 + portraitPad;
+					x = units[i].Vec.X - portraitSize / 2;
+					y = units[i].Vec.Y - portraitSize / 2;
 					// Draw portrait border
 					ctx.fillStyle = cityColor;
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - portraitPad + 2 , 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitSize / 2 + 2 , 0, Math.PI * 2);
 					ctx.closePath();
 					ctx.fill();
 					// Draw portrait
 					ctx.save();
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, unitSize / 2 - portraitPad, 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitSize / 2, 0, Math.PI * 2);
 					ctx.clip();
 					drawImage(battleImages[units[i].Objective[1]], x, y, portraitSize, portraitSize);
 					ctx.restore();
