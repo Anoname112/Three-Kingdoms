@@ -1617,6 +1617,7 @@ function draw () {
 			}
 			
 			// Draw unit icon, strength and damage info
+			var barSize = unitSize * 0.8;
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
@@ -1628,10 +1629,9 @@ function draw () {
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
 					
 					// Draw morale bar
-					var size = unitSize * 0.8;
-					var startPoint = units[i].Vec.add(new Point(-size / 2, unitSize * 0.65));
-					drawLine(startPoint, startPoint.add(new Point(size, 0)));
-					drawLine(startPoint, startPoint.add(new Point(size * units[i].Morale / moraleLimit, 0)), highlightColor);
+					var startPoint = units[i].Vec.add(new Point(-barSize / 2, unitSize * 0.65));
+					drawLine(startPoint, startPoint.add(new Point(barSize, 0)));
+					drawLine(startPoint, startPoint.add(new Point(barSize * units[i].Morale / moraleLimit, 0)), roadColor);
 				}
 			}
 			
