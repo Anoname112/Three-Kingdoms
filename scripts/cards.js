@@ -598,7 +598,7 @@ function openUnitCard (cityIndex, objective) {
 					for (var i = 0; i < unitTypes.length; i++) {
 						options += '<option value="' + i + '">' + unitTypes[i].Name + ' | ' + unitTypes[i].Cost + '</option>';
 					}
-					objectiveHTML += 'Type: <select id="unitType">' + options + '</select>';
+					objectiveHTML += 'Unit Type: <select id="unitType">' + options + '</select>';
 					break;
 				case 'Recurit':
 					var options = '';

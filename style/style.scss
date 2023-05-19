@@ -268,11 +268,11 @@ select {
 .checkboxes {
 	border: 1px solid #000000;
 	background-color: #FFFFFF;
-	overflow-x: hidden;
 }
 
 .checkboxes label {
 	display: block;
+	overflow-x: hidden;
 }
 
 .checkboxes label:hover {
