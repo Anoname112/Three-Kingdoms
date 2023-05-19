@@ -1594,12 +1594,12 @@ function draw () {
 			drawImage(sceneImage, battleX, battleY, battleWidth, battleHeight);
 			
 			// Draw unit images
+			var pad = unitSize / 6;
+			var size = unitSize - pad * 2;
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
-					var pad = unitSize / 6;
 					x = units[i].Vec.X - unitSize / 2 + pad;
 					y = units[i].Vec.Y - unitSize / 2 + pad;
-					var size = unitSize - pad * 2;
 					
 					ctx.fillStyle = cityColor;
 					ctx.beginPath();
@@ -1626,6 +1626,12 @@ function draw () {
 					}
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
 					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
+					
+					// Draw morale bar
+					var size = unitSize * 0.8;
+					var startPoint = units[i].Vec.add(new Point(-size / 2, unitSize * 0.65));
+					drawLine(startPoint, startPoint.add(new Point(size, 0)));
+					drawLine(startPoint, startPoint.add(new Point(size * units[i].Morale / moraleLimit, 0)), highlightColor);
 				}
 			}
 			

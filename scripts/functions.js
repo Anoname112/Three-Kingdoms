@@ -34,6 +34,16 @@ function fillRect (x, y, w, h, s) {
 	ctx.fillRect(x, y, w, h);
 }
 
+function drawLine (p1, p2, s) {
+	ctx.strokeStyle = (s == null) ? "#000" : s;
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.moveTo(p1.X, p1.Y);
+	ctx.lineTo(p2.X, p2.Y);
+	ctx.closePath();
+	ctx.stroke();
+}
+
 function drawRect (x, y, w, h, s) {
 	ctx.strokeStyle = s == null ? "#000" : s;
 	ctx.lineWidth = scaling;
