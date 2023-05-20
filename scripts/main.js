@@ -879,10 +879,9 @@ function onMouseClick (e) {
 				enemyDeployed = deployed0;
 			}
 			if (playerDeployed != null && enemyDeployed != null) {
-				var radius = portraitSize / 2;
 				for (var i = 0; i < enemyDeployed.length; i++) {
 					var distance = units[enemyDeployed[i]].Vec.subtract(mousePos).length();
-					if (distance < radius) {
+					if (distance < portraitRadius) {
 						for (var j = 0; j < playerDeployed.length; j++) units[playerDeployed[j]].Target = units[enemyDeployed[i]].Id;
 						return;
 					}
@@ -1598,18 +1597,18 @@ function draw () {
 			// Draw unit portrait
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
-					x = units[i].Vec.X - portraitSize / 2;
-					y = units[i].Vec.Y - portraitSize / 2;
+					x = units[i].Vec.X - portraitRadius;
+					y = units[i].Vec.Y - portraitRadius;
 					// Draw portrait border
 					ctx.fillStyle = cityColor;
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitSize / 2 + 2 , 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitRadius + 2 , 0, Math.PI * 2);
 					ctx.closePath();
 					ctx.fill();
 					// Draw portrait
 					ctx.save();
 					ctx.beginPath();
-					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitSize / 2, 0, Math.PI * 2);
+					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitRadius, 0, Math.PI * 2);
 					ctx.clip();
 					drawImage(battleImages[units[i].Objective[1]], x, y, portraitSize, portraitSize);
 					ctx.restore();
@@ -1621,7 +1620,7 @@ function draw () {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
-						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitSize / 2, 'center', damageColor);
+						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitRadius, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
 					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');

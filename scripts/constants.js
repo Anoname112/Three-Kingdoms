@@ -75,6 +75,7 @@ const battleSeconds = 1000;
 const unitSize = isMobile || isPortrait ? 30 : 50;
 const portraitPad = unitSize / 6;
 const portraitSize = unitSize - portraitPad * 2;
+const portraitRadius = portraitSize / 2;
 const moraleBarSize = unitSize * 0.8;
 const influence = [0.35, 0.1, 0.15, 0.15, 0.25];
 const objectiveLength = {
