@@ -34,6 +34,11 @@ var battleX;
 var battleY;
 var battleWidth;
 var battleHeight;
+var attX;
+var defX;
+var forceY;
+var statsY;
+var strengthY;
 var infoX;
 var infoY;
 var infoXHalf;
@@ -555,6 +560,12 @@ window.onload = function () {
 	//battleY = infoY + playerCard.clientHeight + cardMargin * 2;
 	battleWidth = window.innerWidth - battleX;
 	battleHeight = window.innerHeight - battleY;
+	attX = battleX + battleWidth * 0.25;
+	defX = battleX + battleWidth * 0.75;
+	forceY = battleY + unitSize * 0.15;
+	statsY = battleY + unitSize * 0.5;
+	strengthY = battleY + unitSize * 0.85;
+	
 	infoCard.style.left = (infoX + cardMargin) + 'px';
 	infoCard.style.top = (infoY + playerCard.clientHeight + cardMargin * 2) + 'px';
 	infoCard.style.width = (window.innerWidth - infoX - (cardMargin * 2)) + 'px';
@@ -1634,11 +1645,6 @@ function draw () {
 			}
 			
 			// Draw battle info
-			var attX = battleX + battleWidth * 0.25;
-			var defX = battleX + battleWidth * 0.75;
-			var forceY = battleY + unitSize * 0.15;
-			var statsY = battleY + unitSize * 0.5;
-			var strengthY = battleY + unitSize * 0.85;
 			fillRect(battleX, battleY, battleWidth, unitSize, highlightColor);
 			drawGlowMessage(officers[battles[0][0]].Name + ' Unit', attX, forceY, 'center');
 			drawGlowMessage(officers[battles[0][1]].Name + ' Unit', defX, forceY, 'center');
