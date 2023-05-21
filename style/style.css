@@ -153,7 +153,7 @@ select {
 
 .selectContent input, .cityContent input, .deployedContent input, .buttonsGroup .buttons input {
   display: block;
-  width: 100px;
+  width: 104px;
   height: 21px;
 }
 
@@ -166,18 +166,16 @@ select {
   position: relative;
 }
 
-.buttonsGroup .label {
-  padding: 1px 0;
-  border: 1px solid #AAAAAA;
-  height: 17px;
-  text-align: center;
+.buttonsGroup > input {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .buttonsGroup .buttons {
   display: none;
   position: absolute;
   top: 0;
-  left: 100px;
+  left: 104px;
 }
 
 .buttonsGroup:hover .buttons {

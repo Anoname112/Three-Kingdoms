@@ -86,7 +86,7 @@ function openCityCard (cityIndex, select) {
 		
 		buttons += `<input type="button" value="March" onclick="openMarchCard(` + cityIndex + `); playAudio(clickSound);"` + marchDisabled + `>
 			<div class="buttonsGroup">
-				<div class="label">Development &#9654;</div>
+				<input type="button" value="Development &#9654;">
 				<div class="buttons">
 					<input type="button" value="Farm" onclick="openDevCard(` + cityIndex + `, 'Farm'); playAudio(clickSound);"` + farmDisabled + `>
 					<input type="button" value="Trade" onclick="openDevCard(` + cityIndex + `, 'Trade'); playAudio(clickSound);"` + tradeDisabled + `>
@@ -96,7 +96,7 @@ function openCityCard (cityIndex, select) {
 				</div>
 			</div>
 			<div class="buttonsGroup">
-				<div class="label">Military &#9654;</div>
+				<input type="button" value="Military &#9654;">
 				<div class="buttons">
 					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish'); playAudio(clickSound);"` + establishDisabled + `>
 					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit'); playAudio(clickSound);"` + recuritDisabled + `>
@@ -105,7 +105,7 @@ function openCityCard (cityIndex, select) {
 				</div>
 			</div>
 			<div class="buttonsGroup">
-				<div class="label">Personel &#9654;</div>
+				<input type="button" value="Personel &#9654;">
 				<div class="buttons">
 					<input type="button" value="Employ" onclick="openOfficerCard(` + cityIndex + `, 'Employ'); playAudio(clickSound);"` + employDisabled + `>
 					<input type="button" value="Dismiss" onclick="openOfficerCard(` + cityIndex + `, 'Dismiss'); playAudio(clickSound);"` + dismissDisabled + `>

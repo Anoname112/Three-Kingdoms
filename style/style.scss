@@ -4,6 +4,7 @@ $titleFontSize: 15px;
 $titleColor: #FFFFFF;
 $contentFontSize: 13px;
 $inputSize: 21px;
+$buttonWidth: 104px;
 $imageSize: 30px;
 $imageRadius: 50%;
 $statsPadding: 2px;
@@ -182,7 +183,7 @@ select {
 
 .selectContent input, .cityContent input, .deployedContent input, .buttonsGroup .buttons input {
 	display: block;
-	width: 100px;
+	width: $buttonWidth;
 	height: $inputSize;
 }
 
@@ -195,18 +196,17 @@ select {
 	position: relative;
 }
 
-.buttonsGroup .label {
-	padding: 1px 0;
-	border: 1px solid #AAAAAA;
-	height: $inputSize - 4;
-	text-align: center;
+.buttonsGroup > input {
+	padding-left: 0;
+	padding-right: 0;
+	
 }
 
 .buttonsGroup .buttons {
 	display: none;
 	position: absolute;
 	top: 0;
-	left: 100px;
+	left: $buttonWidth;
 }
 
 .buttonsGroup:hover .buttons {
@@ -281,10 +281,6 @@ select {
 .checkboxes label:hover {
 	background-color: #1E90FF;
 	color: #FFFFFF;
-}
-
-.checkboxes label input, .checkboxes label span {
-	
 }
 
 .bold {
