@@ -1,7 +1,7 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Damage and morale info, Enable abilities, Transfer Gold-Food, Button color, Battle map indicator, Target focus, Items
+TO DO: Damage and morale info, Enable abilities, Transfer Gold-Food, Button color, Battle map indicator, Target focus, Items, Optimize drawing, Other fonts
 
 <!--
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
