@@ -59,7 +59,7 @@ select {
 
 .playerName {
   display: table-cell;
-  padding: 2px 3px 3px 3px;
+  padding: 3px;
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
@@ -167,8 +167,9 @@ select {
 }
 
 .buttonsGroup .label {
+  padding: 1px 0;
   border: 1px solid #AAAAAA;
-  height: 21px;
+  height: 17px;
   text-align: center;
 }
 
@@ -251,10 +252,6 @@ select {
 .checkboxes label:hover {
   background-color: #1E90FF;
   color: #FFFFFF;
-}
-
-.checkboxes label input, .checkboxes label span {
-  vertical-align: top;
 }
 
 .bold {
