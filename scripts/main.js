@@ -1492,7 +1492,7 @@ function draw () {
 				drawMessage(
 					'[' + scenarios[i].Date + '] ' + scenarios[i].Name + ': ' + officers[scenarios[i].Playables[j]].Name,
 					x + buttonPad,
-					y + buttonHeight / 2
+					y + buttonHeight / 2 + 1
 				);
 			}
 		}
@@ -1505,7 +1505,7 @@ function draw () {
 		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 		drawRect(x, y, w, h, fontDark);
 		ctx.fillStyle = fontDark;
-		drawMessage('IMPORT DATA', x + buttonPad, y + buttonHeight / 2);
+		drawMessage('IMPORT DATA', x + buttonPad, y + buttonHeight / 2 + 1);
 		
 		// Copy data
 		y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
@@ -1513,7 +1513,7 @@ function draw () {
 		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 		drawRect(x, y, w, h, fontDark);
 		ctx.fillStyle = fontDark;
-		drawMessage(copyString, x + buttonPad, y + buttonHeight / 2);
+		drawMessage(copyString, x + buttonPad, y + buttonHeight / 2 + 1);
 		
 		// Load data
 		if (localStorage['player']) {
@@ -1522,7 +1522,7 @@ function draw () {
 			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 			drawRect(x, y, w, h, fontDark);
 			ctx.fillStyle = fontDark;
-			drawMessage('LOAD DATA', x + buttonPad, y + buttonHeight / 2);
+			drawMessage('LOAD DATA', x + buttonPad, y + buttonHeight / 2 + 1);
 		}
 	}
 	else if (gState == 1) {
@@ -1563,7 +1563,7 @@ function draw () {
 						var forceIndex = getForceIndexById(cities[index].Force);
 						fillRect(x, y, squareSize, squareSize, forces[forceIndex].Color);
 						ctx.fillStyle = getTextColor(forces[forceIndex].Color);
-						drawMessage(forces[forceIndex].Name[0], x + squareSize / 2, y + squareSize / 2, 'center');
+						drawMessage(forces[forceIndex].Name[0], x + squareSize / 2, y + squareSize / 2 + 1, 'center');
 					}
 				}
 			}

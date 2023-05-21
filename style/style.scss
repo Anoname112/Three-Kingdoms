@@ -6,7 +6,7 @@ $contentFontSize: 13px;
 $inputSize: 21px;
 $imageSize: 30px;
 $imageRadius: 50%;
-$statsPadding: 1px 2px 2px 2px;
+$statsPadding: 2px;
 $statsBorder: 1px solid #AAAAAA;
 $statsBackColor: #CCCCCC;
 $statsMinWidth: 32px;
@@ -18,7 +18,7 @@ $statsMinWidth: 32px;
 body {
 	margin: 0;
 	padding: 0;
-	font-family: "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
+	font-family: "Roboto", "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
 }
 
 input[type=text] {

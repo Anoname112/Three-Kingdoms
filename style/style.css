@@ -5,7 +5,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
+  font-family: "Roboto", "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
 }
 
 input[type=text] {
@@ -120,13 +120,13 @@ select {
 }
 
 .cityStats tr th {
-  padding: 1px 2px 2px 2px;
+  padding: 2px;
   border: 1px solid #AAAAAA;
   background-color: #CCCCCC;
 }
 
 .cityStats tr td {
-  padding: 1px 2px 2px 2px;
+  padding: 2px;
   border: 1px solid #AAAAAA;
   text-align: right;
 }
@@ -188,7 +188,7 @@ select {
 }
 
 .stats th {
-  padding: 1px 2px 2px 2px;
+  padding: 2px;
   border: 1px solid #AAAAAA;
   min-width: 32px;
   background-color: #CCCCCC;
@@ -198,7 +198,7 @@ select {
 
 .stats td {
   position: relative;
-  padding: 1px 2px 2px 2px;
+  padding: 2px;
   border: 1px solid #AAAAAA;
   min-width: 32px;
   text-align: right;

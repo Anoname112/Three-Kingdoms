@@ -95,8 +95,8 @@ const objectiveLength = {
 // Canvas
 const scaling = 1;
 const canvasPad = 0;
-const canvasFontSize = isMobile || isPortrait ? 9 : 14;
-const canvasFontFamily = '"Consolas"';
+const canvasFontSize = isMobile || isPortrait ? 9 : 13;
+const canvasFontFamily = '"Roboto", "Segoe UI"';
 const canvasFont = 'bold ' + canvasFontSize + 'px ' + canvasFontFamily;
 const cityPad = isMobile || isPortrait ? 2 : 3;
 const unitPad = isMobile || isPortrait ? 2 : 3;
