@@ -247,11 +247,17 @@ select {
 .checkboxes label {
   display: block;
   overflow-x: hidden;
+  position: relative;
 }
 
 .checkboxes label:hover {
   background-color: #1E90FF;
   color: #FFFFFF;
+}
+
+.checkboxes label span {
+  position: absolute;
+  padding: 1px 0 0 1px;
 }
 
 .bold {
