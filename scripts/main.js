@@ -1626,7 +1626,7 @@ function draw () {
 				}
 			}
 			
-			// Draw damage, icon, strength and damage info
+			// Draw unit icon, strength, morale and damage info
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
 					// Draw damage
