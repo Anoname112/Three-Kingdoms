@@ -1,5 +1,6 @@
 $cardRadius: 5px;
 $cardPadding: 5px;
+$cardBackColor: #DDDDDD;
 $titleFontSize: 15px;
 $titleColor: #FFFFFF;
 $contentFontSize: 13px;
@@ -69,7 +70,7 @@ select {
 	position: fixed;
 	border: 1px solid #333333;
 	border-radius: $cardRadius;
-	background-color: #DDDDDD;
+	background-color: $cardBackColor;
 	visibility: hidden;
 	cursor: default;
 	opacity: 0.95;
@@ -199,6 +200,8 @@ select {
 .buttonsGroup > input {
 	padding: 0;
 	height: $inputSize;
+	background-color: $cardBackColor;
+	border: $statsBorder;
 }
 
 .buttonsGroup .buttons {

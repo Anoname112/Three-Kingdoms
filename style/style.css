@@ -169,6 +169,8 @@ select {
 .buttonsGroup > input {
   padding: 0;
   height: 21px;
+  background-color: #DDDDDD;
+  border: 1px solid #AAAAAA;
 }
 
 .buttonsGroup .buttons {
