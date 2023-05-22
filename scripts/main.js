@@ -53,9 +53,9 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
-unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 50, [1.0, 1.0, 1.1], 1200));
-unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 50, [1.1, 1.0, 1.25], 1400));
-unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 155, [0.9, 1.05, 1.0], 1000));
+unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 50, [1.0, 1.0, 1.1], 1200, '⛨'));
+unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 50, [1.1, 1.0, 1.25], 1400, '♞'));
+unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 155, [0.9, 1.05, 1.0], 1000, '➶'));
 
 /*
 1. February 184: Revolt Awakens Heroric Ambitions
@@ -1004,14 +1004,14 @@ function initBattle () {
 	for (var i = 0; i < attUnits.length; i++) {
 		if (attBackRow.includes(attUnits[i])) {
 			units[attUnits[i]].Vec = new Point(
-				battleX + unitSize / 2,
-				battleY + (battleHeight - unitSize * attBackRow.length) / 2 + (backCount++ * unitSize) + unitSize / 2
+				battleX + unitHalfSize,
+				battleY + (battleHeight - unitSize * attBackRow.length) / 2 + (backCount++ * unitSize) + unitHalfSize
 			);
 		}
 		else {
 			units[attUnits[i]].Vec = new Point(
-				battleX + unitSize + unitSize / 2,
-				battleY + (battleHeight - unitSize * (attUnits.length - attBackRow.length)) / 2 + (frontCount++ * unitSize) + unitSize / 2
+				battleX + unitSize + unitHalfSize,
+				battleY + (battleHeight - unitSize * (attUnits.length - attBackRow.length)) / 2 + (frontCount++ * unitSize) + unitHalfSize
 			);
 		}
 	}
@@ -1022,14 +1022,14 @@ function initBattle () {
 	for (var i = 0; i < defUnits.length; i++) {
 		if (defBackRow.includes(defUnits[i])) {
 			units[defUnits[i]].Vec = new Point(
-				battleX + battleWidth - unitSize / 2,
-				battleY + (battleHeight - unitSize * defBackRow.length) / 2 + (backCount++ * unitSize) + unitSize / 2
+				battleX + battleWidth - unitHalfSize,
+				battleY + (battleHeight - unitSize * defBackRow.length) / 2 + (backCount++ * unitSize) + unitHalfSize
 			);
 		}
 		else {
 			units[defUnits[i]].Vec = new Point(
-				battleX + battleWidth - unitSize - unitSize / 2,
-				battleY + (battleHeight - unitSize * (defUnits.length - defBackRow.length)) / 2 + (frontCount++ * unitSize) + unitSize / 2
+				battleX + battleWidth - unitSize - unitHalfSize,
+				battleY + (battleHeight - unitSize * (defUnits.length - defBackRow.length)) / 2 + (frontCount++ * unitSize) + unitHalfSize
 			);
 		}
 	}
@@ -1626,16 +1626,17 @@ function draw () {
 				}
 			}
 			
-			// Draw unit icon, strength and damage info
+			// Draw damage, icon, strength and damage info
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
+					// Draw damage
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
 						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitRadius, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
-					var icon = units[i].Type == 0 ? '⛨' : (units[i].Type == 1 ? '♞' : '➶');
-					drawGlowMessage(icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitSize / 2, 'center', forces[getForceIndexById(units[i].Force)].Color);
+					// Draw icon and strength
+					drawGlowMessage(unitTypes[units[i].Type].Icon + units[i].Strength, units[i].Vec.X, units[i].Vec.Y + unitHalfSize, 'center', forces[getForceIndexById(units[i].Force)].Color);
 					
 					// Draw morale bar
 					var startPoint = units[i].Vec.add(new Point(-moraleBarSize / 2, unitSize * 0.65));

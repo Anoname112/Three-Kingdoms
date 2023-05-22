@@ -73,6 +73,7 @@ const unitLimit = 10;
 const unitCooldown = 1;
 const battleSeconds = 1000;
 const unitSize = isMobile || isPortrait ? 30 : 50;
+const unitHalfSize = unitSize / 2;
 const portraitPad = unitSize / 6;
 const portraitSize = unitSize - portraitPad * 2;
 const portraitRadius = portraitSize / 2;
