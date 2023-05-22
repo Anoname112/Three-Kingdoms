@@ -246,8 +246,8 @@ select {
 
 .checkboxes label {
   display: block;
-  overflow-x: hidden;
   position: relative;
+  overflow-x: hidden;
 }
 
 .checkboxes label:hover {
@@ -256,8 +256,8 @@ select {
 }
 
 .checkboxes label span {
+  display: inline-table;
   position: absolute;
-  padding: 1px 0 0 1px;
 }
 
 .bold {
