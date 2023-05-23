@@ -1608,7 +1608,7 @@ function draw () {
 			// Draw unit portrait
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
-					x = units[i].Vec.X - portraitRadius;
+					x = units[i].Vec.X - portraitRadius - portraitPad / 2;
 					y = units[i].Vec.Y - portraitRadius;
 					// Draw portrait border
 					ctx.fillStyle = cityColor;
@@ -1621,7 +1621,7 @@ function draw () {
 					ctx.beginPath();
 					ctx.arc(units[i].Vec.X, units[i].Vec.Y, portraitRadius, 0, Math.PI * 2);
 					ctx.clip();
-					drawImage(battleImages[units[i].Objective[1]], x, y, portraitSize, portraitSize);
+					drawImage(battleImages[units[i].Objective[1]], x, y, portraitSize + portraitPad, portraitSize + portraitPad);
 					ctx.restore();
 				}
 			}

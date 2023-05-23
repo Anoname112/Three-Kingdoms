@@ -111,9 +111,9 @@ select {
 	background-color: #888888;
 }
 
-.miniPortrait {
-	height: $imageSize * 5 / 6;
-	border-radius: $imageRadius / 2;
+.clipPortrait {
+	height: $imageSize * 5 / 4;
+	clip-path: inset(10% 15% 20% 15% round 10%);
 }
 
 .smallPortrait {
@@ -243,9 +243,9 @@ select {
 
 .float {
 	position: absolute;
-	left: 100%;
+	left: 91%;
 	top: 50%;
-	transform: translate(0, -43%);
+	transform: translate(0, -42%);
 	visibility: hidden;
 }
 

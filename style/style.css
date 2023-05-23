@@ -80,9 +80,9 @@ select {
   background-color: #888888;
 }
 
-.miniPortrait {
-  height: 25px;
-  border-radius: 25%;
+.clipPortrait {
+  height: 37.5px;
+  clip-path: inset(10% 15% 20% 15% round 10%);
 }
 
 .smallPortrait {
@@ -212,9 +212,9 @@ select {
 
 .float {
   position: absolute;
-  left: 100%;
+  left: 91%;
   top: 50%;
-  transform: translate(0, -43%);
+  transform: translate(0, -42%);
   visibility: hidden;
 }
 
