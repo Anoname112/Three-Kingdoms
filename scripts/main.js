@@ -877,6 +877,7 @@ function onMouseClick (e) {
 			return;
 		}
 		
+		// If battle is not paused
 		if (battles[0][2]) {
 			// Focus a target
 			var playerDeployed = null;
