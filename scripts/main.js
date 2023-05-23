@@ -389,7 +389,7 @@ scenarios.push(new Scenario(
 		[2, 49, getCityPosition(49), 45, 5500]
 	], [
 		// Playables
-		15, 247, 382, 277, 248
+		15, 247, 382, 277
 	]
 ));
 
