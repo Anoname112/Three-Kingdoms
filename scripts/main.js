@@ -389,7 +389,7 @@ scenarios.push(new Scenario(
 		[2, 49, getCityPosition(49), 45, 5500]
 	], [
 		// Playables
-		15, 247, 382, 277
+		15, 247, 382, 277, 248
 	]
 ));
 
@@ -1632,7 +1632,7 @@ function draw () {
 					// Draw damage
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
-						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitRadius, 'center', damageColor);
+						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitRadius - 1, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
 					// Draw icon and strength
@@ -1641,7 +1641,7 @@ function draw () {
 					// Draw morale bar
 					var startPoint = units[i].Vec.add(new Point(-moraleBarSize / 2, unitSize * 0.65));
 					drawLine(startPoint, startPoint.add(new Point(moraleBarSize, 0)));
-					drawLine(startPoint, startPoint.add(new Point(moraleBarSize * units[i].Morale / moraleLimit, 0)), roadColor);
+					drawLine(startPoint, startPoint.add(new Point(moraleBarSize * units[i].Morale / moraleLimit, 0)), moraleColor);
 				}
 			}
 			

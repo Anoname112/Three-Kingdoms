@@ -113,6 +113,7 @@ const cityColor = '#888888';
 const buttonColor = '#DCDCDC';
 const highlightColor = giveAlpha(buttonColor, 0.4);
 const damageColor = '#FF0000';
+const moraleColor = '#48F0FF';
 
 // Control
 const playSvgPad = 10;
