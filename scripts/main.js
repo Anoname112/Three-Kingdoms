@@ -920,7 +920,7 @@ function animateUnits (unitIndexs, elapsed) {
 			var distance = subtract.length();
 			if (distance <= unitType.Range) {
 				// Attack target
-				unit.Cooldown -= 1 * elapsedSecond;
+				unit.Cooldown -= elapsedSecond;
 				if (unit.Cooldown <= 0) {
 					var assistedStats = getAssistedStats(unit.Objective[1]);
 					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
