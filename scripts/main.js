@@ -912,12 +912,6 @@ function onMouseClick (e) {
 	}
 }
 
-function applyAbilities (morale, allyAbilities, enemyAbilities) {
-	for (var i = 0; i < allyAbilities.length; i++) morale += abilities[allyAbilities[i]].AllyEffect;
-	for (var i = 0; i < enemyAbilities.length; i++) morale -= abilities[enemyAbilities[i]].EnemyEffect;
-	return morale;
-}
-
 function animateUnits (unitIndexs, elapsed, allyAbilities, enemyAbilities) {
 	var elapsedSecond = elapsed / battleSeconds;
 	for (var i = 0; i < unitIndexs.length; i++) {
