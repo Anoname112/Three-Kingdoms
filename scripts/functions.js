@@ -483,6 +483,39 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
+function applyAbilities (morale, unitIndex) {
+	// Get current battle units
+	var deployedUnits0 = getDeployedUnits(battles[0][0]);
+	var deployedUnits1 = getDeployedUnits(battles[0][1]);
+	// Get ally and enemy officers
+	var allyOfficers = [];
+	var enemyOfficers = [];
+	if (deployedUnits0.includes(unitIndex)) {
+		allyOfficers = getDeployedAssistOfficers(battles[0][0]).concat(battles[0][0]);
+		enemyOfficers = getDeployedAssistOfficers(battles[0][1]).concat(battles[0][1]);
+	}
+	else if (deployedUnits1.includes(unitIndex)) {
+		allyOfficers = getDeployedAssistOfficers(battles[0][1]).concat(battles[0][1]);
+		enemyOfficers = getDeployedAssistOfficers(battles[0][0]).concat(battles[0][0]);
+	}
+	
+	if (allyOfficers.length > 0 && enemyOfficers.length > 0) {
+		// Apply abilities
+		for (var i = 0; i < allyOfficers.length; i++) {
+			for (var j = 0; j < abilities.length; j++) {
+				if (abilities[j].Officers.includes(allyOfficers[i])) morale += abilities[j].AllyEffect;
+			}
+		}
+		for (var i = 0; i < enemyOfficers.length; i++) {
+			for (var j = 0; j < abilities.length; j++) {
+				if (abilities[j].Officers.includes(enemyOfficers[i])) morale -= abilities[j].EnemyEffect;
+			}
+		}
+	}
+	
+	return morale;
+}
+
 function createStatsTable (officerIndex) {
 	var officer = officers[officerIndex];
 	return `<table class="stats">

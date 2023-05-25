@@ -12,12 +12,13 @@ function Officer (name, force, city, position, leadership, war, intelligence, po
 	this.Progress = progress;
 }
 
-function Ability (name, desc, cooldown, allyEffect, enemyEffect) {
+function Ability (name, desc, cooldown, allyEffect, enemyEffect, officers) {
 	this.Name = name;
 	this.Desc = desc;
 	this.Cooldown = cooldown;
 	this.AllyEffect = allyEffect;
 	this.EnemyEffect = enemyEffect;
+	this.Officers = officers;
 }
 
 function Scenario (name, date, forces, officers, units, playables) {

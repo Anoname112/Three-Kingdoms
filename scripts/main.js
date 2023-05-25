@@ -53,6 +53,7 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
+// name, type, attack, defense, speed, range, effectiveness, cost, icon
 unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 50, [1.0, 1.0, 1.1], 1200, '⛨'));
 unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 50, [1.1, 1.0, 1.25], 1400, '♞'));
 unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 155, [0.9, 1.05, 1.0], 1000, '➶'));
@@ -394,6 +395,7 @@ scenarios.push(new Scenario(
 ));
 
 var cities = [];
+// name, force, gold, food, farm, trade, tech, defense, cfarm, ctrade, ctech, cdefense, corder, speciality
 cities[0] = new City('Xi Liang', '-', 8000, 65000, 3200, 3200, 2800, 4000, 420, 400, 600, 2800, 80, '-');
 cities[1] = new City('Wu Wei', '-', 7800, 63000, 3200, 3200, 2800, 4000, 410, 390, 600, 2800, 80, '-');
 cities[2] = new City('Tian Shui', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 200, 600, 2800, 80, '-');
@@ -445,12 +447,12 @@ cities[47] = new City('Jian An', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 
 cities[48] = new City('Nan Hai', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 200, 600, 2800, 80, '-');
 cities[49] = new City('Jiao Zhi', '-', 12000, 70000, 3200, 3200, 2800, 4000, 500, 510, 600, 2800, 80, '-');
 
-var abilities = [];    // 4: morale, 5: strength
-abilities[0] = new Ability('True Leader', '', 0, [[4, 30]], [[4, 30]]);
-abilities[1] = new Ability('Benevolence', '', 10, [[5, 800]], []);
-abilities[3] = new Ability('Tiger', '', 0, [[4, 50]], []);
-abilities[3] = new Ability('Conqueror', '', 0, [], [[4, 50]]);
-// Demolisher
+var abilities = [];
+// name, desc, cooldown, allyEffect, enemyEffect, officers
+abilities[0] = new Ability('True Leader', '', 0, 15, 15, [15]);
+abilities[1] = new Ability('Benevolence', '', 0, 10, 10, [247]);
+abilities[2] = new Ability('Tiger', '', 0, 20, 0, [389]);
+abilities[3] = new Ability('Conqueror', '', 0, 0, 20, [382]);
 
 window.onload = function () {
 	window.oncontextmenu = onContextMenu;
@@ -926,7 +928,7 @@ function animateUnits (unitIndexs, elapsed) {
 					var assistedStats = getAssistedStats(unit.Objective[1]);
 					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
 					var defense = calculateDefense(assistedStats[0], assistedStats[2]);
-					var damage = floor(calculateDamage(unit.Morale, attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
+					var damage = floor(calculateDamage(applyAbilities(unit.Morale, unitIndexs[i]), attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
 					units[targetIndex].Strength -= damage;
 					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;			
 					damages[units[targetIndex].Id] = [damage, startTimestamp];
