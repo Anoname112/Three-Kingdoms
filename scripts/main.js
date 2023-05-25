@@ -912,7 +912,13 @@ function onMouseClick (e) {
 	}
 }
 
-function animateUnits (unitIndexs, elapsed) {
+function applyAbilities (morale, allyAbilities, enemyAbilities) {
+	for (var i = 0; i < allyAbilities.length; i++) morale += abilities[allyAbilities[i]].AllyEffect;
+	for (var i = 0; i < enemyAbilities.length; i++) morale -= abilities[enemyAbilities[i]].EnemyEffect;
+	return morale;
+}
+
+function animateUnits (unitIndexs, elapsed, allyAbilities, enemyAbilities) {
 	var elapsedSecond = elapsed / battleSeconds;
 	for (var i = 0; i < unitIndexs.length; i++) {
 		var unit = units[unitIndexs[i]];
@@ -928,7 +934,12 @@ function animateUnits (unitIndexs, elapsed) {
 					var assistedStats = getAssistedStats(unit.Objective[1]);
 					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
 					var defense = calculateDefense(assistedStats[0], assistedStats[2]);
-					var damage = floor(calculateDamage(applyAbilities(unit.Morale, unitIndexs[i]), attack, defense, unitType.Effectiveness[units[targetIndex].Type]));
+					var damage = floor(calculateDamage(
+						applyAbilities(unit.Morale, allyAbilities, enemyAbilities),
+						attack,
+						defense,
+						unitType.Effectiveness[units[targetIndex].Type]
+					));
 					units[targetIndex].Strength -= damage;
 					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;			
 					damages[units[targetIndex].Id] = [damage, startTimestamp];
@@ -968,7 +979,8 @@ function animateBattle (timestamp) {
 				}
 			}
 			
-			animateUnits(attUnits.concat(defUnits), elapsed);
+			animateUnits(attUnits, elapsed, battles[0][5], battles[0][6]);
+			animateUnits(defUnits, elapsed, battles[0][6], battles[0][5]);
 			
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
@@ -1259,12 +1271,30 @@ function animateMap (timestamp) {
 				if (Number.isInteger(unitCollision)) {
 					var attStats = getAssistedStats(i);
 					var defStats = getAssistedStats(unitCollision);
+					// Get abilities
+					var attOfficers = getDeployedAssistOfficers(i).concat(i);
+					var attAbilities = [];
+					for (var j = 0; j < attOfficers.length; j++) {
+						for (var k = 0; k < abilities.length; k++) {
+							if (abilities[k] && abilities[k].Officers.includes(attOfficers[j]) && !attAbilities.includes(k)) attAbilities.push(k);
+						}
+					}
+					var defOfficers = getDeployedAssistOfficers(unitCollision).concat(unitCollision);
+					var defAbilities = [];
+					for (var j = 0; j < defOfficers.length; j++) {
+						for (var k = 0; k < abilities.length; k++) {
+							if (abilities[k] && abilities[k].Officers.includes(defOfficers[j]) && !defAbilities.includes(k)) defAbilities.push(k);
+						}
+					}
+					
 					battles.push([
 						i,
 						unitCollision,
 						false,
 						[calculateAttack(attStats[0], attStats[1]).toFixed(1), calculateDefense(attStats[0], attStats[2]).toFixed(1)],
-						[calculateAttack(defStats[0], defStats[1]).toFixed(1), calculateDefense(defStats[0], defStats[2]).toFixed(1)]
+						[calculateAttack(defStats[0], defStats[1]).toFixed(1), calculateDefense(defStats[0], defStats[2]).toFixed(1)],
+						attAbilities,
+						defAbilities
 					]);
 				}
 				else if (Number.isInteger(cityCollision)) {

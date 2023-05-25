@@ -482,7 +482,7 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	var e = effectiveness ? effectiveness : 1.0;
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
-
+/*
 function applyAbilities (morale, unitIndex) {
 	// Get current battle units
 	var deployedUnits0 = getDeployedUnits(battles[0][0]);
@@ -515,7 +515,7 @@ function applyAbilities (morale, unitIndex) {
 	
 	return morale;
 }
-
+*/
 function createStatsTable (officerIndex) {
 	var officer = officers[officerIndex];
 	return `<table class="stats">
