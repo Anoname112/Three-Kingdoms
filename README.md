@@ -6,6 +6,9 @@ TO DO: Damage and morale info, Enable abilities, Transfer Gold-Food, Button colo
 <!--
 (mor, att, def) => mor / 2 + ((50 + mor) * att / def)
 (mor, att, def, ldr) => mor / 2 + (mor * att / def) + (50 * ldr / 100)
+189 99 166 none
+221 99 166 tiger
+213 79 144 true leader
 Live Demo: https://anoname112.github.io/Three-Kingdoms/
 <br /><br />
 Screenshot:
