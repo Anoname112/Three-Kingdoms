@@ -1,7 +1,9 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Damage and morale info, Enable abilities, Transfer Gold-Food, Button color, Battle map indicator, Target focus, Items, Optimize drawing, Other fonts, Tech impact into gameplay
+TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech impact into gameplay
+
+DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Target focus, Other fonts
 
 <!--
 (mor, att, def) => mor / 2 + ((50 + mor) * att / def)
