@@ -1,12 +1,11 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech impact into gameplay, Change indexed array into library
+TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech impact into game, Change indexed array into library
 
 DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Target focus, Other fonts
 
 <!--
-(mor, att, def) => mor / 2 + ((50 + mor) * att / def)
 (mor, att, def, ldr) => mor / 2 + (mor * att / def) + (50 * ldr / 100)
 189 99 166 none
 221 99 166 tiger
