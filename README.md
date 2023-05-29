@@ -6,7 +6,6 @@ TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech 
 DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Target focus, Other fonts
 
 <!--
-(mor, att, def, ldr) => mor / 2 + (mor * att / def) + (50 * ldr / 100)
 189 99 166 none
 221 99 166 tiger
 213 79 144 true leader
