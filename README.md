@@ -6,9 +6,9 @@ TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech 
 DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Target focus, Other fonts
 
 <!--
-189 99 166 none
-221 99 166 tiger
-213 79 144 true leader
+189 99 166 No Ability
+221 99 166 Tiger
+213 79 144 True Leader
 
 Screenshot:
 <br />
