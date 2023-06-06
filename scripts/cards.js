@@ -881,10 +881,10 @@ function createCityTable (cityIndex) {
 }
 
 // Info card
-function createOfficersTable (officersIndex, cityIndex) {
+function createOfficersTable (officerIndexes, cityIndex) {
 	var officersHTML = '';
-	for (var i = 0; i < officersIndex.length; i++) {
-		var officer = officers[officersIndex[i]];
+	for (var i = 0; i < officerIndexes.length; i++) {
+		var officer = officers[officerIndexes[i]];
 		var objective = officer.Objective == '-' ? '-' : officer.Objective[0];
 		officersHTML += `<tr>
 				<td>` + officer.Name + `</td>
@@ -900,7 +900,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 	if (Number.isInteger(cityIndex)) {
 		return `<table class="stats">
 		<tr>
-			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `)"><span>Officers (` + officersIndex.length + `)</span></th>
+			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `)"><span>Officers (` + officerIndexes.length + `)</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'LDR')"><span>LDR</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'WAR')"><span>WAR</span></th>
 			<th class="sortable" onclick="openInfoCard('City', ` + cityIndex + `, 'INT')"><span>INT</span></th>
@@ -912,7 +912,7 @@ function createOfficersTable (officersIndex, cityIndex) {
 	}
 	return `<table class="stats">
 		<tr>
-			<th>Officers (` + officersIndex.length + `)</th>
+			<th>Officers (` + officerIndexes.length + `)</th>
 			<th>LDR</th>
 			<th>WAR</th>
 			<th>INT</th>
@@ -924,10 +924,10 @@ function createOfficersTable (officersIndex, cityIndex) {
 }
 
 // Info card
-function createUnitsTable (unitsIndex) {
+function createUnitsTable (unitIndexes) {
 	var unitsHTML = '';
-	for (var i = 0; i < unitsIndex.length; i++) {
-		var unit = units[unitsIndex[i]];
+	for (var i = 0; i < unitIndexes.length; i++) {
+		var unit = units[unitIndexes[i]];
 		var objective = unit.Objective == '-' ? '-' : unit.Objective[0];
 		var name = '-';
 		switch (objective) {
@@ -951,7 +951,7 @@ function createUnitsTable (unitsIndex) {
 	}
 	return `<table class="stats">
 		<tr>
-			<th>Units (` + unitsIndex.length + `)</th>
+			<th>Units (` + unitIndexes.length + `)</th>
 			<th>Strength</th>
 			<th>Morale</th>
 			<th>Objective</th>

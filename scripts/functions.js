@@ -483,6 +483,16 @@ function calculateDamage (morale, attack, defense, effectiveness) {
 	return (50 + (morale / 2) + (morale * attack / defense)) * e;
 }
 
+function getAbilities (officerIndexes) {
+	var resultAbilities = [];
+	for (var i = 0; i < officerIndexes.length; i++) {
+		for (var j = 0; j < abilities.length; j++) {
+			if (abilities[j] && abilities[j].Officers.includes(officerIndexes[i]) && !resultAbilities.includes(j)) resultAbilities.push(j);
+		}
+	}
+	return resultAbilities;
+}
+
 function applyAbilities (morale, allyAbilities, enemyAbilities) {
 	for (var i = 0; i < allyAbilities.length; i++) morale += abilities[allyAbilities[i]].AllyEffect;
 	for (var i = 0; i < enemyAbilities.length; i++) morale -= abilities[enemyAbilities[i]].EnemyEffect;

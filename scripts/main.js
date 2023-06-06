@@ -692,85 +692,106 @@ function onMouseMove (e) {
 		draw();
 	}
 	else if (gState == 1) {
-		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
-			// Hovering info icon
-			if (eX >= canvasPad + squareSize && eX < canvasPad + squareSize * 2 && eY >= canvasPad + squareSize && eY < canvasPad + squareSize * 2) {
-				openInfoCard('Global', playerForce);
-				draw();
-				return;
-			}
-			
-			// Hovering a unit
-			for (var i = 0; i < officers.length; i++) {
-				if (officers[i].Objective[0] == 'March') {
-					var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
-					var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
-					var w = squareSize - unitPad * 2;
-					var h = squareSize - unitPad * 2;
-					if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
-						var backColor = 'enemyColor';
-						if (officers[i].Force == playerForce) backColor = 'allyColor';
-						
-						hoverCard.style.visibility = 'visible';
-						var hoverX = eX + hoverMarginX;
-						var hoverY = eY + hoverMarginY;
-						if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
-						else hoverCard.style.left = hoverX + 'px';
-						if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
-						else hoverCard.style.top = hoverY + 'px';
-						
-						var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
-							<div class="unitInfo">` +
-								getPortrait(officers[i].Name, 'small') + `<br />
-								<table class="stats">
-									<tr><th colspan="2">` + forces[getForceIndexById(officers[i].Force)].Name + `</th></tr>
-									<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
-									<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
-								</table>
-							</div>`;
-						hoverCard.innerHTML = string;
-						
-						openInfoCard('Unit', i);
-						draw();
-						return;
-					}
+		// Hovering info icon
+		if (eX >= canvasPad + squareSize && eX < canvasPad + squareSize * 2 && eY >= canvasPad + squareSize && eY < canvasPad + squareSize * 2) {
+			openInfoCard('Global', playerForce);
+			return;
+		}
+		
+		// Hovering a unit
+		for (var i = 0; i < officers.length; i++) {
+			if (officers[i].Objective[0] == 'March') {
+				var x = canvasPad + officers[i].Position.X * squareSize + unitPad;
+				var y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
+				var w = squareSize - unitPad * 2;
+				var h = squareSize - unitPad * 2;
+				if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
+					var backColor = 'enemyColor';
+					if (officers[i].Force == playerForce) backColor = 'allyColor';
+					
+					var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
+						<div class="unitInfo">` +
+							getPortrait(officers[i].Name, 'small') + `<br />
+							<table class="stats">
+								<tr><th colspan="2">` + forces[getForceIndexById(officers[i].Force)].Name + `</th></tr>
+								<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
+								<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
+							</table>
+						</div>`;
+					hoverCard.innerHTML = string;
+					
+					hoverCard.style.visibility = 'visible';
+					var hoverX = eX + hoverMarginX;
+					var hoverY = eY + hoverMarginY;
+					if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+					else hoverCard.style.left = hoverX + 'px';
+					if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+					else hoverCard.style.top = hoverY + 'px';
+					
+					openInfoCard('Unit', i);
+					return;
 				}
 			}
+		}
+		
+		// Hovering a city
+		var indexX = parseInt((eX - canvasPad) / squareSize);
+		var indexY = parseInt((eY - canvasPad) / squareSize);
+		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize && map[indexX][indexY] >= cityIndexStart) {
+			var index = map[indexX][indexY] - cityIndexStart;
+			var backColor = 'enemyColor';
+			if (cities[index].Force == '-') backColor = 'neutralColor';
+			else if (cities[index].Force == playerForce) backColor = 'allyColor';
 			
-			// Hovering a city
-			var indexX = parseInt((eX - canvasPad) / squareSize);
-			var indexY = parseInt((eY - canvasPad) / squareSize);
-			if (map[indexX][indexY] >= cityIndexStart) {
-				var index = map[indexX][indexY] - cityIndexStart;
-				var backColor = 'enemyColor';
-				if (cities[index].Force == '-') backColor = 'neutralColor';
-				else if (cities[index].Force == playerForce) backColor = 'allyColor';
-				
-				hoverCard.style.visibility = 'visible';
-				var hoverX = eX + hoverMarginX;
-				var hoverY = eY + hoverMarginY;
-				if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
-				else hoverCard.style.left = hoverX + 'px';
-				if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
-				else hoverCard.style.top = hoverY + 'px';
-				
-				var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
-				if (cities[index].Force == '-') string += '<table class="cityStats">';
-				else {
-					var forceIndex = getForceIndexById(cities[index].Force);
-					var forceRulerName = officers[forces[forceIndex].Ruler].Name;
-					string += getPortrait(forceRulerName, 'small') + '<br /><table class="cityStats"><tr><th colspan="2">' + forces[forceIndex].Name + '</th></tr>';
+			var string = '<div class="cityName ' + backColor + '">' + cities[index].Name + '</div><div class="cityInfo">';
+			if (cities[index].Force == '-') string += '<table class="cityStats">';
+			else {
+				var forceIndex = getForceIndexById(cities[index].Force);
+				var forceRulerName = officers[forces[forceIndex].Ruler].Name;
+				string += getPortrait(forceRulerName, 'small') + '<br /><table class="cityStats"><tr><th colspan="2">' + forces[forceIndex].Name + '</th></tr>';
+			}
+			string += `<tr><th>Gold</th><td>` + cities[index].Gold + `</td></tr>
+					<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>
+					<tr><th>Strength</th><td>` + getCityStrength(index) + `</td></tr>
+					<tr><th>Defense</th><td>` + cities[index].cDefense + `/` + cities[index].Defense + `</td></tr>
+					<tr><th>Order</th><td>` + cities[index].cOrder + `/` + moraleLimit + `</td></tr>
+				</div>`;
+			hoverCard.innerHTML = string;
+			
+			hoverCard.style.visibility = 'visible';
+			var hoverX = eX + hoverMarginX;
+			var hoverY = eY + hoverMarginY;
+			if (hoverX + hoverCard.clientWidth > mapSize) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+			else hoverCard.style.left = hoverX + 'px';
+			if (hoverY + hoverCard.clientHeight > mapSize) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+			else hoverCard.style.top = hoverY + 'px';
+			
+			openInfoCard('City', index);
+		}
+		
+		// Hovering a battle unit
+		for (var i = 0; i < units.length; i++) {
+			if (units[i].Vec && battles[0].includes(units[i].Objective[1])) {
+				var distance = units[i].Vec.subtract(mousePos).length();
+				if (distance < portraitRadius) {
+					var backColor = 'enemyColor';
+					if (officers[units[i].Objective[1]].Force == playerForce) backColor = 'allyColor';
+					
+					var string = `<div class="unitName ` + backColor + `">` + officers[units[i].Objective[1]].Name + ` Unit</div>
+						<div class="unitInfo">
+							<b>` + forces[getForceIndexById(officers[units[i].Objective[1]].Force)].Name + `</b><br />
+							Morale: ` + units[i].Morale + `<br />
+						</div>`;
+					hoverCard.innerHTML = string;
+					
+					hoverCard.style.visibility = 'visible';
+					var hoverX = eX + hoverMarginX;
+					var hoverY = eY + hoverMarginY;
+					if (hoverX + hoverCard.clientWidth > window.innerWidth - hoverMarginX) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+					else hoverCard.style.left = hoverX + 'px';
+					if (hoverY + hoverCard.clientHeight > window.innerHeight - hoverMarginY) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+					else hoverCard.style.top = hoverY + 'px';
 				}
-				string += `<tr><th>Gold</th><td>` + cities[index].Gold + `</td></tr>
-						<tr><th>Food</th><td>` + cities[index].Food + `</td></tr>
-						<tr><th>Strength</th><td>` + getCityStrength(index) + `</td></tr>
-						<tr><th>Defense</th><td>` + cities[index].cDefense + `/` + cities[index].Defense + `</td></tr>
-						<tr><th>Order</th><td>` + cities[index].cOrder + `/` + moraleLimit + `</td></tr>
-					</div>`;
-				hoverCard.innerHTML = string;
-				
-				openInfoCard('City', index);
-				draw();
 			}
 		}
 	}
@@ -912,10 +933,10 @@ function onMouseClick (e) {
 	}
 }
 
-function animateUnits (unitIndexs, elapsed, allyAbilities, enemyAbilities) {
+function animateUnits (unitIndexes, elapsed, allyAbilities, enemyAbilities) {
 	var elapsedSecond = elapsed / battleSeconds;
-	for (var i = 0; i < unitIndexs.length; i++) {
-		var unit = units[unitIndexs[i]];
+	for (var i = 0; i < unitIndexes.length; i++) {
+		var unit = units[unitIndexes[i]];
 		var targetIndex = getUnitIndexById(unit.Target);
 		if (Number.isInteger(targetIndex)) {
 			var unitType = unitTypes[unit.Type];
@@ -1267,19 +1288,9 @@ function animateMap (timestamp) {
 					var defStats = getAssistedStats(unitCollision);
 					// Get abilities
 					var attOfficers = getDeployedAssistOfficers(i).concat(i);
-					var attAbilities = [];
-					for (var j = 0; j < attOfficers.length; j++) {
-						for (var k = 0; k < abilities.length; k++) {
-							if (abilities[k] && abilities[k].Officers.includes(attOfficers[j]) && !attAbilities.includes(k)) attAbilities.push(k);
-						}
-					}
+					var attAbilities = getAbilities(attOfficers);
 					var defOfficers = getDeployedAssistOfficers(unitCollision).concat(unitCollision);
-					var defAbilities = [];
-					for (var j = 0; j < defOfficers.length; j++) {
-						for (var k = 0; k < abilities.length; k++) {
-							if (abilities[k] && abilities[k].Officers.includes(defOfficers[j]) && !defAbilities.includes(k)) defAbilities.push(k);
-						}
-					}
+					var defAbilities = getAbilities(defOfficers);
 					
 					battles.push([
 						i,
