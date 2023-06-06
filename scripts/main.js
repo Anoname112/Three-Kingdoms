@@ -709,7 +709,7 @@ function onMouseMove (e) {
 					var backColor = 'enemyColor';
 					if (officers[i].Force == playerForce) backColor = 'allyColor';
 					
-					var string = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
+					hoverCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[i].Name + ` Unit</div>
 						<div class="unitInfo">` +
 							getPortrait(officers[i].Name, 'small') + `<br />
 							<table class="stats">
@@ -718,7 +718,6 @@ function onMouseMove (e) {
 								<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
 							</table>
 						</div>`;
-					hoverCard.innerHTML = string;
 					
 					hoverCard.style.visibility = 'visible';
 					var hoverX = eX + hoverMarginX;
@@ -774,15 +773,21 @@ function onMouseMove (e) {
 			if (units[i].Vec && battles[0].includes(units[i].Objective[1])) {
 				var distance = units[i].Vec.subtract(mousePos).length();
 				if (distance < portraitRadius) {
-					var backColor = 'enemyColor';
-					if (officers[units[i].Objective[1]].Force == playerForce) backColor = 'allyColor';
-					
-					var string = `<div class="unitName ` + backColor + `">` + officers[units[i].Objective[1]].Name + ` Unit</div>
-						<div class="unitInfo">
-							<b>` + forces[getForceIndexById(officers[units[i].Objective[1]].Force)].Name + `</b><br />
-							Morale: ` + units[i].Morale + `<br />
+					var resAbilities = units[i].Objective[1] == battles[0][0] ? battles[0][5] : battles[0][6];
+					var string = resAbilities.length > 0 ? '<tr><th colspan="2">Abilities</th></tr>' : '';
+					for (var j = 0; j < resAbilities.length; j++) {
+						string += '<tr><td colspan="2" style="text-align: center !important;">' + abilities[resAbilities[j]].Name + '</td></tr>';
+					}
+					hoverCard.innerHTML = `<div class="unitInfo">
+							<table class="stats">
+								<tr><th colspan="2">` + officers[units[i].Objective[1]].Name + ` Unit</th></tr>
+								<tr>
+									<th>Morale</th>
+									<td>` + units[i].Morale + `</td>
+								</tr>
+								` + string + `
+							</table>
 						</div>`;
-					hoverCard.innerHTML = string;
 					
 					hoverCard.style.visibility = 'visible';
 					var hoverX = eX + hoverMarginX;
