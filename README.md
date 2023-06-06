@@ -1,9 +1,9 @@
 # Three-Kingdoms
 Live Demo: https://three-kingdoms.vercel.app/
 <br /><br />
-TO DO: Transfer Gold-Food, Items, Optimize drawing, Battle abilities info, Tech impact into speciality, Change indexed to library
+TO DO: Transfer Gold-Food, Items, Optimize drawing, Tech impact into speciality, Change indexed to library
 
-DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Target focus, Other fonts
+DONE: Damage and morale info, Enable abilities, Button color, Battle map indicator, Battle abilities info, Target focus, Other fonts
 
 <!--
 189 99 166 No Ability
