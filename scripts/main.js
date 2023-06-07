@@ -963,7 +963,10 @@ function animateUnits (unitIndexes, elapsed, allyAbilities, enemyAbilities) {
 					));
 					units[targetIndex].Strength -= damage;
 					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;			
-					damages[units[targetIndex].Id] = [damage, startTimestamp];
+					damages[units[targetIndex].Id] = {
+						'Damage' : damage,
+						'Timestamp' : startTimestamp
+					};
 					
 					unit.Cooldown = unitCooldown;
 				}
@@ -1014,7 +1017,7 @@ function animateBattle (timestamp) {
 			}
 			
 			// Remove elapsed damage info
-			for (var i = 0; i < damages.length; i++) if (damages[i] && startTimestamp - damages[i][2] > battleSeconds) damages[i] = null;
+			for (var i = 0; i < damages.length; i++) if (damages[i] && startTimestamp - damages[i]['Timestamp'] > battleSeconds) damages[i] = null;
 		}
 		
 		draw();
@@ -1680,9 +1683,10 @@ function draw () {
 			for (var i = 0; i < units.length; i++) {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0]['Commander0'] || units[i].Objective[1] == battles[0]['Commander1'])) {
 					// Draw damage
-					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
-						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
-						drawGlowMessage('-' + damages[units[i].Id][0], units[i].Vec.X, units[i].Vec.Y + portraitRadius - 1, 'center', damageColor);
+					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id]['Timestamp'] < battleSeconds) {
+						console.log(damages[units[i].Id]['Damage']);
+						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id]['Timestamp']) / battleSeconds)) + 'px ' + canvasFontFamily;
+						drawGlowMessage('-' + damages[units[i].Id]['Damage'], units[i].Vec.X, units[i].Vec.Y + portraitRadius - 1, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
 					// Draw icon and strength
