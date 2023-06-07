@@ -769,33 +769,35 @@ function onMouseMove (e) {
 		}
 		
 		// Hovering a battle unit
-		for (var i = 0; i < units.length; i++) {
-			if (units[i].Vec && battles[0].includes(units[i].Objective[1])) {
-				var distance = units[i].Vec.subtract(mousePos).length();
-				if (distance < portraitRadius) {
-					var resAbilities = units[i].Objective[1] == battles[0][0] ? battles[0][5] : battles[0][6];
-					var string = resAbilities.length > 0 ? '<tr><th colspan="2">Abilities</th></tr>' : '';
-					for (var j = 0; j < resAbilities.length; j++) {
-						string += '<tr><td colspan="2" style="text-align: center !important;">' + abilities[resAbilities[j]].Name + '</td></tr>';
+		if (battles.length > 0) {
+			for (var i = 0; i < units.length; i++) {
+				if (units[i].Vec && (battles[0]['Commander0'] == units[i].Objective[1] || battles[0]['Commander1'] == units[i].Objective[1])) {
+					var distance = units[i].Vec.subtract(mousePos).length();
+					if (distance < portraitRadius) {
+						var resAbilities = battles[0]['Commander0'] == units[i].Objective[1] ? battles[0]['Abilities0'] : battles[0]['Abilities1'];
+						var string = resAbilities.length > 0 ? '<tr><th colspan="2">Abilities</th></tr>' : '';
+						for (var j = 0; j < resAbilities.length; j++) {
+							string += '<tr><td colspan="2" style="text-align: center !important;">' + abilities[resAbilities[j]].Name + '</td></tr>';
+						}
+						hoverCard.innerHTML = `<div class="unitInfo">
+								<table class="stats">
+									<tr><th colspan="2">` + officers[units[i].Objective[1]].Name + ` Unit</th></tr>
+									<tr>
+										<th>Morale</th>
+										<td>` + units[i].Morale + `</td>
+									</tr>
+									` + string + `
+								</table>
+							</div>`;
+						
+						hoverCard.style.visibility = 'visible';
+						var hoverX = eX + hoverMarginX;
+						var hoverY = eY + hoverMarginY;
+						if (hoverX + hoverCard.clientWidth > window.innerWidth - hoverMarginX) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
+						else hoverCard.style.left = hoverX + 'px';
+						if (hoverY + hoverCard.clientHeight > window.innerHeight - hoverMarginY) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
+						else hoverCard.style.top = hoverY + 'px';
 					}
-					hoverCard.innerHTML = `<div class="unitInfo">
-							<table class="stats">
-								<tr><th colspan="2">` + officers[units[i].Objective[1]].Name + ` Unit</th></tr>
-								<tr>
-									<th>Morale</th>
-									<td>` + units[i].Morale + `</td>
-								</tr>
-								` + string + `
-							</table>
-						</div>`;
-					
-					hoverCard.style.visibility = 'visible';
-					var hoverX = eX + hoverMarginX;
-					var hoverY = eY + hoverMarginY;
-					if (hoverX + hoverCard.clientWidth > window.innerWidth - hoverMarginX) hoverCard.style.left = (hoverX - hoverCard.clientWidth - hoverMarginX * 2) + 'px';
-					else hoverCard.style.left = hoverX + 'px';
-					if (hoverY + hoverCard.clientHeight > window.innerHeight - hoverMarginY) hoverCard.style.top = (hoverY - hoverCard.clientHeight - hoverMarginY * 2) + 'px';
-					else hoverCard.style.top = hoverY + 'px';
 				}
 			}
 		}
@@ -879,17 +881,17 @@ function onMouseClick (e) {
 		}
 	}
 	else if (battles.length > 0) {
-		var deployed0 = getDeployedUnits(battles[0][0]);
-		var deployed1 = getDeployedUnits(battles[0][1]);
+		var deployed0 = getDeployedUnits(battles[0]['Commander0']);
+		var deployed1 = getDeployedUnits(battles[0]['Commander1']);
 		// If battle ended, init another battle if there are any
 		if (deployed0.length == 0 || deployed1.length == 0) {
 			if (deployed0.length == 0) {
 				giveBattleBonus(deployed1);
-				dismissDeployed(battles[0][0]);
+				dismissDeployed(battles[0]['Commander0']);
 			}
 			if (deployed1.length == 0) {
 				giveBattleBonus(deployed0);
-				dismissDeployed(battles[0][1]);
+				dismissDeployed(battles[0]['Commander1']);
 			}
 			battles.shift();
 			if (battles.length > 0) initBattle();
@@ -906,15 +908,15 @@ function onMouseClick (e) {
 		}
 		
 		// If battle is not paused
-		if (battles[0][2]) {
+		if (battles[0]['Resumed']) {
 			// Focus a target
 			var playerDeployed = null;
 			var enemyDeployed = null;
-			if (playerForce == officers[battles[0][0]].Force) {
+			if (playerForce == officers[battles[0]['Commander0']].Force) {
 				playerDeployed = deployed0;
 				enemyDeployed = deployed1;
 			}
-			else if (playerForce == officers[battles[0][1]].Force) {
+			else if (playerForce == officers[battles[0]['Commander1']].Force) {
 				playerDeployed = deployed1;
 				enemyDeployed = deployed0;
 			}
@@ -929,11 +931,11 @@ function onMouseClick (e) {
 			}
 			
 			// Pause battle
-			battles[0][2] = false;
+			battles[0]['Resumed'] = false;
 		}
 		else {
 			// Resume battle
-			battles[0][2] = true;
+			battles[0]['Resumed'] = true;
 		}
 	}
 }
@@ -951,13 +953,12 @@ function animateUnits (unitIndexes, elapsed, allyAbilities, enemyAbilities) {
 				// Attack target
 				unit.Cooldown -= elapsedSecond;
 				if (unit.Cooldown <= 0) {
-					var assistedStats = getAssistedStats(unit.Objective[1]);
-					var attack = calculateAttack(assistedStats[0], assistedStats[1]);
-					var defense = calculateDefense(assistedStats[0], assistedStats[2]);
+					var assistedStats0 = getAssistedStats(unit.Objective[1]);
+					var assistedStats1 = getAssistedStats(units[targetIndex].Objective[1]);
 					var damage = floor(calculateDamage(
 						applyAbilities(unit.Morale, allyAbilities, enemyAbilities),
-						attack,
-						defense,
+						calculateAttack(assistedStats0[0], assistedStats0[1]),
+						calculateDefense(assistedStats1[0], assistedStats1[2]),
 						unitType.Effectiveness[units[targetIndex].Type]
 					));
 					units[targetIndex].Strength -= damage;
@@ -984,9 +985,9 @@ function animateBattle (timestamp) {
 		startTimestamp = currentTimestamp;
 		
 		// Animate when battle is not paused
-		if (battles[0][2]) {
-			var attUnits = getDeployedUnits(battles[0][0]);
-			var defUnits = getDeployedUnits(battles[0][1]);
+		if (battles[0]['Resumed']) {
+			var attUnits = getDeployedUnits(battles[0]['Commander0']);
+			var defUnits = getDeployedUnits(battles[0]['Commander1']);
 			// Find Target
 			if (defUnits.length > 0) {
 				for (var i = 0; i < attUnits.length; i++) {
@@ -999,8 +1000,8 @@ function animateBattle (timestamp) {
 				}
 			}
 			
-			animateUnits(attUnits, elapsed, battles[0][5], battles[0][6]);
-			animateUnits(defUnits, elapsed, battles[0][6], battles[0][5]);
+			animateUnits(attUnits, elapsed, battles[0]['Abilities0'], battles[0]['Abilities1']);
+			animateUnits(defUnits, elapsed, battles[0]['Abilities1'], battles[0]['Abilities0']);
 			
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
@@ -1022,8 +1023,8 @@ function animateBattle (timestamp) {
 }
 
 function initBattle () {
-	var attCommander = battles[0][0];
-	var defCommander = battles[0][1];
+	var attCommander = battles[0]['Commander0'];
+	var defCommander = battles[0]['Commander1'];
 	var attUnits = getDeployedUnits(attCommander);
 	var defUnits = getDeployedUnits(defCommander);
 	
@@ -1297,15 +1298,21 @@ function animateMap (timestamp) {
 					var defOfficers = getDeployedAssistOfficers(unitCollision).concat(unitCollision);
 					var defAbilities = getAbilities(defOfficers);
 					
-					battles.push([
-						i,
-						unitCollision,
-						false,
-						[calculateAttack(attStats[0], attStats[1]).toFixed(1), calculateDefense(attStats[0], attStats[2]).toFixed(1)],
-						[calculateAttack(defStats[0], defStats[1]).toFixed(1), calculateDefense(defStats[0], defStats[2]).toFixed(1)],
-						attAbilities,
-						defAbilities
-					]);
+					battles.push({
+						'Commander0' : i,
+						'Commander1' : unitCollision,
+						'Resumed' : false,
+						'Stats0' : {
+							'ATK' : calculateAttack(attStats[0], attStats[1]).toFixed(1),
+							'DEF' : calculateDefense(attStats[0], attStats[2]).toFixed(1)
+						},
+						'Stats1' : {
+							'ATK' : calculateAttack(defStats[0], defStats[1]).toFixed(1),
+							'DEF' : calculateDefense(defStats[0], defStats[2]).toFixed(1)
+						},
+						'Abilities0' : attAbilities,
+						'Abilities1' : defAbilities
+					});
 				}
 				else if (Number.isInteger(cityCollision)) {
 					// Deployed vs City collisions
@@ -1635,7 +1642,7 @@ function draw () {
 				drawImage(unitImage, x, y, w, h);
 				
 				// Battle indicator on map
-				if (battles.length > 0 && (i == battles[0][0] || i == battles[0][1])) drawImage(downImage, x, y - h, w, h);
+				if (battles.length > 0 && (i == battles[0]['Commander0'] || i == battles[0]['Commander1'])) drawImage(downImage, x, y - h, w, h);
 			}
 		}
 		
@@ -1650,7 +1657,7 @@ function draw () {
 			
 			// Draw unit portrait
 			for (var i = 0; i < units.length; i++) {
-				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
+				if (units[i].Vec && (units[i].Objective[1] == battles[0]['Commander0'] || units[i].Objective[1] == battles[0]['Commander1'])) {
 					x = units[i].Vec.X - portraitRadius - portraitPad / 2;
 					y = units[i].Vec.Y - portraitRadius;
 					// Draw portrait border
@@ -1671,7 +1678,7 @@ function draw () {
 			
 			// Draw unit icon, strength, morale and damage info
 			for (var i = 0; i < units.length; i++) {
-				if (units[i].Vec && (units[i].Objective[1] == battles[0][0] || units[i].Objective[1] == battles[0][1])) {
+				if (units[i].Vec && (units[i].Objective[1] == battles[0]['Commander0'] || units[i].Objective[1] == battles[0]['Commander1'])) {
 					// Draw damage
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id][1] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id][1]) / battleSeconds)) + 'px ' + canvasFontFamily;
@@ -1690,13 +1697,13 @@ function draw () {
 			
 			// Draw battle info
 			fillRect(battleX, battleY, battleWidth, unitSize, highlightColor);
-			drawGlowMessage(officers[battles[0][0]].Name + ' Unit', attX, forceY, 'center');
-			drawGlowMessage(officers[battles[0][1]].Name + ' Unit', defX, forceY, 'center');
-			drawGlowMessage('⚔' + battles[0][3][0] + ' ⛨' + battles[0][3][1], attX, statsY, 'center');
-			drawGlowMessage('⚔' + battles[0][4][0] + ' ⛨' + battles[0][4][1], defX, statsY, 'center');
-			drawGlowMessage('☗ ' + getDeployedStrength(battles[0][0]), attX, strengthY, 'center');
-			drawGlowMessage('☗ ' + getDeployedStrength(battles[0][1]), defX, strengthY, 'center');
-			if (!battles[0][2]) drawGlowMessage('Paused', battleX + battleWidth / 2, statsY, 'center');
+			drawGlowMessage(officers[battles[0]['Commander0']].Name + ' Unit', attX, forceY, 'center');
+			drawGlowMessage(officers[battles[0]['Commander1']].Name + ' Unit', defX, forceY, 'center');
+			drawGlowMessage('⚔' + battles[0]['Stats0']['ATK'] + ' ⛨' + battles[0]['Stats0']['DEF'], attX, statsY, 'center');
+			drawGlowMessage('⚔' + battles[0]['Stats1']['ATK'] + ' ⛨' + battles[0]['Stats1']['DEF'], defX, statsY, 'center');
+			drawGlowMessage('☗ ' + getDeployedStrength(battles[0]['Commander0']), attX, strengthY, 'center');
+			drawGlowMessage('☗ ' + getDeployedStrength(battles[0]['Commander1']), defX, strengthY, 'center');
+			if (!battles[0]['Resumed']) drawGlowMessage('Paused', battleX + battleWidth / 2, statsY, 'center');
 		}
 	}
 	

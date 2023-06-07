@@ -569,11 +569,7 @@ function getNearestTarget (unitIndex, targetUnits) {
 }
 
 function inBattle (officerIndex) {
-	for (var i = 0; i < battles.length; i++) {
-		for (var j = 0; j < 2; j++) {
-			if (battles[i][j] == officerIndex) return true;
-		}
-	}
+	for (var i = 0; i < battles.length; i++) if (battles[i]['Commander0'] == officerIndex || battles[i]['Commander1'] == officerIndex) return true;
 	return false;
 }
 
