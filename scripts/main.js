@@ -1684,7 +1684,6 @@ function draw () {
 				if (units[i].Vec && (units[i].Objective[1] == battles[0]['Commander0'] || units[i].Objective[1] == battles[0]['Commander1'])) {
 					// Draw damage
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id]['Timestamp'] < battleSeconds) {
-						console.log(damages[units[i].Id]['Damage']);
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id]['Timestamp']) / battleSeconds)) + 'px ' + canvasFontFamily;
 						drawGlowMessage('-' + damages[units[i].Id]['Damage'], units[i].Vec.X, units[i].Vec.Y + portraitRadius - 1, 'center', damageColor);
 						ctx.font = canvasFont;
