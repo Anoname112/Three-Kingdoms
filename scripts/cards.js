@@ -28,13 +28,13 @@ function openPlayerCard () {
 function openSelectCard (clickedObjects) {
 	var buttons = '';
 	for (var i = 0; i < clickedObjects.length; i++) {
-		if (clickedObjects[i][0] == cityCard) {
-			var cityName = cities[clickedObjects[i][1]].Name;
-			buttons += '<input type="button" value="' + cityName + '" onclick="openCityCard(' + clickedObjects[i][1] + ', true); playAudio(clickSound);">';
+		if (clickedObjects[i]['Card'] == cityCard) {
+			var cityName = cities[clickedObjects[i]['Index']].Name;
+			buttons += '<input type="button" value="' + cityName + '" onclick="openCityCard(' + clickedObjects[i]['Index'] + ', true); playAudio(clickSound);">';
 		}
-		else if (clickedObjects[i][0] == deployedCard) {
-			var commanderName = officers[clickedObjects[i][1]].Name;
-			buttons += '<input type="button" value="' + commanderName + '" onclick="openDeployedCard(' + clickedObjects[i][1] + ', true); playAudio(clickSound);">';
+		else if (clickedObjects[i]['Card'] == deployedCard) {
+			var commanderName = officers[clickedObjects[i]['Index']].Name;
+			buttons += '<input type="button" value="' + commanderName + '" onclick="openDeployedCard(' + clickedObjects[i]['Index'] + ', true); playAudio(clickSound);">';
 		}
 	}
 	selectCard.innerHTML = `<div class="selectContent">` + buttons + `<input type="button" value="Cancel" onclick="closeCard(selectCard); playAudio(clickSound);"></div>`;

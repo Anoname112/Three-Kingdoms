@@ -728,6 +728,7 @@ function onMouseMove (e) {
 					else hoverCard.style.top = hoverY + 'px';
 					
 					openInfoCard('Unit', i);
+					draw();
 					return;
 				}
 			}
@@ -855,7 +856,10 @@ function onMouseClick (e) {
 			// Clicked city
 			if (map[indexX][indexY] >= cityIndexStart) {
 				var index = map[indexX][indexY] - cityIndexStart;
-				clickedObjects.push([cityCard, index]);
+				clickedObjects.push({
+					'Card' : cityCard,
+					'Index' : index
+				});
 			}
 			// Clicked units
 			for (var i = 0; i < officers.length; i++) {
@@ -865,15 +869,18 @@ function onMouseClick (e) {
 					var w = squareSize - unitPad * 2;
 					var h = squareSize - unitPad * 2;
 					if (eX >= x && eX < x + w && eY >= y && eY < y + h) {
-						clickedObjects.push([deployedCard, i]);
+						clickedObjects.push({
+							'Card' : deployedCard,
+							'Index' : i
+						});
 					}
 				}
 			}
 			
 			if (clickedObjects.length > 0) {
 				if (clickedObjects.length == 1) {
-					if (clickedObjects[0][0] == cityCard) openCityCard(clickedObjects[0][1]);
-					else if (clickedObjects[0][0] == deployedCard) openDeployedCard(clickedObjects[0][1]);
+					if (clickedObjects[0]['Card'] == cityCard) openCityCard(clickedObjects[0]['Index']);
+					else if (clickedObjects[0]['Card'] == deployedCard) openDeployedCard(clickedObjects[0]['Index']);
 				}
 				else openSelectCard(clickedObjects);
 				playAudio(clickSound);
