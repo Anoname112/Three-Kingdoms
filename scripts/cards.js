@@ -988,8 +988,8 @@ function openInfoCard (mode, index, sort) {
 			<div class="deployedContent">
 				<table class="stats">
 					<tr><th colspan="2">` + forces[getForceIndexById(officers[index].Force)].Name + `</th></tr>
-					<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(index) + `</td></tr>
-					<tr><th>Target</th><td style="text-align: center;">` + cities[officers[index].Objective[1]].Name + `</td></tr>
+					<tr><th>Strength</th><td class="center">` + getDeployedStrength(index) + `</td></tr>
+					<tr><th>Target</th><td class="center">` + cities[officers[index].Objective[1]].Name + `</td></tr>
 				</table><br />` +
 				createUnitsTable(deployedUnits) + `<br />` +
 				createOfficersTable([index].concat(assistOfficers)) + `<br />

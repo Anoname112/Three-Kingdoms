@@ -714,8 +714,8 @@ function onMouseMove (e) {
 							getPortrait(officers[i].Name, 'small') + `<br />
 							<table class="stats">
 								<tr><th colspan="2">` + forces[getForceIndexById(officers[i].Force)].Name + `</th></tr>
-								<tr><th>Strength</th><td style="text-align: center;">` + getDeployedStrength(i) + `</td></tr>
-								<tr><th>Target</th><td style="text-align: center;">` + cities[officers[i].Objective[1]].Name + `</td></tr>
+								<tr><th>Strength</th><td class="center">` + getDeployedStrength(i) + `</td></tr>
+								<tr><th>Target</th><td class="center">` + cities[officers[i].Objective[1]].Name + `</td></tr>
 							</table>
 						</div>`;
 					
