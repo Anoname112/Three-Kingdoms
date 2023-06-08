@@ -261,13 +261,13 @@ select {
 }
 
 .bold {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 .center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .right {
-  text-align: right;
+  text-align: right !important;
 }

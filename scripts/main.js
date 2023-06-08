@@ -778,7 +778,7 @@ function onMouseMove (e) {
 						var resAbilities = battles[0]['Commander0'] == units[i].Objective[1] ? battles[0]['Abilities0'] : battles[0]['Abilities1'];
 						var string = resAbilities.length > 0 ? '<tr><th colspan="2">Abilities</th></tr>' : '';
 						for (var j = 0; j < resAbilities.length; j++) {
-							string += '<tr><td colspan="2" style="text-align: center !important;">' + abilities[resAbilities[j]].Name + '</td></tr>';
+							string += '<tr><td colspan="2" class="center">' + abilities[resAbilities[j]].Name + '</td></tr>';
 						}
 						hoverCard.innerHTML = `<div class="unitInfo">
 								<table class="stats">
