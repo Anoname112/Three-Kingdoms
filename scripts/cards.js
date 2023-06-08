@@ -950,14 +950,16 @@ function createUnitsTable (unitIndexes) {
 			</tr>`;
 	}
 	return `<table class="stats">
-		<tr>
-			<th>Units (` + unitIndexes.length + `)</th>
-			<th>Strength</th>
-			<th>Morale</th>
-			<th>Objective</th>
-			<th>Name</th>
-			<th>Progress</th>
-		</tr>` + unitsHTML + `</table>`;
+			<tr>
+				<th>Units (` + unitIndexes.length + `)</th>
+				<th>Strength</th>
+				<th>Morale</th>
+				<th>Objective</th>
+				<th>Name</th>
+				<th>Progress</th>
+			</tr>
+			` + unitsHTML + `
+		</table>`;
 }
 
 // Info card
@@ -1040,6 +1042,21 @@ function openInfoCard (mode, index, sort) {
 				</tr>`;
 		}
 		
+		var abilitiesHTML = '';
+		for (var i = 0; i < abilities.length; i++) {
+			var officersHTML = '';
+			for (var j = 0; j < abilities[i].Officers.length; j++) {
+				if (officersHTML.length > 0) officersHTML += ', ' + officers[abilities[i].Officers[j]].Name;
+				else officersHTML += officers[abilities[i].Officers[j]].Name;
+			}
+			abilitiesHTML += `<tr>
+					<td class="center">` + abilities[i].Name + `</td>
+					<td>` + abilities[i].AllyEffect + `</td>
+					<td>` + abilities[i].EnemyEffect + `</td>
+					<td class="left">` + officersHTML + `</td>
+				</tr>`;
+		}
+		
 		infoCard.innerHTML = `<div class="title allyColor">Info</div>
 			<div class="forceContent">
 				<table class="stats">
@@ -1050,6 +1067,15 @@ function openInfoCard (mode, index, sort) {
 						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Strength')"><span>Strength</span></th>
 					</tr>
 					` + forcesHTML + `
+				</table><br />
+				<table class="stats">
+					<tr>
+						<th>Abilities</th>
+						<th>Ally +</th>
+						<th>Enemy -</th>
+						<th>Officers</th>
+					</tr>
+					` + abilitiesHTML + `
 				</table>
 			</div>`;
 	}
