@@ -18,7 +18,7 @@ var mainSound;
 var battleSound;
 var playSvg;
 
-// 0 is picking scenario, 1 is playing
+// 0: Picking scenario, 1: Playing
 var gState;
 var copyString;
 var battles;
