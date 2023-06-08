@@ -767,6 +767,7 @@ function onMouseMove (e) {
 			else hoverCard.style.top = hoverY + 'px';
 			
 			openInfoCard('City', index);
+			draw();
 		}
 		
 		// Hovering a battle unit
