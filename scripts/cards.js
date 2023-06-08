@@ -1003,14 +1003,14 @@ function openInfoCard (mode, index, sort) {
 	else if (mode == 'Global') {
 		var forcesData = [];
 		for (var i = 0; i < forces.length; i++) {
-			var citiesCount = getCities(forces[i].Id, 'force').length;
-			if (citiesCount > 0) {
-				forcesData.push([
-					officers[forces[i].Ruler].Name + ' Forces',
-					citiesCount,
-					getOfficers(forces[i].Id, 'force').length,
-					getForceStrength(forces[i].Id, true)
-				]);
+			var cityCount = getCities(forces[i].Id, 'force').length;
+			if (cityCount > 0) {
+				forcesData.push({
+					'Name' : officers[forces[i].Ruler].Name + ' Forces',
+					'CityCount' : cityCount,
+					'OfficerCount' : getOfficers(forces[i].Id, 'force').length,
+					'Strength' : getForceStrength(forces[i].Id, true)
+				});
 			}
 		}
 		
@@ -1018,9 +1018,9 @@ function openInfoCard (mode, index, sort) {
 			for (var i = 0; i < forcesData.length; i++) {
 				for (var j = i + 1; j < forcesData.length; j++) {
 					var swap = false;
-					if (sort == 'Cities' && forcesData[i][1] < forcesData[j][1]) swap = true;
-					else if (sort == 'Officers' && forcesData[i][2] < forcesData[j][2]) swap = true;
-					else if (sort == 'Strength' && forcesData[i][3] < forcesData[j][3]) swap = true;
+					if (sort == 'Cities' && forcesData[i]['CityCount'] < forcesData[j]['CityCount']) swap = true;
+					else if (sort == 'Officers' && forcesData[i]['OfficerCount'] < forcesData[j]['OfficerCount']) swap = true;
+					else if (sort == 'Strength' && forcesData[i]['Strength'] < forcesData[j]['Strength']) swap = true;
 					if (swap) {
 						var temp = forcesData[i];
 						forcesData[i] = forcesData[j];
@@ -1032,9 +1032,12 @@ function openInfoCard (mode, index, sort) {
 		
 		var forcesHTML = '';
 		for (var i = 0; i < forcesData.length; i++) {
-			forcesHTML += '<tr>';
-			for (var j = 0; j < forcesData[i].length; j++) forcesHTML += '<td>' + forcesData[i][j] + '</td>';
-			forcesHTML += '</tr>';
+			forcesHTML += `<tr>
+					<td>` + forcesData[i]['Name'] + `</td>
+					<td>` + forcesData[i]['CityCount'] + `</td>
+					<td>` + forcesData[i]['OfficerCount'] + `</td>
+					<td>` + forcesData[i]['Strength'] + `</td>
+				</tr>`;
 		}
 		
 		infoCard.innerHTML = `<div class="title allyColor">Info</div>
