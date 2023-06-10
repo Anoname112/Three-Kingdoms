@@ -69,11 +69,9 @@ function Unit (id, type, force, city, position, morale, strength, objective, pro
 	this.Cooldown = cooldown;
 }
 
-function UnitType (name, type, attack, defense, speed, range, effectiveness, cost, icon) {
+function UnitType (name, type, speed, range, effectiveness, cost, icon) {
 	this.Name = name;
 	this.Type = type;
-	this.Attack = attack;
-	this.Defense = defense;
 	this.Speed = speed;
 	this.Range = range;
 	// [Spearmen, Horsemen, Archer]

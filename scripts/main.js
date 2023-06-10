@@ -53,10 +53,10 @@ var officers = [];
 var units = [];
 
 var unitTypes = [];
-// name, type, attack, defense, speed, range, effectiveness, cost, icon
-unitTypes.push(new UnitType('Spearmen', 'foot', 90, 90, 16, 50, [1.0, 1.0, 1.1], 1200, '⛨'));
-unitTypes.push(new UnitType('Horsemen', 'horse', 100, 80, 24, 50, [1.1, 1.0, 1.25], 1400, '♞'));
-unitTypes.push(new UnitType('Archer', 'bow', 70, 80, 16, 155, [0.9, 1.05, 1.0], 1000, '➶'));
+// Name, Type, Speed, Range, Effectiveness, Cost, Icon
+unitTypes.push(new UnitType('Spearmen', 'foot', 16, 50, [1.0, 1.0, 1.1], 1200, '⛨'));
+unitTypes.push(new UnitType('Horsemen', 'horse', 24, 50, [1.1, 1.0, 1.25], 1400, '♞'));
+unitTypes.push(new UnitType('Archer', 'bow', 16, 155, [0.9, 1.05, 1.0], 1000, '➶'));
 
 /*
 1. February 184: Revolt Awakens Heroric Ambitions
@@ -74,7 +74,7 @@ scenarios.push(new Scenario(
 	'Warlords',
 	'194-3-1', [
 		// Forces
-		// name, ruler, color, cities
+		// Name, Ruler, Color, Cities
 		['Cao Cao Forces', 15, '#0000FF', [8, 9]],          // 0	
 		['Liu Bei Forces', 247, '#00FF00', [10]],           // 1
 		['Sun Ce Forces', 382, '#FF0000', [45]],            // 2
@@ -96,7 +96,7 @@ scenarios.push(new Scenario(
 		['Liu Zhang Forces', 272, '#0D0D47', [26, 27, 28]]  // 18
 	], [
 		// Officers
-		// force, name, position
+		// Force, Name, City
 		[0, 'Cao Cao', 8],
 		[0, 'Cao Ang', 8],
 		[0, 'Cheng Yu', 8],
@@ -293,7 +293,7 @@ scenarios.push(new Scenario(
 		[18, 'Wu Lan', 28]
 	], [
 		// Units
-		// type, city, position, morale, strength
+		// Type, City, Position, Morale, Strength
 		// Chen Liu
 		[0, 8, getCityPosition(8), 90, 7000],
 		[0, 8, getCityPosition(8), 90, 7000],
@@ -384,7 +384,7 @@ scenarios.push(new Scenario(
 		[1, 43, getCityPosition(43), 50, 7000],
 		// Hui Ji
 		[2, 46, getCityPosition(46), 45, 6500],
-		// Jiao Zhi 49
+		// Jiao Zhi
 		[0, 49, getCityPosition(49), 50, 5500],
 		[1, 49, getCityPosition(49), 50, 5500],
 		[2, 49, getCityPosition(49), 45, 5500]
@@ -395,7 +395,7 @@ scenarios.push(new Scenario(
 ));
 
 var cities = [];
-// name, force, gold, food, farm, trade, tech, defense, cfarm, ctrade, ctech, cdefense, corder, speciality
+// Name, Force, Gold, Food, Farm, Trade, Tech, Defense, cFarm, cTrade, cTech, cDefense, cOrder, Speciality
 cities[0] = new City('Xi Liang', '-', 8000, 65000, 3200, 3200, 2800, 4000, 420, 400, 600, 2800, 80, '-');
 cities[1] = new City('Wu Wei', '-', 7800, 63000, 3200, 3200, 2800, 4000, 410, 390, 600, 2800, 80, '-');
 cities[2] = new City('Tian Shui', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 200, 600, 2800, 80, '-');
@@ -448,7 +448,7 @@ cities[48] = new City('Nan Hai', '-', 5000, 30000, 3200, 3200, 2800, 4000, 200, 
 cities[49] = new City('Jiao Zhi', '-', 12000, 70000, 3200, 3200, 2800, 4000, 500, 510, 600, 2800, 80, '-');
 
 var abilities = [];
-// name, desc, cooldown, allyEffect, enemyEffect, officers
+// Name, Desc, Cooldown, AllyEffect, EnemyEffect, Officers
 abilities[0] = new Ability('True Leader', '', 0, 15, 15, [15]);
 abilities[1] = new Ability('Benevolence', '', 0, 10, 10, [247]);
 abilities[2] = new Ability('Tiger', '', 0, 20, 0, [389]);
