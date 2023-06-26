@@ -21,6 +21,16 @@ function Ability (name, desc, cooldown, allyEffect, enemyEffect, officers) {
 	this.Officers = officers;
 }
 
+function Item (name, type, decs, value, stats, abilities, owner) {
+	this.Name = name;
+	this.Type = type;
+	this.Desc = desc;
+	this.Value = value;
+	this.Stats = stats;
+	this.Abilities = abilities;
+	this.Owner = owner;
+}
+
 function Scenario (name, date, forces, officers, units, playables) {
 	this.Name = name;
 	this.Date = date;
