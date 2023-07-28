@@ -1,0 +1,16 @@
+DONE:
+- Custom buttons
+- Damage and morale info
+- Enable abilities
+- Battle abilities info
+- Battle map indicator
+- Target focus
+- Other fonts
+
+TO DO:
+- Transfer Gold & Food
+- Items
+- City speciality
+- Tech impact into speciality
+- Optimize drawing
+- Change indexed to library
