@@ -970,7 +970,7 @@ function animateUnits (unitIndexes, elapsed, allyAbilities, enemyAbilities) {
 						applyAbilities(unit.Morale, allyAbilities, enemyAbilities),
 						calculateAttack(assistedStats0[0], assistedStats0[1]),
 						calculateDefense(assistedStats1[0], assistedStats1[2]),
-						unitType.Effectiveness[units[targetIndex].Type]
+						unitType.Effectiveness[units[targetIndex].Type % 3]
 					));
 					units[targetIndex].Strength -= damage;
 					if (units[targetIndex].Strength <= 0) units[targetIndex].Strength = 0;			
