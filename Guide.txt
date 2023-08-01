@@ -1,0 +1,37 @@
+OFFICER AND UNIT
+===============
+LDR is used to develop Order and Drill units.
+Also highly used in unit's ATK and DEF calculation.
+
+WAR is used to strengthen city Defense.
+
+INT is used to develop Tech.
+
+POL is used to develop Farm and Trade.
+
+CHR is used to Recurit and Establish units.
+Also used to Employ officers.
+
+Maximum value of unit's Strength is 10000.
+Maximum value of unit's Morale is 100.
+
+Deployed unit's ATK is calculated using LDR and WAR.
+
+Deployed unit's DEF is calculated using LDR and INT.
+
+Damage in battle influenced by Morale, unit's ATK, and target's DEF.
+
+CITY
+====
+Gold gained based on Trade.
+Food gained based on Farm.
+
+Speciality is activated when Tech reached maximum value.
+
+Order is reduced when Farm, Trade, Tech, or Defense is improved.
+When Order is getting too low Revolt might occur and reduce multiple city stats.
+Maintain the Order to avoid Revolt.
+
+Order is also reduced when city is under attack.
+
+City is taken by attacker when attacker successfuly reduced Defense to 0.
