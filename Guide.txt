@@ -1,6 +1,6 @@
 OFFICER AND UNIT
 ================
-LDR (leadership) is used to develop Order and Drill units.
+LDR is used to develop Order and Drill units.
 Also highly used in unit's ATK and DEF calculation.
 
 WAR is used to strengthen city Defense.
@@ -23,8 +23,8 @@ Damage in battle influenced by Morale, unit's ATK, and target's DEF.
 
 CITY
 ====
-Gold gained based on Trade.
-Food gained based on Farm.
+Gold income is based on Trade.
+Food harvest is based on Farm.
 
 Speciality is activated when Tech reached maximum value.
 
