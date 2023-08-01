@@ -15,11 +15,11 @@ Also used to Employ officers.
 Maximum value of unit's Strength is 10000.
 Maximum value of unit's Morale is 100.
 
-Deployed unit's ATK is calculated using LDR and WAR.
+Deployed unit's ATK is calculated using mostly LDR and a little of WAR.
 
-Deployed unit's DEF is calculated using LDR and INT.
+Deployed unit's DEF is calculated using mostly LDR and a little of INT.
 
-Damage in battle influenced by Morale, unit's ATK, and target's DEF.
+Damage in battle influenced by unit's Morale, unit's ATK, and target's DEF.
 
 CITY
 ====
