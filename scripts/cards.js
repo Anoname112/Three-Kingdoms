@@ -76,7 +76,7 @@ function openCityCard (cityIndex, select) {
 		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech && city.Gold >= devCost ? '' : ' disabled';
 		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense && city.Gold >= devCost ? '' : ' disabled';
 		var orderDisabled = viableOfficers.length > 0 && city.cOrder < orderLimit && city.Gold >= devCost ? '' : ' disabled';
-		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getCityLowestEstablishCost() ? '' : ' disabled';
+		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getCityLowestEstablishCost(cityIndex) ? '' : ' disabled';
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getCityLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';

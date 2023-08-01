@@ -1045,8 +1045,8 @@ function initBattle () {
 	// Assign back row position based on unit type
 	var attBackRow = [];
 	var defBackRow = [];
-	for (var i = 0; i < attUnits.length; i++) if (unitTypes[units[attUnits[i]].Type].Name == 'Archer') attBackRow.push(attUnits[i]);
-	for (var i = 0; i < defUnits.length; i++) if (unitTypes[units[defUnits[i]].Type].Name == 'Archer') defBackRow.push(defUnits[i]);
+	for (var i = 0; i < attUnits.length; i++) if (unitTypes[units[attUnits[i]].Type].Type == 'bow') attBackRow.push(attUnits[i]);
+	for (var i = 0; i < defUnits.length; i++) if (unitTypes[units[defUnits[i]].Type].Type == 'bow') defBackRow.push(defUnits[i]);
 	
 	// Attacking units battle position or vector
 	var backCount = 0;
@@ -1471,8 +1471,9 @@ function playClick (e) {
 									if (city.cOrder < orderLimit && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Order', enemyCities[j]]);
 									break;
 								case 6:
-									if (unitCount < unitLimit && city.Gold >= getCityHighestEstablishCost()) {
-										var unitTypeIndex = parseInt(Math.random() * unitTypes.length);
+									if (unitCount < unitLimit && city.Gold >= getCityHighestEstablishCost(enemyCities[j])) {
+										var cityUnitTypes = getCityUnitTypes(enemyCities[j]);
+										var unitTypeIndex = cityUnitTypes[parseInt(Math.random() * cityUnitTypes.length)];
 										officers[viableOfficers[k]].Objective = ['Establish', unitTypeIndex];
 										officers[viableOfficers[k]].Progress = 0;
 										
