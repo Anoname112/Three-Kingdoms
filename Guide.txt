@@ -4,8 +4,10 @@ LDR is used to increase Order and Drill units.
 Also highly used in unit's ATK and DEF calculation.
 
 WAR is used to strengthen city Defense.
+Also slightly used in unit's ATK calculation.
 
 INT is used to develop Tech.
+Also slightly used in unit's DEF calculation.
 
 POL is used to develop Farm and Trade.
 
@@ -16,7 +18,6 @@ Maximum value of unit's Strength is 10000.
 Maximum value of unit's Morale is 100.
 
 Deployed unit's ATK is calculated using mostly LDR and a little of WAR.
-
 Deployed unit's DEF is calculated using mostly LDR and a little of INT.
 
 Damage in battle influenced by unit's Morale, unit's ATK, and target's DEF.
@@ -34,4 +35,4 @@ Maintain the Order to avoid Revolt.
 
 Order is also reduced when city is under attack.
 
-City is taken by attacker when attacker successfuly reduced Defense to 0.
+City is taken by attacker when attacker successfuly reduced city Defense to 0.
