@@ -175,11 +175,8 @@ function getCityPosition (cityIndex) {
 
 function getCityUnitTypes (cityIndex) {
 	var types = [];
-	var city = cities[cityIndex];
 	for (var i = 0; i < unitTypes.length; i++) {
-		if (i < 3 || (parseInt(city.Speciality) == i && city.cTech == city.Tech)) {
-			types.push(i);
-		}
+		if (i < 3 || (parseInt(cities[cityIndex].Speciality) == i && cities[cityIndex].cTech == cities[cityIndex].Tech)) types.push(i);
 	}
 	return types;
 }
@@ -260,23 +257,19 @@ function getCityLowestMarchCost (cityIndex) {
 }
 
 function getCityLowestEstablishCost (cityIndex) {
-	var cost = unitTypes[0].Cost;
-	var city = cities[cityIndex];
-	for (var i = 1; i < unitTypes.length; i++) {
-		if (i < 3 || (parseInt(city.Speciality) == i && city.cTech == city.Tech)) {
-			if (unitTypes[i].Cost < cost) cost = unitTypes[i].Cost;
-		}
+	var cityUnitTypes = getCityUnitTypes(cityIndex);
+	var cost = unitTypes[cityUnitTypes[0]].Cost;
+	for (var i = 1; i < cityUnitTypes.length; i++) {
+		if (unitTypes[cityUnitTypes[i]].Cost < cost) cost = unitTypes[cityUnitTypes[i]].Cost;
 	}
 	return cost;
 }
 
 function getCityHighestEstablishCost (cityIndex) {
-	var cost = unitTypes[0].Cost;
-	var city = cities[cityIndex];
-	for (var i = 1; i < unitTypes.length; i++) {
-		if (i < 3 || (parseInt(city.Speciality) == i && city.cTech == city.Tech)) {
-			if (unitTypes[i].Cost > cost) cost = unitTypes[i].Cost;
-		}
+	var cityUnitTypes = getCityUnitTypes(cityIndex);
+	var cost = unitTypes[cityUnitTypes[0]].Cost;
+	for (var i = 1; i < cityUnitTypes.length; i++) {
+		if (unitTypes[cityUnitTypes[i]].Cost > cost) cost = unitTypes[cityUnitTypes[i]].Cost;
 	}
 	return cost;
 }

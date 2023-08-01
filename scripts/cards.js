@@ -595,10 +595,9 @@ function openUnitCard (cityIndex, objective) {
 			switch (objective) {
 				case 'Establish':
 					var options = '';
-					for (var i = 0; i < unitTypes.length; i++) {
-						if (i < 3 || (parseInt(city.Speciality) == i && city.cTech == city.Tech)) {
-							options += '<option value="' + i + '">' + unitTypes[i].Name + ' | ' + unitTypes[i].Cost + '</option>';
-						}
+					var cityUnitTypes = getCityUnitTypes(cityIndex);
+					for (var i = 0; i < cityUnitTypes.length; i++) {
+						options += '<option value="' + cityUnitTypes[i] + '">' + unitTypes[cityUnitTypes[i]].Name + ' | ' + unitTypes[cityUnitTypes[i]].Cost + '</option>';
 					}
 					objectiveHTML += 'Unit Type: <select id="unitType">' + options + '</select>';
 					break;
