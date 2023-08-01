@@ -657,6 +657,8 @@ function openUnitCard (cityIndex, objective) {
 					</table>
 				</div>`;
 			
+			if (viableOfficers.length == 1) officerChanged();
+			
 			unitCard.style.visibility = 'visible';
 			if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 			if (objective == 'Establish') getElement('unitType').focus();
