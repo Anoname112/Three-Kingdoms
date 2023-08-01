@@ -631,6 +631,8 @@ function openUnitCard (cityIndex, objective) {
 			for (var i = 0; i < viableOfficers.length; i++) officersHTML += '<option value="' + officers[viableOfficers[i]].Name + '">';
 			officersHTML += '</datalist></div>';
 			
+			var officerValue = viableOfficers.length == 1 ? officers[viableOfficers[0]].Name : '';
+			
 			unitCard.innerHTML = officersHTML + `<div class="title allyColor">` + objective + `</div>
 				<div class="unitContent">
 					<table>
@@ -639,7 +641,11 @@ function openUnitCard (cityIndex, objective) {
 							<td>` + objectiveHTML + `</td>
 						</tr>
 						<tr>
-							<td><div id="officersDiv">Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged()"></div></td>
+							<td>
+								<div id="officersDiv">
+									Officer: <input type="text" id="officer" list="officerList" oninput="officerChanged()" value="` + officerValue + `">
+								</div>
+							</td>
 							<td><div id="relevantStats"></div></td>
 						</tr>
 						<tr class="center">
