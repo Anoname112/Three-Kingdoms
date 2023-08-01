@@ -1,6 +1,6 @@
 OFFICER AND UNIT
 ================
-LDR is used to develop Order and Drill units.
+LDR is used to increase Order and Drill units.
 Also highly used in unit's ATK and DEF calculation.
 
 WAR is used to strengthen city Defense.
