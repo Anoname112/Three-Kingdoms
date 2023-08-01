@@ -5,12 +5,13 @@ DONE:
 - Battle abilities info
 - Battle map indicator
 - Target focus
+- City speciality
+- Tech impact into speciality
 - Other fonts
+- Make gameplay guide
 
 TO DO:
 - Transfer Gold & Food
 - Items
-- City speciality
-- Tech impact into speciality
 - Optimize drawing
 - Change indexed to library
