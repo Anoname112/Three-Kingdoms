@@ -1,4 +1,6 @@
 # Three-Kingdoms
+Gameplay guide: https://github.com/Anoname112/Three-Kingdoms/blob/main/Guide.txt
+
 Live Demo: https://three-kingdoms.vercel.app/
 
 Screenshot:
