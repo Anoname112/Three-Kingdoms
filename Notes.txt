@@ -14,4 +14,3 @@ TO DO:
 - Transfer Gold & Food
 - Items
 - Optimize drawing
-- Change indexed to library
