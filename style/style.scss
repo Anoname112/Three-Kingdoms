@@ -13,6 +13,10 @@ $statsBorder: 1px solid #AAAAAA;
 $statsBackColor: #CCCCCC;
 $statsMinWidth: 32px;
 
+* {
+	font-family: "Roboto", "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
+}
+
 *::-webkit-scrollbar {
 	width: 0;
 }
@@ -20,7 +24,6 @@ $statsMinWidth: 32px;
 body {
 	margin: 0;
 	padding: 0;
-	font-family: "Roboto", "Segoe UI", "Trebuchet MS", "Tahoma", "Arial", "Helvetica", "Consolas";
 }
 
 input[type=text] {
