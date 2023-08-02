@@ -210,7 +210,7 @@ function getCityUnits (cityIndex) {
 	for (var i = 0; i < units.length; i++) {
 		if (units[i].City == cityIndex) cityUnits.push(i);
 	}
-	return cityUnits.sort(function(a, b){return units[a].Type - units[b].Type});
+	return cityUnits.sort((a, b) => units[a].Type - units[b].Type);
 }
 
 function getCityViableOfficers (cityIndex, sort) {
@@ -236,7 +236,7 @@ function getCityViableUnits (cityIndex) {
 	for (var i = 0; i < units.length; i++) {
 		if (units[i].City == cityIndex && units[i].Objective == '-') viableUnits.push(i);
 	}
-	return viableUnits.sort(function(a, b){return units[a].Type - units[b].Type});
+	return viableUnits.sort((a, b) => units[a].Type - units[b].Type);
 }
 
 function getCityStrength (cityIndex) {
