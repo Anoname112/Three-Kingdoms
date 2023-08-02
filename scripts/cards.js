@@ -773,7 +773,10 @@ function openOfficerCard (cityIndex, objective) {
 				}
 			}
 			
-			firstRowHTML = `<tr><td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td><td>falalalalala</td></tr>`;
+			firstRowHTML = `<tr>
+					<td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				</tr>`;
 			secondRowHTML = `<tr><td colspan="2"><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
 		}
 	}
