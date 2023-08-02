@@ -227,7 +227,7 @@ function commanderChanged (source) {
 			if (officer.Name != commander) {
 				assistHTML += `<label for="officer` + viableOfficers[i] + `" onclick="assistedStats()">
 						<input type="checkbox" id="officer` + viableOfficers[i] + `">
-						<span>` + officer.Name + ` | ` + officer.LDR + ` | ` + officer.WAR + ` | ` + officer.INT + `</span>
+						<div class="officerCB">` + officer.Name + `</div><div>` + officer.LDR + `</div><div>` + officer.WAR + `</div><div>` + officer.INT + `</div>
 					</label>`;
 			}
 		}
@@ -259,7 +259,7 @@ function createUnitDivInnerHTML (cityIndex) {
 		var unit = units[viableUnits[i]];
 		unitsHTML += `<label for="unit` + viableUnits[i] + `">
 				<input type="checkbox" id="unit` + viableUnits[i] + `" onclick="unitsSelect()">
-				<span>` + unitTypes[unit.Type].Name + ` | ` + unit.Strength + ` | ` + unit.Morale + `</span>
+				<div class="typeCB">` + unitTypes[unit.Type].Name + `</div><div class="strengthCB">` + unit.Strength + `</div><div>` + unit.Morale + `</div>
 			</label>`;
 	}
 	return `Units:<br /><div class="checkboxes">` + unitsHTML + `</div>`;
@@ -442,7 +442,7 @@ function openDevCard (cityIndex, objective) {
 			var officer = officers[viableOfficers[i]];
 			officersHTML += `<label for="officer` + viableOfficers[i] + `">
 					<input type="checkbox" id="officer` + viableOfficers[i] + `" onclick="officersSelect()">
-					<span>` + officer.Name + ` | `;
+					<div class="officerCB">` + officer.Name + `</div><div>`;
 			switch (objective) {
 				case 'Farm': officersHTML += officer.POL; break;
 				case 'Trade': officersHTML += officer.POL; break;
@@ -451,7 +451,7 @@ function openDevCard (cityIndex, objective) {
 				case 'Order': officersHTML += officer.LDR; break;
 				default: break;
 			}
-			officersHTML += `</span>
+			officersHTML += `</div>
 				</label>`;
 		}
 		
@@ -748,7 +748,7 @@ function openOfficerCard (cityIndex, objective) {
 				var officer = officers[viableOfficers[i]];
 				officersHTML += `<label for="officer` + viableOfficers[i] + `">
 						<input type="checkbox" id="officer` + viableOfficers[i] + `">
-						<span>` + officer.Name + ` | ` + officer.CHR + `</span>
+						<div class="officerCB">` + officer.Name + `</div><div>` + officer.CHR + `</div>
 					</label>`;
 			}
 			
@@ -768,13 +768,13 @@ function openOfficerCard (cityIndex, objective) {
 				if (officer.Objective[0] != 'Return') {
 					officersHTML += `<label for="officer` + nonViableOfficers[i] + `">
 							<input type="checkbox" id="officer` + nonViableOfficers[i] + `">
-							<span>` + officer.Name + ` | ` + officer.Objective[0] + `</span>
+							<div class="officerCB">` + officer.Name + `</div><div>` + officer.Objective[0] + `</div>
 						</label>`;
 				}
 			}
 			
-			firstRowHTML = `<tr><td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td></tr>`;
-			secondRowHTML = `<tr><td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
+			firstRowHTML = `<tr><td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td><td>falalalalala</td></tr>`;
+			secondRowHTML = `<tr><td colspan="2"><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td></tr>`;
 		}
 	}
 	else if (objective == 'Transfer') {
@@ -791,7 +791,7 @@ function openOfficerCard (cityIndex, objective) {
 				var officer = officers[viableOfficers[i]];
 				officersHTML += `<label for="officer` + viableOfficers[i] + `">
 						<input type="checkbox" id="officer` + viableOfficers[i] + `">
-						<span>` + officer.Name + ` | ` + officer.LDR + ` | ` + officer.WAR + ` | ` + officer.INT + ` | ` + officer.POL + ` | ` + officer.CHR + `</span>
+						<div class="officerCB">` + officer.Name + `</div><div>` + officer.LDR + `</div><div>` + officer.WAR + `</div><div>` + officer.INT + `</div><div>` + officer.POL + `</div><div>` + officer.CHR + `</div>
 					</label>`;
 			}
 			
