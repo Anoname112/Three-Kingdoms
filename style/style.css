@@ -258,9 +258,25 @@ select {
   color: #FFFFFF;
 }
 
-.checkboxes label span {
-  display: inline-table;
-  position: absolute;
+.checkboxes label input {
+  float: left;
+}
+
+.checkboxes label div {
+  width: 30px;
+  float: left;
+}
+
+.officerCB {
+  width: 100px !important;
+}
+
+.typeCB {
+  width: 80px !important;
+}
+
+.strengthCB {
+  width: 50px !important;
 }
 
 .bold {
