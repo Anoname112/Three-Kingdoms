@@ -35,4 +35,4 @@ Maintain Order to avoid Revolt.
 
 Order is also reduced when city is under attack.
 
-City is taken by attacker when attacker successfuly reduced city Defense to 0.
+City is taken by the attacker when the attacker successfully reduces city Defense to 0.
