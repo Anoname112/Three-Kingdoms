@@ -594,11 +594,11 @@ window.onload = function () {
 			'-',
 			'-',
 			new Point.Zero(),
-			parseInt(baseOfficers[i]['ldr']),
-			parseInt(baseOfficers[i]['war']),
-			parseInt(baseOfficers[i]['int']),
-			parseInt(baseOfficers[i]['pol']),
-			parseInt(baseOfficers[i]['chr']),
+			baseOfficers[i]['ldr'],
+			baseOfficers[i]['war'],
+			baseOfficers[i]['int'],
+			baseOfficers[i]['pol'],
+			baseOfficers[i]['chr'],
 			'-',
 			'-'
 		));
