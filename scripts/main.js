@@ -1546,11 +1546,11 @@ function draw () {
 		var line = 0;
 		// Scenarios
 		var x = canvasPad + buttonMargin;
+		var w = scenarioWidth;
+		var h = buttonHeight;
 		for (var i = 0; i < scenarios.length; i++) {
 			for (var j = 0; j < scenarios[i].Playables.length; j++) {
 				var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-				var w = scenarioWidth;
-				var h = buttonHeight;
 				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 				drawRect(x, y, w, h, fontDark);
 				ctx.fillStyle = fontDark;
@@ -1564,8 +1564,6 @@ function draw () {
 		
 		// Import data
 		var y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
-		var w = scenarioWidth;
-		var h = buttonHeight;
 		fillRect(x, y, w, h, highlightColor);
 		if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
 		drawRect(x, y, w, h, fontDark);
@@ -1635,12 +1633,12 @@ function draw () {
 		}
 		
 		// Draw deployed units
+		var w = squareSize - unitPad * 2;
+		var h = squareSize - unitPad * 2;
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
 				x = canvasPad + officers[i].Position.X * squareSize + unitPad;
 				y = canvasPad + officers[i].Position.Y * squareSize + unitPad;
-				var w = squareSize - unitPad * 2;
-				var h = squareSize - unitPad * 2;
 				if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) {
 					var path = officers[i].Objective[2];
 					for (var j = 1; j < path.Points.length; j++) {
