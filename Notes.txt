@@ -16,6 +16,16 @@ TO DO:
 - Optimize drawing
 
 SNIPPETS:
+/* construct all forces diligence, then sort them
+forces.map((x, i) => [officers[x.Ruler].Name, getForceDiligence(i)]).sort((a, b) => b[1] - a[1]);
+*/
+
+/* display all forces diligence
+for (var i = 0; i < forces.length; i++) {
+    console.log(officers[forces[i].Ruler].Name + ', ' + getForceDiligence(i));
+}
+*/
+
 /* print getCities sort result
 for (var i = 0; i < distances.length; i++) console.log(cities[resultCities[i]].Name + ', ' + distances[i]);
 */
