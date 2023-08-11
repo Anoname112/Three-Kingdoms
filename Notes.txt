@@ -19,7 +19,11 @@ SNIPPETS:
 /* construct famous officers with attack and defense stats
 var famous = ['Cao Cao', 'Xiahou Yuan', 'Liu Bei', 'Guan Yu', 'Sun Ce', 'Zhou Yu', 'Lu Bu', 'Zhang Liao', 'Gongsun Zan', 'Zhao Yun', 'Ma Teng', 'Ma Chao'];
 famous = famous.map((x) => [getOfficerIndexByName(x), x]);
-famous.map((x) => [x[1], calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR), calculateDefense(officers[x[0]].LDR, officers[x[0]].INT)]);
+famous.map((x) => [
+	x[1],
+	calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR).toFixed(1),
+	calculateDefense(officers[x[0]].LDR, officers[x[0]].INT).toFixed(1)
+]);
 */
 
 /* construct all forces diligence, then sort them
