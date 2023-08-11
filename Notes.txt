@@ -14,3 +14,30 @@ TO DO:
 - Transfer Gold & Food
 - Items
 - Optimize drawing
+
+SNIPPETS:
+/* print getCities sort result
+for (var i = 0; i < distances.length; i++) console.log(cities[resultCities[i]].Name + ', ' + distances[i]);
+*/
+
+/* measure sort performance
+const startTime = performance.now();
+
+for (var i = 0; i < distances.length; i++) {
+	for (var j = i + 1; j < distances.length; j++) {
+		if (distances[i] > distances[j]) {
+			var temp = resultCities[i];
+			resultCities[i] = resultCities[j];
+			resultCities[j] = temp;
+
+			temp = distances[i];
+			distances[i] = distances[j];
+			distances[j] = temp;
+		}
+	}
+}
+
+const endTime = performance.now();
+const elapsedTime = endTime - startTime;
+console.log(`Execution time: ${elapsedTime} milliseconds`);
+*/
