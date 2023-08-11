@@ -142,7 +142,7 @@ function getCities (forceId, alliance, sort) {
 		}
 		
 		if (sort[1] == 'near') {
-			for (var i = 0; i < distances.length; i++) {
+			for (var i = 1; i < distances.length; i++) {
 				var tempCity = resultCities[i];
 				var tempDist = distances[i];
 				var j = i - 1;
