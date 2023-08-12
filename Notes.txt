@@ -14,6 +14,8 @@ TO DO:
 - Transfer Gold & Food
 - Items
 - Optimize drawing
+- Create Officer
+- Create new Force
 
 SNIPPETS:
 /* construct famous officers with attack and defense stats
