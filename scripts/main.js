@@ -1695,7 +1695,7 @@ function draw () {
 					// Draw damage
 					if (damages[units[i].Id] && startTimestamp - damages[units[i].Id]['Timestamp'] < battleSeconds) {
 						ctx.font = 'bold ' + floor(canvasFontSize * (1 - (startTimestamp - damages[units[i].Id]['Timestamp']) / battleSeconds)) + 'px ' + canvasFontFamily;
-						drawGlowMessage('-' + damages[units[i].Id]['Damage'], units[i].Vec.X, units[i].Vec.Y + portraitRadius - 1, 'center', damageColor);
+						drawGlowMessage('-' + damages[units[i].Id]['Damage'], units[i].Vec.X, units[i].Vec.Y + damagePad, 'center', damageColor);
 						ctx.font = canvasFont;
 					}
 					// Draw icon and strength
