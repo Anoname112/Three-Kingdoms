@@ -147,7 +147,7 @@ function getCities (forceId, alliance, sort) {
 				var tempDist = distances[i];
 				var j = i - 1;
 				
-				while (distances[j] > tempDist && j >= 0) {
+				while (j >= 0 && distances[j] > tempDist) {
 					resultCities[j + 1] = resultCities[j];
 					distances[j + 1] = distances[j];
 					j--;
