@@ -1,3 +1,10 @@
+// Construct array of cities with speciality
+var special = [];
+for (var i = 0; i < cities.length; i++) {
+    if (cities[i].Speciality != '-') special.push([cities[i].Name, unitTypes[cities[i].Speciality].Name]);
+}
+special;
+
 // Play as someone else
 player = getOfficerIndexByName('Shi Xie');
 playerForce = officers[player].Force;
