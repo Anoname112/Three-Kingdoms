@@ -1,3 +1,7 @@
+// Get top 30 officers
+var total = baseOfficers.map((x) => [x['name'], x['total']]).sort((a, b) => b[1] - a[1]);
+total.slice(0, 30);
+
 // Construct array of cities with speciality
 var special = [];
 for (var i = 0; i < cities.length; i++) {
