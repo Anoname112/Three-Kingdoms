@@ -26,25 +26,28 @@ player = getOfficerIndexByName('Shi Xie');
 playerForce = officers[player].Force;
 openPlayerCard();
 
-// Construct famous officers array, with attack and defense stats
+// Construct famous officers array, with attack and defense stats (delete is optional)
 var famous = ['Cao Cao', 'Xiahou Yuan', 'Liu Bei', 'Guan Yu', 'Sun Ce', 'Zhou Yu', 'Lu Bu', 'Zhang Liao', 'Gongsun Zan', 'Zhao Yun', 'Ma Teng', 'Ma Chao'];
 famous = famous.map((x) => [getOfficerIndexByName(x), x]);
-famous = famous.map((x) => [
-	x[0],
-	x[1],
-	calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR).toFixed(1),
-	calculateDefense(officers[x[0]].LDR, officers[x[0]].INT).toFixed(1),
-	((calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR) + calculateDefense(officers[x[0]].LDR, officers[x[0]].INT)) / 2).toFixed(1)
-]);
+famous = famous.map(function (x) {
+    return {
+    	'Index': x[0],
+    	'Name': x[1],
+    	'Atk': calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR).toFixed(1),
+    	'Def': calculateDefense(officers[x[0]].LDR, officers[x[0]].INT).toFixed(1),
+    	'Avg': ((calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR) + calculateDefense(officers[x[0]].LDR, officers[x[0]].INT)) / 2).toFixed(1)
+    };
+});
 for (var i = 0; i < famous.length; i++) {
 	for (var j = 0; j < abilities.length; j++) {
-        if (abilities[j].Officers.includes(famous[i][0])) {
-			famous[i].push(abilities[j].Name);
+		if (abilities[j].Officers.includes(famous[i]['Index'])) {
+			famous[i]['Ability'] = abilities[j].Name;
 			break;
 		}
 	}
+    delete famous[i]['Index'];
 }
-famous.sort((a, b) => b[4] - a[4]);
+famous.sort((a, b) => b['Avg'] - a['Avg']);
 
 // Construct forces diligence array, then sort them
 forces.map((x, i) => [officers[x.Ruler].Name, getForceDiligence(i)]).sort((a, b) => b[1] - a[1]);
