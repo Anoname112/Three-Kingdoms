@@ -1,5 +1,5 @@
 // Get average stats of officers
-var avg = {LDR: 0, WAR: 0, INT: 0, POL: 0, CHR: 0};
+var avg = {'LDR': 0, 'WAR': 0, 'INT': 0, 'POL': 0, 'CHR': 0};
 for (var i = 0; i < officers.length; i++) {
     avg.LDR += officers[i].LDR;
     avg.WAR += officers[i].WAR;
