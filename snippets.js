@@ -26,7 +26,7 @@ player = getOfficerIndexByName('Shi Xie');
 playerForce = officers[player].Force;
 openPlayerCard();
 
-// Construct famous officers array, with attack and defense stats (delete is optional)
+// Construct famous officers array, with battle stats and ability (delete is optional)
 var famous = ['Cao Cao', 'Xiahou Yuan', 'Liu Bei', 'Guan Yu', 'Sun Ce', 'Zhou Yu', 'Lu Bu', 'Zhang Liao', 'Gongsun Zan', 'Zhao Yun', 'Ma Teng', 'Ma Chao'];
 famous = famous.map((x) => [getOfficerIndexByName(x), x]);
 famous = famous.map(function (x) {
