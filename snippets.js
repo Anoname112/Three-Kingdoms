@@ -1,3 +1,15 @@
+// Get average stats of officers
+var avg = [0, 0, 0, 0, 0];
+for (var i = 0; i < officers.length; i++) {
+    avg[0] += officers[i].LDR;
+    avg[1] += officers[i].WAR;
+    avg[2] += officers[i].INT;
+    avg[3] += officers[i].POL;
+    avg[4] += officers[i].CHR;
+}
+for (var i = 0; i < avg.length; i++) avg[i] = (avg[i] / officers.length).toFixed(2);
+avg;
+
 // Get top 30 officers
 var total = baseOfficers.map((x) => [x['name'], x['total']]).sort((a, b) => b[1] - a[1]);
 total.slice(0, 30);
