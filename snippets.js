@@ -1,13 +1,13 @@
 // Get average stats of officers
-var avg = [0, 0, 0, 0, 0];
+var avg = {LDR: 0, WAR: 0, INT: 0, POL: 0, CHR: 0};
 for (var i = 0; i < officers.length; i++) {
-    avg[0] += officers[i].LDR;
-    avg[1] += officers[i].WAR;
-    avg[2] += officers[i].INT;
-    avg[3] += officers[i].POL;
-    avg[4] += officers[i].CHR;
+    avg.LDR += officers[i].LDR;
+    avg.WAR += officers[i].WAR;
+    avg.INT += officers[i].INT;
+    avg.POL += officers[i].POL;
+    avg.CHR += officers[i].CHR;
 }
-for (var i = 0; i < avg.length; i++) avg[i] = (avg[i] / officers.length).toFixed(2);
+for (var key in avg) avg[key] = (avg[key] / officers.length).toFixed(2);
 avg;
 
 // Get top 30 officers
