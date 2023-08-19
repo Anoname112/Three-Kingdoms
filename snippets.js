@@ -58,6 +58,14 @@ for (var i = 0; i < forces.length; i++) console.log(officers[forces[i].Ruler].Na
 // Print getCities sort result (not for console)
 for (var i = 0; i < distances.length; i++) console.log(cities[resultCities[i]].Name + ', ' + distances[i]);
 
+// Download a file
+const content = 'Your file content';
+const link = document.createElement("a");
+const file = new Blob([content], { type: 'text/plain' });
+link.href = URL.createObjectURL(file);
+link.download = "file_name.txt";
+link.click();
+
 // Measure code performance
 const startTime = performance.now();
 
