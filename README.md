@@ -1,4 +1,6 @@
 # Three-Kingdoms
+Tactical simulation grand strategy game based on the Romance of the Three Kingdoms.
+
 Live Demo: https://three-kingdoms.vercel.app/
 
 Screenshot:
@@ -7,4 +9,4 @@ Screenshot:
    <img src="https://raw.githubusercontent.com/Anoname112/Three-Kingdoms/main/ss.png" title="Three Kingdoms">
 </a>
 
-Gameplay guide: https://github.com/Anoname112/Three-Kingdoms/blob/main/Guide.txt
+Gameplay Guide: https://github.com/Anoname112/Three-Kingdoms/blob/main/Guide.txt
