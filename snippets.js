@@ -9,11 +9,11 @@ for (var i = 0; i < units.length; i++) {
 // Get average stats of officers
 var avg = {'LDR': 0, 'WAR': 0, 'INT': 0, 'POL': 0, 'CHR': 0};
 for (var i = 0; i < officers.length; i++) {
-    avg.LDR += officers[i].LDR;
-    avg.WAR += officers[i].WAR;
-    avg.INT += officers[i].INT;
-    avg.POL += officers[i].POL;
-    avg.CHR += officers[i].CHR;
+	avg.LDR += officers[i].LDR;
+	avg.WAR += officers[i].WAR;
+	avg.INT += officers[i].INT;
+	avg.POL += officers[i].POL;
+	avg.CHR += officers[i].CHR;
 }
 for (var key in avg) avg[key] = (avg[key] / officers.length).toFixed(2);
 avg;
@@ -25,7 +25,7 @@ total.slice(0, 30);
 // Construct array of cities with speciality
 var special = [];
 for (var i = 0; i < cities.length; i++) {
-    if (cities[i].Speciality != '-') special.push([cities[i].Name, unitTypes[cities[i].Speciality].Name]);
+	if (cities[i].Speciality != '-') special.push([cities[i].Name, unitTypes[cities[i].Speciality].Name]);
 }
 special;
 
@@ -38,13 +38,13 @@ openPlayerCard();
 var famous = ['Cao Cao', 'Xiahou Yuan', 'Liu Bei', 'Guan Yu', 'Sun Ce', 'Zhou Yu', 'Lu Bu', 'Zhang Liao', 'Gongsun Zan', 'Zhao Yun', 'Ma Teng', 'Ma Chao'];
 famous = famous.map((x) => [getOfficerIndexByName(x), x]);
 famous = famous.map(function (x) {
-    return {
-    	'Index': x[0],
-    	'Name': x[1],
-    	'Atk': calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR).toFixed(1),
-    	'Def': calculateDefense(officers[x[0]].LDR, officers[x[0]].INT).toFixed(1),
-    	'Avg': ((calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR) + calculateDefense(officers[x[0]].LDR, officers[x[0]].INT)) / 2).toFixed(1)
-    };
+	return {
+		'Index': x[0],
+		'Name': x[1],
+		'Atk': calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR).toFixed(1),
+		'Def': calculateDefense(officers[x[0]].LDR, officers[x[0]].INT).toFixed(1),
+		'Avg': ((calculateAttack(officers[x[0]].LDR, officers[x[0]].WAR) + calculateDefense(officers[x[0]].LDR, officers[x[0]].INT)) / 2).toFixed(1)
+	};
 });
 for (var i = 0; i < famous.length; i++) {
 	for (var j = 0; j < abilities.length; j++) {
@@ -53,7 +53,7 @@ for (var i = 0; i < famous.length; i++) {
 			break;
 		}
 	}
-    delete famous[i]['Index'];
+	delete famous[i]['Index'];
 }
 famous.sort((a, b) => b['Avg'] - a['Avg']);
 
