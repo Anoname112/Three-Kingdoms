@@ -1096,8 +1096,8 @@ function openInfoCard (mode, index, sort) {
 }
 
 // Import card
-function importData () {
-	var data = getElement('importTextarea') ? getElement('importTextarea').value : '';
+function importData (data) {
+	if (data ===  undefined) data = getElement('importTextarea') ? getElement('importTextarea').value : '';
 	
 	if (data.length == 0) return;
 	
@@ -1130,10 +1130,25 @@ function openImportCard () {
 					<td>
 						<input type="button" id="importButton" onclick="importData()" value="Import">
 						<input type="button" id="importCancel" onclick="closeCard(importCard)" value="Cancel">
+						<label for="importUpload" class="importUpload">Upload</label>
+						<input type="file" id="importUpload" accept=".txt">
 					</td>
 				</tr>
 			</table>
 		</div>`;
+	
+	const importUpload = getElement('importUpload');
+	importUpload.addEventListener('change', (event) => {
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		
+		reader.onload = (event) => {
+			const data = event.target.result;
+			importData(data);
+		};
+		
+		reader.readAsText(file);
+	});
 	
 	importCard.style.visibility = 'visible';
 	getElement('importTextarea').focus();
