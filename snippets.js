@@ -1,3 +1,11 @@
+// Give the player's units maximum Strength and Morale
+for (var i = 0; i < units.length; i++) {
+	if (units[i].Force == playerForce) {
+		units[i].Strength = strengthLimit;
+		units[i].Morale = moraleLimit;
+	}
+}
+
 // Get average stats of officers
 var avg = {'LDR': 0, 'WAR': 0, 'INT': 0, 'POL': 0, 'CHR': 0};
 for (var i = 0; i < officers.length; i++) {
