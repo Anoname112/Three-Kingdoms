@@ -592,6 +592,14 @@ function copyData () {
 	navigator.clipboard.writeText(JSON.stringify(localStorage));
 }
 
+function downloadData () {
+	const link = document.createElement("a");
+	const file = new Blob([JSON.stringify(localStorage)], { type: 'text/plain' });
+	link.href = URL.createObjectURL(file);
+	link.download = "savedata.txt";
+	link.click();
+}
+
 function saveData () {
 	localStorage.setItem('scenario', JSON.stringify(scenario));
 	localStorage.setItem('date', JSON.stringify(date));

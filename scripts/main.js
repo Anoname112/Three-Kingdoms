@@ -21,6 +21,7 @@ var playSvg;
 // 0: Picking scenario, 1: Playing
 var gState;
 var copyString;
+var downloadString;
 var battles;
 var battleImages;
 var damages;
@@ -616,6 +617,7 @@ window.onload = function () {
 	mousePos = new Point.Zero();
 	startTimestamp = mapAnimationStep = gState = 0;
 	copyString = 'COPY DATA';
+	downloadString = 'DOWNLOAD DATA';
 	battles = [];
 	battleImages = [];
 	damages = [];
@@ -842,8 +844,16 @@ function onMouseClick (e) {
 			draw();
 		}
 		
-		// Load data
 		if (localStorage['player']) {
+			// Download data
+			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+			if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
+				downloadData();
+				downloadString = 'DATA DOWNLOADED';
+				draw();
+			}
+			
+			// Load data
 			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 			if (eX >= x && eX < x + scenarioWidth && eY >= y && eY < y + buttonHeight) {
 				loadDataFromStorage();
@@ -1578,8 +1588,16 @@ function draw () {
 		ctx.fillStyle = fontDark;
 		drawMessage(copyString, x + buttonPad, y + buttonHeight / 2 + 1);
 		
-		// Load data
 		if (localStorage['player']) {
+			// Download data
+			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
+			fillRect(x, y, w, h, highlightColor);
+			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
+			drawRect(x, y, w, h, fontDark);
+			ctx.fillStyle = fontDark;
+			drawMessage(downloadString, x + buttonPad, y + buttonHeight / 2 + 1);
+			
+			// Load data
 			y = canvasPad + (line * buttonHeight) + (++line * buttonMargin);
 			fillRect(x, y, w, h, highlightColor);
 			if (mousePos.X >= x && mousePos.X < x + w && mousePos.Y >= y && mousePos.Y < y + h) fillRect(x, y, w, h, buttonColor);
