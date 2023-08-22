@@ -1,6 +1,6 @@
 'IMPORT DATA' is used to import external save data
 'COPY DATA' is used to copy save data to the clipboard
-'DOWNLOAD DATA' is used to download save data as .txt file
+'DOWNLOAD DATA' is used to download save data as a .txt file
 'LOAD DATA' is used to load save data and continue playing
 
 OFFICER AND UNIT
