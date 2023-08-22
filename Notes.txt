@@ -9,6 +9,7 @@ DONE:
 - Tech impact into speciality
 - Other fonts
 - Make gameplay guide
+- Download save file
 
 TO DO:
 - Transfer Gold & Food
@@ -16,4 +17,3 @@ TO DO:
 - Optimize drawing
 - Create Officer
 - Create new Force
-- Download save file
