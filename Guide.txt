@@ -34,10 +34,10 @@ Food harvest is based on Farm.
 
 Speciality is activated when Tech reaches maximum value.
 
-Order is reduced when Farm, Trade, Tech, or Defense is improved.
+Order is reduced when Farm, Trade, Tech, or Defense are improved.
 When Order gets too low, Revolt might occur and reduce multiple city stats.
 Maintain Order to avoid Revolt.
 
 Order is also reduced when city is under attack.
 
-City is taken by the attacker when the attacker successfully reduces city Defense to 0.
+City is taken by the attacker when the attacker successfully reduces city's Defense to 0.
