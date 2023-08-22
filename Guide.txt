@@ -1,3 +1,5 @@
+MAIN MENU
+=========
 'IMPORT DATA' is used to import external save data
 'COPY DATA' is used to copy save data to the clipboard
 'DOWNLOAD DATA' is used to download save data as a .txt file
