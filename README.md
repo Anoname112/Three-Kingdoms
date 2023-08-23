@@ -1,5 +1,5 @@
 # Three-Kingdoms
-Tactical simulation grand strategy game based on the Romance of the Three Kingdoms. Instead of keeping save data in a database, the game provides players with a variety of tools to manage their own save data, such as: COPY DATA, DOWNLOAD DATA, and IMPORT DATA. This approach gives players more control over their save data and allows them to easily transfer it between devices.
+Tactical simulation grand strategy game based on the Romance of the Three Kingdoms. Instead of keeping save data in a database, the game provides players with a variety of tools to manage their own save data, such as: Copy Data, Download Data, and Import Data. This approach gives players more control over their save data and allows them to easily transfer it between devices.
 
 Live Demo: https://three-kingdoms.vercel.app/
 
