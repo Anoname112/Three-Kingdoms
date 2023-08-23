@@ -541,9 +541,14 @@ function calculatedStatsTable (elementId, LDR, WAR, INT) {
 		</table>`;
 }
 
-function dismissObjective (officerIndex) {
+function dismissOfficer (officerIndex) {
 	officers[officerIndex].Objective = '-';
 	officers[officerIndex].Progress = '-';
+}
+
+function dismissUnit (unitIndex) {
+	units[unitIndex].Objective = '-';
+	units[unitIndex].Progress = '-';
 }
 
 function deployedCityCollision (officerIndex) {

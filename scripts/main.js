@@ -1123,53 +1123,51 @@ function animateMap (timestamp) {
 							if (cities[index].cFarm > cities[index].Farm) cities[index].cFarm = cities[index].Farm;
 							cities[index].cOrder -= orderDistrubtion;
 							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Trade':
 							cities[index].cTrade += floor(officers[i].POL * devMultiplier);
 							if (cities[index].cTrade > cities[index].Trade) cities[index].cTrade = cities[index].Trade;
 							cities[index].cOrder -= orderDistrubtion;
 							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Tech':
 							cities[index].cTech += floor(officers[i].INT * devMultiplier);
 							if (cities[index].cTech > cities[index].Tech) cities[index].cTech = cities[index].Tech;
 							cities[index].cOrder -= orderDistrubtion;
 							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Defense':
 							cities[index].cDefense += floor(officers[i].WAR * devMultiplier);
 							if (cities[index].cDefense > cities[index].Defense) cities[index].cDefense = cities[index].Defense;
 							cities[index].cOrder -= orderDistrubtion;
 							if (cities[index].cOrder < 0) cities[index].cOrder = 0;
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Order':
 							cities[index].cOrder += floor(officers[i].LDR * devMultiplier);
 							if (cities[index].cOrder > orderLimit) cities[index].cOrder = orderLimit;
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Establish':
 							units.push(new Unit(getNewUnitId(), index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-', null, null, 0));
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Recurit':
 							index = getUnitIndexById(index);
 							units[index].Strength += floor(officers[i].CHR * recuritMultiplier);
 							if (units[index].Strength > strengthLimit) units[index].Strength = strengthLimit;
-							units[index].Objective = '-';
-							units[index].Progress = '-';
-							dismissObjective(i);
+							dismissUnit(index);
+							dismissOfficer(i);
 							break;
 						case 'Drill':
 							index = getUnitIndexById(index);
 							units[index].Morale += floor(officers[i].LDR * drillMultiplier);
 							if (units[index].Morale > moraleLimit) units[index].Morale = moraleLimit;
-							units[index].Objective = '-';
-							units[index].Progress = '-';
-							dismissObjective(i);
+							dismissUnit(index);
+							dismissOfficer(i);
 							break;
 						case 'Employ':
 							if (Math.random() * officers[i].CHR > Math.random() * getForceDiligence(getForceIndexById(officers[index].Force))) {
@@ -1177,8 +1175,7 @@ function animateMap (timestamp) {
 									if (officers[index].Objective[0] == 'March') dismissDeployed(index);
 									else if (officers[index].Objective[0] == 'Recurit' || officers[index].Objective[0] == 'Drill') {
 										var unitIndex = getUnitIndexById(officers[index].Objective[1]);
-										units[unitIndex].Objective = '-';
-										units[unitIndex].Progress = '-';
+										dismissUnit(unitIndex);
 									}
 								}
 								officers[index].Force = officers[i].Force;
@@ -1201,11 +1198,11 @@ function animateMap (timestamp) {
 						case 'Transfer':
 							officers[i].City = index;
 							officers[i].Position = getCityPosition(index);
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 						case 'Return':
 							officers[i].Position = getCityPosition(index);
-							dismissObjective(i);
+							dismissOfficer(i);
 							break;
 					}
 				}
@@ -1222,13 +1219,11 @@ function animateMap (timestamp) {
 						case 'Transfer':
 							units[i].City = index;
 							units[i].Position = getCityPosition(index);
-							units[i].Objective = '-';
-							units[i].Progress = '-';
+							dismissUnit(i);
 							break;
 						case 'Return':
 							units[i].Position = getCityPosition(index);
-							units[i].Objective = '-';
-							units[i].Progress = '-';
+							dismissUnit(i);
 							break;
 					}
 				}
@@ -1354,8 +1349,7 @@ function animateMap (timestamp) {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
 											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
-											units[unitIndex].Objective = '-';
-											units[unitIndex].Progress = '-';
+											dismissUnit(unitIndex);
 										}
 									}
 									officers[j].City = nearestCities[1];
@@ -1368,8 +1362,7 @@ function animateMap (timestamp) {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
 										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
 											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
-											units[unitIndex].Objective = '-';
-											units[unitIndex].Progress = '-';
+											dismissUnit(unitIndex);
 										}
 									}
 									officers[j].Force = officers[i].Force;
@@ -1383,10 +1376,7 @@ function animateMap (timestamp) {
 						for (var j = 0; j < units.length; j++) {
 							if (units[j].City == cityCollision) {
 								units[j].Force = officers[i].Force;
-								if (units[j].Objective != '-' && units[j].Objective[0] != 'Return') {
-									units[j].Objective = '-';
-									units[j].Progress = '-';
-								}
+								if (units[j].Objective != '-' && units[j].Objective[0] != 'Return') dismissUnit(j);
 							}
 						}
 						

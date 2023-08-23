@@ -707,11 +707,9 @@ function personel (cityIndex, objective) {
 				else {
 					if (officer.Objective[0] == 'Recurit' || officer.Objective[0] == 'Drill') {
 						var unitIndex = getUnitIndexById(officer.Objective[1]);
-						units[unitIndex].Objective = '-';
-						units[unitIndex].Progress = '-';
+						dismissUnit(unitIndex);
 					}
-					officer.Objective = '-';
-					officer.Progress = '-';
+					dismissOfficer(choosenOfficers[i]);
 				}
 			}
 			
