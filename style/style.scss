@@ -74,13 +74,12 @@ select {
 }
 
 .importUpload {
-    display: inline-block;
+	display: inline-block;
 	border: 1px solid #767676;
 	border-radius: 1px;
-    padding: 2px 6px;
+	padding: 2px 6px;
 	background-color: #0F8223;
 	color: $titleColor;
-    cursor: pointer;
 }
 
 .importUpload:hover {
