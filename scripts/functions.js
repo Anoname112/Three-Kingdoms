@@ -541,13 +541,6 @@ function calculatedStatsTable (elementId, LDR, WAR, INT) {
 		</table>`;
 }
 
-function assignDevObjective (officerIndex, objective, progress) {
-	officers[officerIndex].Objective = objective;
-	officers[officerIndex].Progress = progress == null ? 0 : progress;
-	
-	cities[objective[1]].Gold -= devCost;
-}
-
 function dismissObjective (officerIndex) {
 	officers[officerIndex].Objective = '-';
 	officers[officerIndex].Progress = '-';

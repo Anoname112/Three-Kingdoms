@@ -1466,19 +1466,19 @@ function playClick (e) {
 						if (Math.random() * 100 < diligence) {
 							switch (parseInt(Math.random() * (viableUnits.length > 0 ? 11 : 8))) {
 								case 0:
-									if (city.cFarm < city.Farm && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Farm', enemyCities[j]]);
+									if (city.cFarm < city.Farm && city.Gold >= devCost) assignDevObjective('Farm', viableOfficers[k], enemyCities[j]);
 									break;
 								case 1:
-									if (city.cTrade < city.Trade && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Trade', enemyCities[j]]);
+									if (city.cTrade < city.Trade && city.Gold >= devCost) assignDevObjective('Trade', viableOfficers[k], enemyCities[j]);
 									break;
 								case 2:
-									if (city.cTech < city.Tech && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Tech', enemyCities[j]]);
+									if (city.cTech < city.Tech && city.Gold >= devCost) assignDevObjective('Tech', viableOfficers[k], enemyCities[j]);
 									break;
 								case 3:
-									if (city.cDefense < city.Defense && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Defense', enemyCities[j]]);
+									if (city.cDefense < city.Defense && city.Gold >= devCost) assignDevObjective('Defense', viableOfficers[k], enemyCities[j]);
 									break;
 								case 4: case 5:
-									if (city.cOrder < orderLimit && city.Gold >= devCost) assignDevObjective(viableOfficers[k], ['Order', enemyCities[j]]);
+									if (city.cOrder < orderLimit && city.Gold >= devCost) assignDevObjective('Order', viableOfficers[k], enemyCities[j]);
 									break;
 								case 6:
 									if (unitCount < unitLimit && city.Gold >= getCityHighestEstablishCost(enemyCities[j])) {
@@ -1506,10 +1506,7 @@ function playClick (e) {
 									if (recuritable && city.Gold >= getCityHighestRecuritCost(enemyCities[j])) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Strength < strengthLimit && units[viableUnits[l]].Objective == '-') {
-												officers[viableOfficers[k]].Objective = ['Recurit', units[viableUnits[l]].Id];
-												officers[viableOfficers[k]].Progress = 0;
-												units[viableUnits[l]].Objective = ['Recurit', viableOfficers[k]];
-												units[viableUnits[l]].Progress = 0;
+												assignOfficerUnit('Recurit', viableOfficers[k], viableUnits[l]);
 												
 												city.Gold -= unitTypes[units[viableUnits[l]].Type].Cost * recuritCostMultiplier;
 												break;
@@ -1521,10 +1518,7 @@ function playClick (e) {
 									if (drillable) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Morale < moraleLimit && units[viableUnits[l]].Objective == '-') {
-												officers[viableOfficers[k]].Objective = ['Drill', units[viableUnits[l]].Id];
-												officers[viableOfficers[k]].Progress = 0;
-												units[viableUnits[l]].Objective = ['Drill', viableOfficers[k]];
-												units[viableUnits[l]].Progress = 0;
+												assignOfficerUnit('Drill', viableOfficers[k], viableUnits[l]);
 												break;
 											}
 										}

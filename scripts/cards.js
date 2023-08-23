@@ -383,6 +383,14 @@ function openMarchCard (cityIndex) {
 	else getElement('source').focus();
 }
 
+// Dev Card
+function assignDevObjective (objective, officerIndex, cityIndex, progress) {
+	officers[officerIndex].Objective = [objective, cityIndex];
+	officers[officerIndex].Progress = progress == null ? 0 : progress;
+	
+	cities[cityIndex].Gold -= devCost;
+}
+
 // Dev card
 function develop (cityIndex, objective) {
 	if (Number.isInteger(cityIndex) && (objective == 'Farm' || objective == 'Trade' || objective == 'Tech' || objective == 'Defense' || objective == 'Order')) {
@@ -393,12 +401,7 @@ function develop (cityIndex, objective) {
 		
 		var totalCost = devOfficers.length * devCost;
 		if (devOfficers.length > 0 && cities[cityIndex].Gold >= totalCost) {
-			for (var i = 0; i < devOfficers.length; i++) {
-				officers[devOfficers[i]].Objective = [objective, cityIndex];
-				officers[devOfficers[i]].Progress = 0;
-			}
-			
-			cities[cityIndex].Gold -= totalCost;
+			for (var i = 0; i < devOfficers.length; i++) assignDevObjective(objective, devOfficers[i], cityIndex);
 			
 			closeCard(devCard);
 			openInfoCard('City', cityIndex);
@@ -480,6 +483,14 @@ function openDevCard (cityIndex, objective) {
 	}
 }
 
+// Unit Card
+function assignOfficerUnit (objective, officerIndex, unitIndex) {
+	officers[officerIndex].Objective = [objective, units[unitIndex].Id];
+	officers[officerIndex].Progress = 0;
+	units[unitIndex].Objective = [objective, officerIndex];
+	units[unitIndex].Progress = 0;
+}
+
 // Unit card
 function military (cityIndex, objective) {
 	if (objective == 'Transfer') {
@@ -504,16 +515,16 @@ function military (cityIndex, objective) {
 	}
 	else {
 		var officer = getElement('officer') ? getElement('officer').value : '';
-		officer = getOfficerIndexByName(officer);
-		if (officer != null) {
+		var officerIndex = getOfficerIndexByName(officer);
+		if (officerIndex != null) {
 			if (getElement('unitType')) {
 				// Establish
 				var unitTypeIndex = parseInt(getElement('unitType').value);
 				
 				var cost = unitTypes[unitTypeIndex].Cost;
 				if (cities[cityIndex].Gold >= cost) {
-					officers[officer].Objective = [objective, unitTypeIndex];
-					officers[officer].Progress = 0;
+					officers[officerIndex].Objective = [objective, unitTypeIndex];
+					officers[officerIndex].Progress = 0;
 					
 					cities[cityIndex].Gold -= cost;
 					
@@ -528,10 +539,7 @@ function military (cityIndex, objective) {
 				
 				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritCostMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
-					officers[officer].Objective = [objective, units[unitIndex].Id];
-					officers[officer].Progress = 0;
-					units[unitIndex].Objective = [objective, officer];
-					units[unitIndex].Progress = 0;
+					assignOfficerUnit(objective, officerIndex, unitIndex);
 					
 					cities[cityIndex].Gold -= cost;
 					
