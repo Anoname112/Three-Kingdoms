@@ -1,3 +1,5 @@
+//Give enemies units maximum Strength and Morale
+
 // Give player's units maximum Strength and Morale
 for (var i = 0; i < units.length; i++) {
 	if (units[i].Force == playerForce) {
