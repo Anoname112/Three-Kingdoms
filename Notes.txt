@@ -10,6 +10,7 @@ DONE:
 - Other fonts
 - Make gameplay guide
 - Download save file
+- Upload save file
 
 TO DO:
 - Transfer Gold & Food
