@@ -1,4 +1,12 @@
-//Give enemies units maximum Strength and Morale
+// Give certain force's units maximum Strength and Morale
+for (var i = 0; i < units.length; i++) {
+	if (units[i].Force == officers[getOfficerIndexByName('Yuan Shao')].Force) {
+		units[i].Strength = strengthLimit;
+		units[i].Morale = moraleLimit;
+	}
+}
+
+// Give enemies units maximum Strength and Morale
 for (var i = 0; i < units.length; i++) {
 	if (units[i].Force != playerForce) {
 		units[i].Strength = strengthLimit;
