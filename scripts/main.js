@@ -1637,6 +1637,7 @@ function draw () {
 		// Draw deployed units
 		var w = squareSize - unitPad * 2;
 		var h = squareSize - unitPad * 2;
+		var dotSize = w / 3;
 		for (var i = 0; i < officers.length; i++) {
 			if (officers[i].Objective[0] == 'March') {
 				x = canvasPad + officers[i].Position.X * squareSize + unitPad;
@@ -1655,6 +1656,8 @@ function draw () {
 					y -= diff.Y * squareSize * mapAnimationStep;
 				}
 				drawImage(unitImage, x, y, w, h);
+				// Dot indicator
+				fillRect(x + dotSize, y - dotSize, dotSize, dotSize, forces[getForceIndexById(officers[i].Force)].Color);
 				
 				// Battle indicator on map
 				if (battles.length > 0 && (i == battles[0]['Commander0'] || i == battles[0]['Commander1'])) drawImage(downImage, x, y - h, w, h);
