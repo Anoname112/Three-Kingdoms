@@ -399,8 +399,7 @@ function develop (cityIndex, objective) {
 			if (getElement('officer' + i) && getElement('officer' + i).checked) devOfficers.push(i);
 		}
 		
-		var totalCost = devOfficers.length * devCost;
-		if (devOfficers.length > 0 && cities[cityIndex].Gold >= totalCost) {
+		if (devOfficers.length > 0 && cities[cityIndex].Gold >= devOfficers.length * devCost) {
 			for (var i = 0; i < devOfficers.length; i++) assignDevObjective(objective, devOfficers[i], cityIndex);
 			
 			closeCard(devCard);

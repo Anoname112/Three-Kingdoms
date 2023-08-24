@@ -522,7 +522,7 @@ window.onload = function () {
 	hidden.style.visibility = 'hidden';
 	hidden.innerHTML += `<audio id="clickSound"><source src="bgm/click.mp3" /></audio>
 		<audio id="confirmSound"><source src="bgm/confirm.mp3" /></audio>
-		<audio id="mainSound"><source src="bgm/main` + floor(Math.random() * 2) + `.mp3" /></audio>
+		<audio id="mainSound"><source src="bgm/main` + floor(Math.random() * 4) + `.mp3" /></audio>
 		<audio id="battleSound"><source src="bgm/battle.mp3" /></audio>`;
 	document.body.appendChild(hidden);
 	// Prepare audio
