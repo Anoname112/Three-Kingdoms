@@ -412,13 +412,14 @@ function develop (cityIndex, objective) {
 	}
 }
 
+// Dev card
 function transferResource (cityIndex, objective) {
 	var targetIndex = getCityIndexByName(getElement('target').value);
 	var transferGold = parseInt(isNumeric(getElement('gold').value) ? getElement('gold').value : 0);
 	var transferFood = parseInt(isNumeric(getElement('food').value) ? getElement('food').value : 0);
 	
 	// Check if the target is valid, then if either gold or food transfer value valid (or both valid),
-	// then also make sure target gold and food doesn't exceed the maximum capacity after transfer
+	// then also make sure target gold and food doesn't exceed the maximum capacity after the transfer
 	if (targetIndex && ((transferGold > 0 && transferGold <= cities[cityIndex].Gold) || (transferFood > 0 && transferFood <= cities[cityIndex].Food)) &&
 		cities[targetIndex].Gold + transferGold <= maxGold && cities[targetIndex].Food + transferFood <= maxFood) {
 		
