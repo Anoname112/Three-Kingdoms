@@ -59,6 +59,7 @@ function openCityCard (cityIndex, select) {
 	var buttons = '';
 	if (city.Force == playerForce) {
 		backColor = 'allyColor';
+		var transferPartners = getCityTransferPartners(cityIndex);
 		var viableOfficers = getCityViableOfficers(cityIndex);
 		var viableUnits = getCityViableUnits(cityIndex);
 		var unitCount = getCityUnitCount(cityIndex, true);
@@ -76,6 +77,7 @@ function openCityCard (cityIndex, select) {
 		var techDisabled = viableOfficers.length > 0 && city.cTech < city.Tech && city.Gold >= devCost ? '' : ' disabled';
 		var defenseDisabled = viableOfficers.length > 0 && city.cDefense < city.Defense && city.Gold >= devCost ? '' : ' disabled';
 		var orderDisabled = viableOfficers.length > 0 && city.cOrder < orderLimit && city.Gold >= devCost ? '' : ' disabled';
+		var rTransferDisabled = transferPartners.length > 0 ? '' : ' disabled';
 		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getCityLowestEstablishCost(cityIndex) ? '' : ' disabled';
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getCityLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
@@ -93,6 +95,7 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Tech" onclick="openDevCard(` + cityIndex + `, 'Tech'); playAudio(clickSound);"` + techDisabled + `>
 					<input type="button" value="Defense" onclick="openDevCard(` + cityIndex + `, 'Defense'); playAudio(clickSound);"` + defenseDisabled + `>
 					<input type="button" value="Order" onclick="openDevCard(` + cityIndex + `, 'Order'); playAudio(clickSound);"` + orderDisabled + `>
+					<input type="button" value="Transfer" onclick="openDevCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + rTransferDisabled + `>
 				</div>
 			</div>
 			<div class="buttonsGroup">
@@ -409,6 +412,27 @@ function develop (cityIndex, objective) {
 	}
 }
 
+function transferResource (cityIndex, objective) {
+	var targetIndex = getCityIndexByName(getElement('target').value);
+	var transferGold = parseInt(isNumeric(getElement('gold').value) ? getElement('gold').value : 0);
+	var transferFood = parseInt(isNumeric(getElement('food').value) ? getElement('food').value : 0);
+	
+	// Check if the target is valid, then if either gold or food transfer value valid (or both valid),
+	// then also make sure target gold and food doesn't exceed the maximum capacity after transfer
+	if (targetIndex && ((transferGold > 0 && transferGold <= cities[cityIndex].Gold) || (transferFood > 0 && transferFood <= cities[cityIndex].Food)) &&
+		cities[targetIndex].Gold + transferGold <= maxGold && cities[targetIndex].Food + transferFood <= maxFood) {
+		
+		cities[cityIndex].Gold -= transferGold;
+		cities[cityIndex].Food -= transferFood;
+		cities[targetIndex].Gold += transferGold;
+		cities[targetIndex].Food += transferFood;
+		
+		closeCard(devCard);
+		openInfoCard('City', cityIndex);
+		draw();
+	}
+}
+
 // Dev card
 function officersSelect () {
 	getElement('devStats').innerHTML = '';
@@ -425,60 +449,106 @@ function officersSelect () {
 function openDevCard (cityIndex, objective) {
 	closeCard(cityCard);
 	
-	var sort = objective == 'Farm' || objective == 'Trade' ? 'POL' : (objective == 'Tech' ? 'INT' : (objective == 'Defense' ? 'WAR' : (objective == 'Order' ? 'LDR' : null)));
-	var viableOfficers = getCityViableOfficers(cityIndex, sort);
-	if (viableOfficers.length > 0) {
-		var city = cities[cityIndex];
-		
-		var objectiveHTML = '';
-		switch (objective) {
-			case 'Farm': objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>'; break;
-			case 'Trade': objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>'; break;
-			case 'Tech': objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>'; break;
-			case 'Defense': objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>'; break;
-			case 'Order': objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>'; break;
+	if (objective == 'Transfer') {
+		var transferPartners = getCityTransferPartners(cityIndex);
+		if (transferPartners.length > 0) {
+			var partnerList = '';
+			for (var i = 0; i < transferPartners.length; i++) partnerList += '<option value="' + cities[transferPartners[i]].Name + '">';
+			
+			devCard.innerHTML = `<datalist id="partnerList">` + partnerList + `</datalist><div class="title allyColor">` + objective + `</div>
+				<div class="devContent">
+					<table>
+						<tr>
+							<td>City: <input type="text" value="` + cities[cityIndex].Name + `" readonly></td>
+							<td>Target: <input type="text" id="target" list="partnerList"></td>
+						</tr>
+						<tr>
+							<td>Gold: <input type="text" id="gold" value="0"></td>
+							<td>
+								<input type="button" onclick="setTransferValue('gold', '1000')" value="1000">
+								<input type="button" onclick="setTransferValue('gold', '5000')" value="5000">
+								<input type="button" onclick="setTransferValue('gold', '10000')" value="10000">
+								<input type="button" onclick="setTransferValue('gold', '` + cities[cityIndex].Gold + `')" value="Max">
+							</td>
+						</tr>
+						<tr>
+							<td>Food: <input type="text" id="food" value="0"></td>
+							<td>
+								<input type="button" onclick="setTransferValue('food', '10000')" value="10000">
+								<input type="button" onclick="setTransferValue('food', '50000')" value="50000">
+								<input type="button" onclick="setTransferValue('food', '100000')" value="100000">
+								<input type="button" onclick="setTransferValue('food', '` + cities[cityIndex].Food + `')" value="Max">
+							</td>
+						</tr>
+						<tr class="center">
+							<td colspan="2">
+								<input type="button" value="` + objective + `" onclick="transferResource(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+								<input type="button" value="Cancel" onclick="closeCard(devCard); playAudio(clickSound);">
+							</td>
+						</tr>
+					</table>
+				</div>`;
+			
+			devCard.style.visibility = 'visible';
+			getElement('target').focus();
 		}
-		
-		var officersHTML = '';
-		for (var i = 0; i < viableOfficers.length; i++) {
-			var officer = officers[viableOfficers[i]];
-			officersHTML += `<label for="officer` + viableOfficers[i] + `">
-					<input type="checkbox" id="officer` + viableOfficers[i] + `" onclick="officersSelect()">
-					<div class="officerCB">` + officer.Name + `</div><div>`;
+	}
+	else {
+		var sort = objective == 'Farm' || objective == 'Trade' ? 'POL' : (objective == 'Tech' ? 'INT' : (objective == 'Defense' ? 'WAR' : (objective == 'Order' ? 'LDR' : null)));
+		var viableOfficers = getCityViableOfficers(cityIndex, sort);
+		if (viableOfficers.length > 0) {
+			var city = cities[cityIndex];
+			
+			var objectiveHTML = '';
 			switch (objective) {
-				case 'Farm': officersHTML += officer.POL; break;
-				case 'Trade': officersHTML += officer.POL; break;
-				case 'Tech': officersHTML += officer.INT; break;
-				case 'Defense': officersHTML += officer.WAR; break;
-				case 'Order': officersHTML += officer.LDR; break;
-				default: break;
+				case 'Farm': objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>'; break;
+				case 'Trade': objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>'; break;
+				case 'Tech': objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>'; break;
+				case 'Defense': objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>'; break;
+				case 'Order': objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>'; break;
 			}
-			officersHTML += `</div>
-				</label>`;
+			
+			var officersHTML = '';
+			for (var i = 0; i < viableOfficers.length; i++) {
+				var officer = officers[viableOfficers[i]];
+				officersHTML += `<label for="officer` + viableOfficers[i] + `">
+						<input type="checkbox" id="officer` + viableOfficers[i] + `" onclick="officersSelect()">
+						<div class="officerCB">` + officer.Name + `</div><div>`;
+				switch (objective) {
+					case 'Farm': officersHTML += officer.POL; break;
+					case 'Trade': officersHTML += officer.POL; break;
+					case 'Tech': officersHTML += officer.INT; break;
+					case 'Defense': officersHTML += officer.WAR; break;
+					case 'Order': officersHTML += officer.LDR; break;
+					default: break;
+				}
+				officersHTML += `</div>
+					</label>`;
+			}
+			
+			devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
+				<div class="devContent">
+					<table>
+						<tr>
+							<td>City: <input type="text" value="` + city.Name + `" readonly></td>
+							<td>` + objectiveHTML + `</td>
+						</tr>
+						<tr>
+							<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
+							<td><div id="devStats"></div></td>
+						</tr>
+						<tr class="center">
+							<td colspan="2">
+								<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+								<input type="button" value="Cancel" onclick="closeCard(devCard); playAudio(clickSound);">
+							</td>
+						</tr>
+					</table>
+				</div>`;
+			
+			devCard.style.visibility = 'visible';
+			if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 		}
-		
-		devCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
-			<div class="devContent">
-				<table>
-					<tr>
-						<td>City: <input type="text" value="` + city.Name + `" readonly></td>
-						<td>` + objectiveHTML + `</td>
-					</tr>
-					<tr>
-						<td><div id="officersDiv" class="checkboxes">` + officersHTML + `</div></td>
-						<td><div id="devStats"></div></td>
-					</tr>
-					<tr class="center">
-						<td colspan="2">
-							<input type="button" value="` + objective + `" onclick="develop(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
-							<input type="button" value="Cancel" onclick="closeCard(devCard); playAudio(clickSound);">
-						</td>
-					</tr>
-				</table>
-			</div>`;
-		
-		devCard.style.visibility = 'visible';
-		if (officersHTML.length > 0) getElement('officersDiv').style.visibility = 'visible';
 	}
 }
 

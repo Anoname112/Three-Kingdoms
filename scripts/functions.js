@@ -174,6 +174,19 @@ function getCityPosition (cityIndex) {
 	return new Point(0, 0);
 }
 
+function getCityTransferPartners (cityIndex) {
+	var partners = [];
+	for (var i = 0; i < cities.length; i++) {
+		// Target city is not the same city and from the same force, also there is transferable resource and the target can receive it
+		if (cityIndex != i && cities[cityIndex].Force == cities[i].Force && ((cities[cityIndex].Gold > 0 && cities[i].Gold < maxGold) || (cities[cityIndex].Food > 0 && cities[i].Food < maxFood))) partners.push(i);
+	}
+	return partners;
+}
+
+function setTransferValue (resource, value) {
+	if (getElement(resource)) getElement(resource).value = value;
+}
+
 function getCityUnitTypes (cityIndex) {
 	var types = [];
 	for (var i = 0; i < unitTypes.length; i++) {
