@@ -26,9 +26,11 @@ var battles;
 var battleImages;
 var damages;
 var mousePos;
+var infoIconHover;
 var startTimestamp;
 var mapAnimationStep;
 var squareSize;
+var squareHalf;
 var mapSize;
 var buttonHeight;
 var battleX;
@@ -544,6 +546,7 @@ window.onload = function () {
 	mapSize = window.innerHeight;
 	if (window.innerWidth < window.innerHeight) mapSize = window.innerWidth;
 	squareSize = mapSize / map.length;
+	squareHalf = squareSize / 2;
 	buttonHeight = squareSize + buttonPad * 2;
 	infoX = isPortrait ? canvasPad : canvasPad * 2 + mapSize;
 	infoY = isPortrait ? canvasPad * 2 + mapSize : canvasPad;
@@ -615,6 +618,7 @@ window.onload = function () {
 	}
 	
 	mousePos = new Point.Zero();
+	infoIconHover = false;
 	startTimestamp = mapAnimationStep = gState = 0;
 	copyString = 'COPY DATA';
 	downloadString = 'DOWNLOAD DATA';
@@ -865,6 +869,13 @@ function onMouseClick (e) {
 		if (eX >= canvasPad && eX < canvasPad + mapSize && eY >= canvasPad && eY < canvasPad + mapSize) {
 			var indexX = parseInt((eX - canvasPad) / squareSize);
 			var indexY = parseInt((eY - canvasPad) / squareSize);
+			
+			// Clicked info icon
+			if (indexX == infoIconX && indexY == infoIconY) {
+				infoIconHover = !infoIconHover;
+				draw();
+				return;
+			}
 			
 			var clickedObjects = [];
 			// Clicked city
@@ -1528,6 +1539,7 @@ function playClick (e) {
 }
 
 function draw () {
+	console.log('d');
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
@@ -1627,8 +1639,12 @@ function draw () {
 					else {
 						var forceIndex = getForceIndexById(cities[index].Force);
 						fillRect(x, y, squareSize, squareSize, forces[forceIndex].Color);
+						if (infoIconHover) {
+							ctx.fillStyle = fontDark;
+							drawMessage(getCityViableOfficers(index).length + '/' + getCityOfficers(index).length, x + squareHalf, y + squareSize * 1.35, 'center');
+						}
 						ctx.fillStyle = getTextColor(forces[forceIndex].Color);
-						drawMessage(forces[forceIndex].Name[0], x + squareSize / 2, y + squareSize / 2 + 1, 'center');
+						drawMessage(forces[forceIndex].Name[0], x + squareHalf, y + squareHalf + 1, 'center');
 					}
 				}
 			}
@@ -1665,7 +1681,7 @@ function draw () {
 		}
 		
 		// Draw info icon
-		drawImage(infoImage, canvasPad + squareSize, canvasPad + squareSize, squareSize, squareSize);
+		drawImage(infoImage, canvasPad + (squareSize * infoIconX), canvasPad + (squareSize * infoIconY), squareSize, squareSize);
 		
 		// Draw battle scene
 		if (battles.length > 0) {
