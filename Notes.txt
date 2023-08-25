@@ -13,7 +13,7 @@ DONE:
 - City speciality
 - Tech impact into speciality
 - Transfer Gold & Food
-- Click (i) show officers in cities
+- Click (i) show officer count in cities
 
 TO DO:
 - Items
