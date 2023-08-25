@@ -1640,7 +1640,7 @@ function draw () {
 						fillRect(x, y, squareSize, squareSize, forces[forceIndex].Color);
 						if (infoIconHover) {
 							ctx.fillStyle = fontDark;
-							drawMessage(getCityViableOfficers(index).length + '/' + getCityOfficers(index).length, x + squareHalf, y + squareSize * 1.35, 'center');
+							drawMessage(getCityViableOfficers(index).length + '/' + getCityOfficers(index).length, x + squareHalf, y + squareSize * 1.37, 'center');
 						}
 						ctx.fillStyle = getTextColor(forces[forceIndex].Color);
 						drawMessage(forces[forceIndex].Name[0], x + squareHalf, y + squareHalf + 1, 'center');
