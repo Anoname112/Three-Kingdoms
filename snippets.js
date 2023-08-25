@@ -1,3 +1,12 @@
+// Distribute food evenly to each force's cities.
+var total = 0;
+var force = officers[getOfficerIndexByName('Cao Cao')].Force;
+var cityCount = getCities(force, 'force', false).length;
+for (var i = 0; i < cities.length; i++) if (cities[i].Force == force) total += cities[i].Food;
+var avg = parseInt(total / cityCount);
+var remains = total - (avg * cityCount);
+for (var i = 0; i < cities.length; i++) if (cities[i].Force == force) cities[i].Food = avg + (remains-- > 0 ? 1 : 0);
+
 // Give certain force's units maximum Strength and Morale
 for (var i = 0; i < units.length; i++) {
 	if (units[i].Force == officers[getOfficerIndexByName('Yuan Shao')].Force) {
