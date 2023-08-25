@@ -1,11 +1,9 @@
-GAME INFO
+MAIN MENU
 =========
 'IMPORT DATA' is used to import external save data.
 'COPY DATA' is used to copy save data to the clipboard.
 'DOWNLOAD DATA' is used to download save data as a .txt file.
 'LOAD DATA' is used to load save data and continue playing.
-
-Click the (i) icon to see the number of officers in each city. Click it again to hide the numbers.
 
 OFFICER AND UNIT
 ================
@@ -45,3 +43,8 @@ Maintain Order to avoid Revolt.
 Order is also reduced when city is under attack.
 
 City is taken by the attacker when the attacker successfully reduces city's Defense to 0.
+
+OTHERS
+======
+Click the (i) icon to see the number of officers in each city. Click it again to hide the numbers.
+During battle, click on the enemy unit to order your units to attack it.
