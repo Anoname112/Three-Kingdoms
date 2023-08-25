@@ -13,10 +13,10 @@ DONE:
 - City speciality
 - Tech impact into speciality
 - Transfer Gold & Food
+- Click (i) show officers in cities
 
 TO DO:
 - Items
 - Optimize drawing
 - Create Officer
 - Create new Force
-- Hover i show officers in cities (add guide)
