@@ -1539,7 +1539,6 @@ function playClick (e) {
 }
 
 function draw () {
-	console.log('d');
 	// Invalidate
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
