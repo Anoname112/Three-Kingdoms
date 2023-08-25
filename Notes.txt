@@ -1,5 +1,10 @@
 DONE:
+- Add more musics and compress them
+- Other fonts
+- Make gameplay guide
 - Custom buttons
+- Download save file
+- Upload save file
 - Damage and morale info
 - Enable abilities
 - Battle abilities info
@@ -7,16 +12,11 @@ DONE:
 - Target focus
 - City speciality
 - Tech impact into speciality
-- Other fonts
-- Make gameplay guide
-- Download save file
-- Upload save file
+- Transfer Gold & Food
 
 TO DO:
-- Transfer Gold & Food
 - Items
 - Optimize drawing
 - Create Officer
 - Create new Force
-- Add more musics and compress them
 - Hover i show officers in cities (add guide)
