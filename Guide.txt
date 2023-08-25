@@ -31,7 +31,7 @@ Deployed unit's DEF is calculated using mostly LDR and a little of INT.
 
 Damage in battle is influenced by unit's Morale, unit's ATK, and target's DEF.
 
-During battle, click on the enemy unit to order your units to attack it.
+During battle, click on the enemy unit to order your units to target it.
 
 CITY
 ====
