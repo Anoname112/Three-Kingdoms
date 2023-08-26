@@ -101,22 +101,15 @@ function giveAlpha (color, alpha) {
 }
 
 function sortOfficers (officerIndexes, sort) {
-	for (var i = 0; i < officerIndexes.length; i++) {
-		for (var j = i + 1; j < officerIndexes.length; j++) {
-			var swap = false;
-			switch (sort) {
-				case 'LDR': if (officers[officerIndexes[i]].LDR < officers[officerIndexes[j]].LDR) swap = true; break;
-				case 'WAR': if (officers[officerIndexes[i]].WAR < officers[officerIndexes[j]].WAR) swap = true; break;
-				case 'INT': if (officers[officerIndexes[i]].INT < officers[officerIndexes[j]].INT) swap = true; break;
-				case 'POL': if (officers[officerIndexes[i]].POL < officers[officerIndexes[j]].POL) swap = true; break;
-				case 'CHR': if (officers[officerIndexes[i]].CHR < officers[officerIndexes[j]].CHR) swap = true; break;
-			}
-			if (swap) {
-				var temp = officerIndexes[i];
-				officerIndexes[i] = officerIndexes[j];
-				officerIndexes[j] = temp;
-			}
+	for (var i = 1; i < officerIndexes.length; i++) {
+		var temp = officerIndexes[i];
+		var j = i - 1;
+		
+		while (j >= 0 && officers[officerIndexes[j]][sort] < officers[temp][sort]) {
+			officerIndexes[j + 1] = officerIndexes[j--];
 		}
+		
+		officerIndexes[j + 1] = temp;
 	}
 	return officerIndexes;
 }
