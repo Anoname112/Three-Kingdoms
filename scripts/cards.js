@@ -502,11 +502,8 @@ function openDevCard (cityIndex, objective) {
 			
 			var objectiveHTML = '';
 			switch (objective) {
-				case 'Farm': objectiveHTML += 'Farm: <input type="text" value="' + city.cFarm + '/' + city.Farm + '" readonly>'; break;
-				case 'Trade': objectiveHTML += 'Trade: <input type="text" value="' + city.cTrade + '/' + city.Trade + '" readonly>'; break;
-				case 'Tech': objectiveHTML += 'Tech: <input type="text" value="' + city.cTech + '/' + city.Tech + '" readonly>'; break;
-				case 'Defense': objectiveHTML += 'Defense: <input type="text" value="' + city.cDefense + '/' + city.Defense + '" readonly>'; break;
-				case 'Order': objectiveHTML += 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>'; break;
+				case 'Order': objectiveHTML = 'Order: <input type="text" value="' + city.cOrder + '/' + orderLimit + '" readonly>'; break;
+				default: objectiveHTML = objective + ': <input type="text" value="' + city['c' + objective] + '/' + city[objective] + '" readonly>';
 			}
 			
 			var officersHTML = '';
@@ -521,7 +518,6 @@ function openDevCard (cityIndex, objective) {
 					case 'Tech': officersHTML += officer.INT; break;
 					case 'Defense': officersHTML += officer.WAR; break;
 					case 'Order': officersHTML += officer.LDR; break;
-					default: break;
 				}
 				officersHTML += `</div>
 					</label>`;
@@ -700,8 +696,6 @@ function openUnitCard (cityIndex, objective) {
 						}
 					}
 					objectiveHTML += 'Unit: <select id="unit">' + options + '</select>';
-					break;
-				default:
 					break;
 			}
 			
