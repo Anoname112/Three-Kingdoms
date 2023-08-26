@@ -1,4 +1,4 @@
-// Distribute food evenly to each force's cities. Also works for cities[i].Gold
+// Distribute food evenly to each force's cities. This also works for cities[i].Gold
 var total = 0;
 var force = officers[getOfficerIndexByName('Cao Cao')].Force;
 var cityCount = getCities(force, 'force', false).length;
