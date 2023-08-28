@@ -5,6 +5,7 @@ DONE:
 - Custom buttons
 - Download save file
 - Upload save file
+- Drag Drop save file
 - Damage and morale info
 - Enable abilities
 - Battle abilities info
