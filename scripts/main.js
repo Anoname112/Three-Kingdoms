@@ -466,6 +466,8 @@ window.onload = function () {
 	// Prepare canvas
 	const ratio = window.devicePixelRatio;
 	canvas = getElement('myCanvas');
+	canvas.ondragover = onDragOver;
+	canvas.ondrop = onDrop;
 	canvas.onclick = onMouseClick;
 	canvas.onmousemove = onMouseMove;
 	canvas.width = window.innerWidth * ratio;
@@ -687,6 +689,15 @@ function applyScenario (name) {
 
 function onContextMenu (e) {
 	e.preventDefault();
+}
+
+function onDragOver (e) {
+	e.preventDefault();
+}
+
+function onDrop (e) {
+	e.preventDefault();
+	if (gState == 0 && startTimestamp == 0) importFile(e.dataTransfer.files[0]);
 }
 
 function onMouseMove (e) {

@@ -1207,18 +1207,7 @@ function openImportCard () {
 			</table>
 		</div>`;
 	
-	const importUpload = getElement('importUpload');
-	importUpload.addEventListener('change', (event) => {
-		const file = event.target.files[0];
-		const reader = new FileReader();
-		
-		reader.onload = (event) => {
-			const data = event.target.result;
-			importData(data);
-		};
-		
-		reader.readAsText(file);
-	});
+	getElement('importUpload').addEventListener('change', (event) => importFile(event.target.files[0]));
 	
 	importCard.style.visibility = 'visible';
 	getElement('importTextarea').focus();
