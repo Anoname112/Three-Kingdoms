@@ -675,13 +675,3 @@ function loadData (_scenario, _date, _player, _playerForce, _cities, _officers, 
 	playAudio(mainSound);
 	draw();
 }
-
-function importFile (file) {
-	const reader = new FileReader();
-	reader.onload = (event) => {
-		const data = event.target.result;
-		importData(data);
-	};
-	
-	reader.readAsText(file);
-}

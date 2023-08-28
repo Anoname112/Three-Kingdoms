@@ -1191,6 +1191,17 @@ function importData (data) {
 }
 
 // Import card
+function importFile (file) {
+	const reader = new FileReader();
+	reader.onload = (event) => {
+		const data = event.target.result;
+		importData(data);
+	};
+	
+	reader.readAsText(file);
+}
+
+// Import card
 function openImportCard () {
 	importCard.innerHTML = `<div class="title allyColor">Import</div>
 		<div class="importContent">
