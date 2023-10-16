@@ -957,7 +957,7 @@ function createCityTable (cityIndex) {
 			<tr><th colspan="2">` + forceName + `</th><th>Farm</th><td>` + city.cFarm + `/` + city.Farm + `</td></tr>
 			<tr><th>Gold</th><td>` + city.Gold + `</td><th>Trade</th><td>` + city.cTrade + `/` + city.Trade + `</td></tr>
 			<tr><th>Food</th><td>` + city.Food + `</td><th>Tech</th><td>` + city.cTech + `/` + city.Tech + `</td></tr>
-			<tr><th>Strength</th><td>` + getCityStrength(cityIndex) + `</td><th>Defense</th><td>` + city.cDefense + `/` + city.Defense + `</td></tr>
+			<tr><th>Strength</th><td>` + getCityStrength(cityIndex) + `/` + getCityStrength(cityIndex, true) + `</td><th>Defense</th><td>` + city.cDefense + `/` + city.Defense + `</td></tr>
 			<tr><th>Speciality</th><td>` + (city.Speciality == '-' ? '-' : unitTypes[parseInt(city.Speciality)].Name) + `</td><th>Order</th><td>` + city.cOrder + `/` + orderLimit + `</td></tr>
 		</table>`;
 }

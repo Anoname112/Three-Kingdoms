@@ -246,8 +246,8 @@ function getCityViableUnits (cityIndex) {
 	return viableUnits.sort((a, b) => units[a].Type - units[b].Type);
 }
 
-function getCityStrength (cityIndex) {
-	var viableUnits = getCityViableUnits(cityIndex);
+function getCityStrength (cityIndex, includeNonViable) {
+	var viableUnits = includeNonViable ? getCityUnits(cityIndex) : getCityViableUnits(cityIndex);
 	var strength = 0;
 	for (var i = 0; i < viableUnits.length; i++) strength += units[viableUnits[i]].Strength;
 	return strength;
