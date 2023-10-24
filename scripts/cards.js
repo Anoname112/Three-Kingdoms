@@ -82,6 +82,7 @@ function openCityCard (cityIndex, select) {
 		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getCityLowestRecuritCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
+		var uAutoDisabled = recuritDisabled == '' || drillDisabled == '' ? '' : ' disabled';
 		var employDisabled = viableOfficers.length > 0 && getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
 		var dismissDisabled = getCityNonViableOfficers(cityIndex, true).length > 0 ? '' : ' disabled';
 		var oTransferDisabled = viableOfficers.length > 0 && getCities(city.Force, 'force').length > 1 ? '' : ' disabled';
@@ -105,6 +106,7 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit'); playAudio(clickSound);"` + recuritDisabled + `>
 					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill'); playAudio(clickSound);"` + drillDisabled + `>
 					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + uTransferDisabled + `>
+					<input type="button" value="Auto" onclick="openUnitCard(` + cityIndex + `, 'Auto'); playAudio(clickSound);"` + uAutoDisabled + `>
 				</div>
 			</div>
 			<div class="buttonsGroup">
@@ -633,7 +635,46 @@ function openUnitCard (cityIndex, objective) {
 	closeCard(cityCard);
 	
 	var city = cities[cityIndex];
-	if (objective == 'Transfer') {
+	if (objective == 'Auto') {
+		var viableOfficers = getCityViableOfficers(cityIndex);
+		var viableUnits = getCityViableUnits(cityIndex);
+		var recuritIndex = -1;
+		var drillIndex = -1;
+		for (var i = 0; i < viableUnits.length; i++) {
+			if (units[viableUnits[i]].Strength < strengthLimit) recuritIndex = viableUnits[i];
+			if (units[viableUnits[i]].Morale < moraleLimit) drillIndex = viableUnits[i];
+		}
+		
+		var iter = 0;
+		while (viableOfficers.length > 0 && (recuritIndex >= 0 || drillIndex >= 0)) {
+			if (iter % 2 == 0 && recuritIndex >= 0) {
+				var cost = unitTypes[units[recuritIndex].Type].Cost * recuritCostMultiplier;
+				if (city.Gold >= cost) {
+					var officerIndex = getCityViableOfficers(cityIndex, 'CHR')[0];
+					assignOfficerUnit('Recurit', officerIndex, recuritIndex);
+					cities[cityIndex].Gold -= cost;
+				}
+			}
+			else if (iter % 2 != 0 && drillIndex >= 0) {
+				var officerIndex = getCityViableOfficers(cityIndex, 'LDR')[0];
+				assignOfficerUnit('Drill', officerIndex, drillIndex);
+			}
+			
+			iter++;
+			viableOfficers = getCityViableOfficers(cityIndex);
+			viableUnits = getCityViableUnits(cityIndex);
+			recuritIndex = -1;
+			drillIndex = -1;
+			for (var i = 0; i < viableUnits.length; i++) {
+				if (units[viableUnits[i]].Strength < strengthLimit) recuritIndex = viableUnits[i];
+				if (units[viableUnits[i]].Morale < moraleLimit) drillIndex = viableUnits[i];
+			}
+		}
+		
+		openInfoCard('City', cityIndex);
+		draw();
+	}
+	else if (objective == 'Transfer') {
 		var targets = getTransferCities(cityIndex);
 		var targetsHTML = '<select id="target">';
 		for (var i = 0; i < targets.length; i++) targetsHTML += '<option value="' + targets[i] + '">' + cities[targets[i]].Name + '</option>';
