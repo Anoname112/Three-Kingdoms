@@ -106,7 +106,7 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit'); playAudio(clickSound);"` + recuritDisabled + `>
 					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill'); playAudio(clickSound);"` + drillDisabled + `>
 					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + uTransferDisabled + `>
-					<input type="button" value="Auto" onclick="openUnitCard(` + cityIndex + `, 'Auto'); playAudio(clickSound);"` + uAutoDisabled + `>
+					<input type="button" value="Auto" onclick="openUnitCard(` + cityIndex + `, 'Auto'); playAudio(confirmSound);"` + uAutoDisabled + `>
 				</div>
 			</div>
 			<div class="buttonsGroup">
@@ -652,7 +652,7 @@ function openUnitCard (cityIndex, objective) {
 				if (city.Gold >= cost) {
 					var officerIndex = getCityViableOfficers(cityIndex, 'CHR')[0];
 					assignOfficerUnit('Recurit', officerIndex, recuritIndex);
-					cities[cityIndex].Gold -= cost;
+					city.Gold -= cost;
 				}
 			}
 			else if (iter % 2 != 0 && drillIndex >= 0) {
