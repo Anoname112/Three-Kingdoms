@@ -650,18 +650,17 @@ function openUnitCard (cityIndex, objective) {
 			if (iter % 2 == 0 && recuritIndex >= 0) {
 				var cost = unitTypes[units[recuritIndex].Type].Cost * recuritCostMultiplier;
 				if (city.Gold >= cost) {
-					var officerIndex = getCityViableOfficers(cityIndex, 'CHR')[0];
-					assignOfficerUnit('Recurit', officerIndex, recuritIndex);
+					viableOfficers.sort((a, b) => officers[b].CHR - officers[a].CHR);
+					assignOfficerUnit('Recurit', viableOfficers.shift(), recuritIndex);
 					city.Gold -= cost;
 				}
 			}
 			else if (iter % 2 != 0 && drillIndex >= 0) {
-				var officerIndex = getCityViableOfficers(cityIndex, 'LDR')[0];
-				assignOfficerUnit('Drill', officerIndex, drillIndex);
+				viableOfficers.sort((a, b) => officers[b].LDR - officers[a].LDR);
+				assignOfficerUnit('Drill', viableOfficers.shift(), drillIndex);
 			}
 			
 			iter++;
-			viableOfficers = getCityViableOfficers(cityIndex);
 			viableUnits = getCityViableUnits(cityIndex);
 			recuritIndex = -1;
 			drillIndex = -1;
