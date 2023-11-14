@@ -17,6 +17,8 @@ DONE:
 - Click (i) show officer count in cities
 
 TO DO:
+- Disband unit
+- Fix Recurit
 - Items
 - Optimize drawing
 - Create Officer
