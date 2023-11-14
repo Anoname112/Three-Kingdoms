@@ -64,10 +64,10 @@ function openCityCard (cityIndex, select) {
 		var viableUnits = getCityViableUnits(cityIndex);
 		var unitCount = getCityUnitCount(cityIndex, true);
 		
-		var recuritable = false;
+		var recruitable = false;
 		var drillable = false;
 		for (var i = 0; i < viableUnits.length; i++) {
-			if (units[viableUnits[i]].Strength < strengthLimit) recuritable = true;
+			if (units[viableUnits[i]].Strength < strengthLimit) recruitable = true;
 			if (units[viableUnits[i]].Morale < moraleLimit) drillable = true;
 		}
 		
@@ -79,10 +79,10 @@ function openCityCard (cityIndex, select) {
 		var orderDisabled = viableOfficers.length > 0 && city.cOrder < orderLimit && city.Gold >= devCost ? '' : ' disabled';
 		var rTransferDisabled = transferPartners.length > 0 ? '' : ' disabled';
 		var establishDisabled = viableOfficers.length > 0 && unitCount < unitLimit && city.Gold >= getCityLowestEstablishCost(cityIndex) ? '' : ' disabled';
-		var recuritDisabled = viableOfficers.length > 0 && recuritable && city.Gold >= getCityLowestRecuritCost(cityIndex) ? '' : ' disabled';
+		var recruitDisabled = viableOfficers.length > 0 && recruitable && city.Gold >= getCityLowestRecruitCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
-		var uAutoDisabled = recuritDisabled == '' || drillDisabled == '' ? '' : ' disabled';
+		var uAutoDisabled = recruitDisabled == '' || drillDisabled == '' ? '' : ' disabled';
 		var employDisabled = viableOfficers.length > 0 && getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
 		var dismissDisabled = getCityNonViableOfficers(cityIndex, true).length > 0 ? '' : ' disabled';
 		var oTransferDisabled = viableOfficers.length > 0 && getCities(city.Force, 'force').length > 1 ? '' : ' disabled';
@@ -103,7 +103,7 @@ function openCityCard (cityIndex, select) {
 				<input type="button" value="Military &#9654;">
 				<div class="buttons">
 					<input type="button" value="Establish" onclick="openUnitCard(` + cityIndex + `, 'Establish'); playAudio(clickSound);"` + establishDisabled + `>
-					<input type="button" value="Recurit" onclick="openUnitCard(` + cityIndex + `, 'Recurit'); playAudio(clickSound);"` + recuritDisabled + `>
+					<input type="button" value="Recruit" onclick="openUnitCard(` + cityIndex + `, 'Recruit'); playAudio(clickSound);"` + recruitDisabled + `>
 					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill'); playAudio(clickSound);"` + drillDisabled + `>
 					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + uTransferDisabled + `>
 					<input type="button" value="Auto" onclick="openUnitCard(` + cityIndex + `, 'Auto'); playAudio(confirmSound);"` + uAutoDisabled + `>
@@ -602,10 +602,10 @@ function military (cityIndex, objective) {
 				}
 			}
 			else if (getElement('unit')) {
-				// Recurit or Drill
+				// Recruit or Drill
 				var unitIndex = parseInt(getElement('unit').value);
 				
-				var cost = objective == 'Recurit' ? unitTypes[units[unitIndex].Type].Cost * recuritCostMultiplier : 0;
+				var cost = objective == 'Recruit' ? unitTypes[units[unitIndex].Type].Cost * recruitCostMultiplier : 0;
 				if (cities[cityIndex].Gold >= cost) {
 					assignOfficerUnit(objective, officerIndex, unitIndex);
 					
@@ -638,20 +638,20 @@ function openUnitCard (cityIndex, objective) {
 	if (objective == 'Auto') {
 		var viableOfficers = getCityViableOfficers(cityIndex);
 		var viableUnits = getCityViableUnits(cityIndex);
-		var recuritIndex = -1;
+		var recruitIndex = -1;
 		var drillIndex = -1;
 		for (var i = 0; i < viableUnits.length; i++) {
-			if (units[viableUnits[i]].Strength < strengthLimit) recuritIndex = viableUnits[i];
+			if (units[viableUnits[i]].Strength < strengthLimit) recruitIndex = viableUnits[i];
 			if (units[viableUnits[i]].Morale < moraleLimit) drillIndex = viableUnits[i];
 		}
 		
 		var iter = 0;
-		while (viableOfficers.length > 0 && (recuritIndex >= 0 || drillIndex >= 0)) {
-			if (iter % 2 == 0 && recuritIndex >= 0) {
-				var cost = unitTypes[units[recuritIndex].Type].Cost * recuritCostMultiplier;
+		while (viableOfficers.length > 0 && (recruitIndex >= 0 || drillIndex >= 0)) {
+			if (iter % 2 == 0 && recruitIndex >= 0) {
+				var cost = unitTypes[units[recruitIndex].Type].Cost * recruitCostMultiplier;
 				if (city.Gold >= cost) {
 					viableOfficers.sort((a, b) => officers[b].CHR - officers[a].CHR);
-					assignOfficerUnit('Recurit', viableOfficers.shift(), recuritIndex);
+					assignOfficerUnit('Recruit', viableOfficers.shift(), recruitIndex);
 					city.Gold -= cost;
 				}
 			}
@@ -662,10 +662,10 @@ function openUnitCard (cityIndex, objective) {
 			
 			iter++;
 			viableUnits = getCityViableUnits(cityIndex);
-			recuritIndex = -1;
+			recruitIndex = -1;
 			drillIndex = -1;
 			for (var i = 0; i < viableUnits.length; i++) {
-				if (units[viableUnits[i]].Strength < strengthLimit) recuritIndex = viableUnits[i];
+				if (units[viableUnits[i]].Strength < strengthLimit) recruitIndex = viableUnits[i];
 				if (units[viableUnits[i]].Morale < moraleLimit) drillIndex = viableUnits[i];
 			}
 		}
@@ -715,7 +715,7 @@ function openUnitCard (cityIndex, objective) {
 					}
 					objectiveHTML += 'Unit Type: <select id="unitType">' + options + '</select>';
 					break;
-				case 'Recurit':
+				case 'Recruit':
 					var options = '';
 					var viableUnits = getCityViableUnits(cityIndex);
 					for (var i = 0; i < viableUnits.length; i++) {
@@ -809,7 +809,7 @@ function personel (cityIndex, objective) {
 					officer.Progress = officer.Progress > 0 ? 0 : '-';
 				}
 				else {
-					if (officer.Objective[0] == 'Recurit' || officer.Objective[0] == 'Drill') {
+					if (officer.Objective[0] == 'Recruit' || officer.Objective[0] == 'Drill') {
 						var unitIndex = getUnitIndexById(officer.Objective[1]);
 						dismissUnit(unitIndex);
 					}
@@ -1054,7 +1054,7 @@ function createUnitsTable (unitIndexes) {
 		var name = '-';
 		switch (objective) {
 			case 'March':
-			case 'Recurit':
+			case 'Recruit':
 			case 'Drill':
 				name = officers[unit.Objective[1]].Name;
 				break;

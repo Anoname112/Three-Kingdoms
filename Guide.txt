@@ -22,13 +22,13 @@ Also slightly used in the calculation of unit's DEF.
 
 POL is used to develop Farm and Trade.
 
-CHR is used to Recurit and Establish units.
+CHR is used to Recruit and Establish units.
 Also used to Employ officers.
 
 The maximum value of unit's Strength is 10,000.
 The maximum value of unit's Morale is 100.
 
-'Military > Auto' is used to automatically assign Recurit and Drill to viable officers and units.
+'Military > Auto' is used to automatically assign Recruit and Drill to viable officers and units.
 
 Deployed unit's ATK is calculated using mostly LDR and a little of WAR.
 Deployed unit's DEF is calculated using mostly LDR and a little of INT.

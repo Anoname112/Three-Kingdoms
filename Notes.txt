@@ -18,7 +18,7 @@ DONE:
 
 TO DO:
 - Disband unit
-- Fix Recurit
+- Fix Recruit
 - Items
 - Optimize drawing
 - Create Officer

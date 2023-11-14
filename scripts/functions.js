@@ -281,22 +281,22 @@ function getCityHighestEstablishCost (cityIndex) {
 	return cost;
 }
 
-function getCityLowestRecuritCost (cityIndex) {
+function getCityLowestRecruitCost (cityIndex) {
 	var cost = getCityHighestEstablishCost(cityIndex);
 	var viableUnits = getCityViableUnits(cityIndex);
 	for (var i = 0; i < viableUnits.length; i++) {
-		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritCostMultiplier;
-		if (recuritCost < cost) cost = recuritCost;
+		var recruitCost = unitTypes[units[viableUnits[i]].Type].Cost * recruitCostMultiplier;
+		if (recruitCost < cost) cost = recruitCost;
 	}
 	return cost;
 }
 
-function getCityHighestRecuritCost (cityIndex) {
+function getCityHighestRecruitCost (cityIndex) {
 	var cost = 0;
 	var viableUnits = getCityViableUnits(cityIndex);
 	for (var i = 0; i < viableUnits.length; i++) {
-		var recuritCost = unitTypes[units[viableUnits[i]].Type].Cost * recuritCostMultiplier;
-		if (recuritCost > cost) cost = recuritCost;
+		var recruitCost = unitTypes[units[viableUnits[i]].Type].Cost * recruitCostMultiplier;
+		if (recruitCost > cost) cost = recruitCost;
 	}
 	return cost;
 }

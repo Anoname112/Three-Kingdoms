@@ -1175,12 +1175,12 @@ function animateMap (timestamp) {
 							dismissOfficer(i);
 							break;
 						case 'Establish':
-							units.push(new Unit(getNewUnitId(), index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recuritMultiplier), '-', '-', null, null, 0));
+							units.push(new Unit(getNewUnitId(), index, officers[i].Force, officers[i].City, officers[i].Position, establishMorale, floor(officers[i].CHR * recruitMultiplier), '-', '-', null, null, 0));
 							dismissOfficer(i);
 							break;
-						case 'Recurit':
+						case 'Recruit':
 							index = getUnitIndexById(index);
-							units[index].Strength += floor(officers[i].CHR * recuritMultiplier);
+							units[index].Strength += floor(officers[i].CHR * recruitMultiplier);
 							if (units[index].Strength > strengthLimit) units[index].Strength = strengthLimit;
 							dismissUnit(index);
 							dismissOfficer(i);
@@ -1196,7 +1196,7 @@ function animateMap (timestamp) {
 							if (Math.random() * officers[i].CHR > Math.random() * getForceDiligence(getForceIndexById(officers[index].Force))) {
 								if (officers[index].Objective != '-') {
 									if (officers[index].Objective[0] == 'March') dismissDeployed(index);
-									else if (officers[index].Objective[0] == 'Recurit' || officers[index].Objective[0] == 'Drill') {
+									else if (officers[index].Objective[0] == 'Recruit' || officers[index].Objective[0] == 'Drill') {
 										var unitIndex = getUnitIndexById(officers[index].Objective[1]);
 										dismissUnit(unitIndex);
 									}
@@ -1370,7 +1370,7 @@ function animateMap (timestamp) {
 									// Return all officers to nearest city
 									if (officers[j].Objective != '-') {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
-										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
+										else if (officers[j].Objective[0] == 'Recruit' || officers[j].Objective[0] == 'Drill') {
 											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
 											dismissUnit(unitIndex);
 										}
@@ -1383,7 +1383,7 @@ function animateMap (timestamp) {
 									// Auto employ officers of captured city
 									if (officers[j].Objective != '-') {
 										if (officers[j].Objective[0] == 'March') dismissDeployed(j);
-										else if (officers[j].Objective[0] == 'Recurit' || officers[j].Objective[0] == 'Drill') {
+										else if (officers[j].Objective[0] == 'Recruit' || officers[j].Objective[0] == 'Drill') {
 											var unitIndex = getUnitIndexById(officers[j].Objective[1]);
 											dismissUnit(unitIndex);
 										}
@@ -1468,10 +1468,10 @@ function playClick (e) {
 					var viableUnits = getCityViableUnits(enemyCities[j]);
 					var unitCount = getCityUnitCount(enemyCities[j], true);
 					
-					var recuritable = false;
+					var recruitable = false;
 					var drillable = false;
 					for (var k = 0; k < viableUnits.length; k++) {
-						if (units[viableUnits[k]].Strength < strengthLimit) recuritable = true;
+						if (units[viableUnits[k]].Strength < strengthLimit) recruitable = true;
 						if (units[viableUnits[k]].Morale < moraleLimit) drillable = true;
 					}
 					
@@ -1516,12 +1516,12 @@ function playClick (e) {
 									}
 									break;
 								case 8:
-									if (recuritable && city.Gold >= getCityHighestRecuritCost(enemyCities[j])) {
+									if (recruitable && city.Gold >= getCityHighestRecruitCost(enemyCities[j])) {
 										for (var l = 0; l < viableUnits.length; l++) {
 											if (units[viableUnits[l]].Strength < strengthLimit && units[viableUnits[l]].Objective == '-') {
-												assignOfficerUnit('Recurit', viableOfficers[k], viableUnits[l]);
+												assignOfficerUnit('Recruit', viableOfficers[k], viableUnits[l]);
 												
-												city.Gold -= unitTypes[units[viableUnits[l]].Type].Cost * recuritCostMultiplier;
+												city.Gold -= unitTypes[units[viableUnits[l]].Type].Cost * recruitCostMultiplier;
 												break;
 											}
 										}

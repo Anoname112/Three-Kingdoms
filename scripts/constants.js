@@ -66,8 +66,8 @@ const strengthLimit = 10000;
 const moraleLimit = 100;
 const moraleBonus = 5;
 const establishMorale = 40;
-const recuritCostMultiplier = 0.5;
-const recuritMultiplier = 20;
+const recruitCostMultiplier = 0.5;
+const recruitMultiplier = 20;
 const drillMultiplier = 0.3;
 const unitLimit = 10;
 const unitCooldown = 1;
@@ -87,7 +87,7 @@ const objectiveLength = {
 	'Defense': 30,
 	'Order': 30,
 	'Establish': 30,
-	'Recurit': 30,
+	'Recruit': 30,
 	'Drill': 30,
 	'Employ': 30,
 	'Transfer': 10,
