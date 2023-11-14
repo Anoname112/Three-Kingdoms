@@ -15,6 +15,7 @@ DONE:
 - Tech impact into speciality
 - Transfer Gold & Food
 - Click (i) show officer count in cities
+- Fix Recruit
 
 TO DO:
 - Disband unit
