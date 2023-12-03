@@ -1,7 +1,7 @@
 // Disband a unit
 function disbandUnit (unitId) {
     for (var i = 0; i < units.length; i++) {
-        if (unitId == units[i].Id) {
+        if (units[i].Id == unitId) {
             units.splice(i, 1);
             break;
         }
