@@ -1,13 +1,3 @@
-// Disband a unit
-function disbandUnit (unitId) {
-    for (var i = 0; i < units.length; i++) {
-        if (units[i].Id == unitId) {
-            units.splice(i, 1);
-            break;
-        }
-    }
-}
-
 // Distribute food evenly to each force's cities. This also works for cities[i].Gold
 var total = 0;
 var force = officers[getOfficerIndexByName('Cao Cao')].Force;
