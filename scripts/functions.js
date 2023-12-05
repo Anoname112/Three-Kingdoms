@@ -558,12 +558,7 @@ function dismissUnit (unitIndex) {
 }
 
 function disbandUnit (unitId) {
-    for (var i = 0; i < units.length; i++) {
-        if (units[i].Id == unitId) {
-            units.splice(i, 1);
-            break;
-        }
-    }
+	units.splice(getUnitIndexById(unitId), 1);
 }
 
 function deployedCityCollision (officerIndex) {
