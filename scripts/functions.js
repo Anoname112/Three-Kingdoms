@@ -557,6 +557,15 @@ function dismissUnit (unitIndex) {
 	units[unitIndex].Progress = '-';
 }
 
+function disbandUnit (unitId) {
+    for (var i = 0; i < units.length; i++) {
+        if (units[i].Id == unitId) {
+            units.splice(i, 1);
+            break;
+        }
+    }
+}
+
 function deployedCityCollision (officerIndex) {
 	var nonForceCities = getCities(officers[officerIndex].Force, 'nonForce');
 	for (var i = 0; i < nonForceCities.length; i++) {
