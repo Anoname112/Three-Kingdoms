@@ -16,9 +16,9 @@ DONE:
 - Transfer Gold & Food
 - Click (i) show officer count in cities
 - Fix Recruit
+- Disband unit
 
 TO DO:
-- Disband unit
 - Items
 - Optimize drawing
 - Create Officer
