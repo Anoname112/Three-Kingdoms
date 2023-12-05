@@ -82,6 +82,7 @@ function openCityCard (cityIndex, select) {
 		var recruitDisabled = viableOfficers.length > 0 && recruitable && city.Gold >= getCityLowestRecruitCost(cityIndex) ? '' : ' disabled';
 		var drillDisabled = viableOfficers.length > 0 && drillable ? '' : ' disabled';
 		var uTransferDisabled = viableUnits.length > 0 && getTransferCities(cityIndex).length > 0 ? '' : ' disabled';
+		var uDisbandDisabled = viableUnits.length > 0 ? '' : ' disabled';
 		var uAutoDisabled = recruitDisabled == '' || drillDisabled == '' ? '' : ' disabled';
 		var employDisabled = viableOfficers.length > 0 && getOfficers(city.Force, 'nonForce').length > 0 ? '' : ' disabled';
 		var dismissDisabled = getCityNonViableOfficers(cityIndex, true).length > 0 ? '' : ' disabled';
@@ -106,6 +107,7 @@ function openCityCard (cityIndex, select) {
 					<input type="button" value="Recruit" onclick="openUnitCard(` + cityIndex + `, 'Recruit'); playAudio(clickSound);"` + recruitDisabled + `>
 					<input type="button" value="Drill" onclick="openUnitCard(` + cityIndex + `, 'Drill'); playAudio(clickSound);"` + drillDisabled + `>
 					<input type="button" value="Transfer" onclick="openUnitCard(` + cityIndex + `, 'Transfer'); playAudio(clickSound);"` + uTransferDisabled + `>
+					<input type="button" value="Disband" onclick="openUnitCard(` + cityIndex + `, 'Disband'); playAudio(clickSound);"` + uDisbandDisabled + `>
 					<input type="button" value="Auto" onclick="openUnitCard(` + cityIndex + `, 'Auto'); playAudio(confirmSound);"` + uAutoDisabled + `>
 				</div>
 			</div>
@@ -561,7 +563,19 @@ function assignOfficerUnit (objective, officerIndex, unitIndex) {
 
 // Unit card
 function military (cityIndex, objective) {
-	if (objective == 'Transfer') {
+	if (objective == 'Disband') {
+		var disbandUnits = [];
+		for (var i = 0; i < units.length; i++) {
+			if (getElement('unit' + i) && getElement('unit' + i).checked) disbandUnits.push(units[i].Id);
+		}
+		
+		for (var i = 0; i < disbandUnits.length; i++) disbandUnit(disbandUnits[i]);
+		
+		closeCard(unitCard);
+		openInfoCard('City', cityIndex);
+		draw();
+	}
+	else if (objective == 'Transfer') {
 		var target = getElement('target') && isNumeric(getElement('target').value) ? parseInt(getElement('target').value) : '';
 		var forceCities = getCities(cities[cityIndex].Force, 'force');
 		if (Number.isInteger(cityIndex) && Number.isInteger(target) && forceCities.includes(cityIndex) && forceCities.includes(target)) {
@@ -672,6 +686,29 @@ function openUnitCard (cityIndex, objective) {
 		
 		openInfoCard('City', cityIndex);
 		draw();
+	}
+	else if (objective == 'Disband') {
+		unitCard.innerHTML = `<div class="title allyColor">` + objective + `</div>
+			<div class="unitContent">
+				<table>
+					<tr>
+						<td>Source: <input type="text" value="` + city.Name + `" readonly></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><div id="unitsDiv">` + createUnitDivInnerHTML(cityIndex) + `</div></td>
+						<td><div id="unitsStats"></div></td>
+					</tr>
+					<tr class="center">
+						<td colspan="2">
+							<input type="button" value="` + objective + `" onclick="military(` + cityIndex + `, '` + objective + `'); playAudio(confirmSound);">
+							<input type="button" value="Cancel" onclick="closeCard(unitCard); playAudio(clickSound);">
+						</td>
+					</tr>
+				</table>
+			</div>`;
+		
+		unitCard.style.visibility = 'visible';
 	}
 	else if (objective == 'Transfer') {
 		var targets = getTransferCities(cityIndex);
