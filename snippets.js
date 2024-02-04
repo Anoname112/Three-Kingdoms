@@ -59,7 +59,7 @@ player = getOfficerIndexByName('Shi Xie');
 playerForce = officers[player].Force;
 openPlayerCard();
 
-// Add Jiang Wei to Cao Cao Force, then place him in Chen Liu
+// Add Jiang Wei to Cao Cao Forces, then position him in Chen Liu
 officers[204].Force = 0;
 officers[204].City = 8;
 officers[204].Position = new Point(24, 12);
