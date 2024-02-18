@@ -1123,123 +1123,125 @@ function createUnitsTable (unitIndexes) {
 
 // Info card
 function openInfoCard (mode, index, sort) {
-	if (mode == 'City') {
-		var backColor = 'enemyColor';
-		if (cities[index].Force == '-') backColor = 'neutralColor';
-		else if (cities[index].Force == playerForce) backColor = 'allyColor';
-		
-		var cityOfficers = sort ? getCityOfficers(index, sort) : getCityOfficers(index);
-		var cityUnits = getCityUnits(index);
-		
-		infoCard.innerHTML = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
-			<div class="cityContent">` +
-				createCityTable(index) + `<br />` +
-				createOfficersTable(cityOfficers, index) + `<br />` +
-				createUnitsTable(cityUnits) + `
-			</div>`;
-	}
-	else if (mode == 'Unit') {
-		var backColor = 'enemyColor';
-		if (officers[index].Force == playerForce) backColor = 'allyColor';
-		
-		var deployedUnits = getDeployedUnits(index);
-		var assistOfficers = getDeployedAssistOfficers(index);
-		
-		infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
-			<div class="deployedContent">
-				<table class="stats">
-					<tr><th colspan="2">` + forces[getForceIndexById(officers[index].Force)].Name + `</th></tr>
-					<tr><th>Strength</th><td class="center">` + getDeployedStrength(index) + `</td></tr>
-					<tr><th>Target</th><td class="center">` + cities[officers[index].Objective[1]].Name + `</td></tr>
-				</table><br />` +
-				createUnitsTable(deployedUnits) + `<br />` +
-				createOfficersTable([index].concat(assistOfficers)) + `<br />
-				<b>Assisted Stats:</b>
-				<div id="infoStats"></div>
-			</div>`;
-		
-		var assistedStats = getAssistedStats(index);
-		calculatedStatsTable('infoStats', assistedStats[0], assistedStats[1], assistedStats[2]);
-	}
-	else if (mode == 'Global') {
-		var forcesData = [];
-		for (var i = 0; i < forces.length; i++) {
-			var cityCount = getCities(forces[i].Id, 'force').length;
-			if (cityCount > 0) {
-				forcesData.push({
-					'Name' : officers[forces[i].Ruler].Name + ' Forces',
-					'CityCount' : cityCount,
-					'OfficerCount' : getOfficers(forces[i].Id, 'force').length,
-					'Strength' : getForceStrength(forces[i].Id, true)
-				});
-			}
+	if (battles.length == 0) {
+		if (mode == 'City') {
+			var backColor = 'enemyColor';
+			if (cities[index].Force == '-') backColor = 'neutralColor';
+			else if (cities[index].Force == playerForce) backColor = 'allyColor';
+			
+			var cityOfficers = sort ? getCityOfficers(index, sort) : getCityOfficers(index);
+			var cityUnits = getCityUnits(index);
+			
+			infoCard.innerHTML = `<div class="cityName ` + backColor + `">` + cities[index].Name + `</div>
+				<div class="cityContent">` +
+					createCityTable(index) + `<br />` +
+					createOfficersTable(cityOfficers, index) + `<br />` +
+					createUnitsTable(cityUnits) + `
+				</div>`;
 		}
-		
-		if (sort) {
-			for (var i = 0; i < forcesData.length; i++) {
-				for (var j = i + 1; j < forcesData.length; j++) {
-					var swap = false;
-					if (sort == 'Cities' && forcesData[i]['CityCount'] < forcesData[j]['CityCount']) swap = true;
-					else if (sort == 'Officers' && forcesData[i]['OfficerCount'] < forcesData[j]['OfficerCount']) swap = true;
-					else if (sort == 'Strength' && forcesData[i]['Strength'] < forcesData[j]['Strength']) swap = true;
-					if (swap) {
-						var temp = forcesData[i];
-						forcesData[i] = forcesData[j];
-						forcesData[j] = temp;
+		else if (mode == 'Unit') {
+			var backColor = 'enemyColor';
+			if (officers[index].Force == playerForce) backColor = 'allyColor';
+			
+			var deployedUnits = getDeployedUnits(index);
+			var assistOfficers = getDeployedAssistOfficers(index);
+			
+			infoCard.innerHTML = `<div class="unitName ` + backColor + `">` + officers[index].Name + ` Unit</div>
+				<div class="deployedContent">
+					<table class="stats">
+						<tr><th colspan="2">` + forces[getForceIndexById(officers[index].Force)].Name + `</th></tr>
+						<tr><th>Strength</th><td class="center">` + getDeployedStrength(index) + `</td></tr>
+						<tr><th>Target</th><td class="center">` + cities[officers[index].Objective[1]].Name + `</td></tr>
+					</table><br />` +
+					createUnitsTable(deployedUnits) + `<br />` +
+					createOfficersTable([index].concat(assistOfficers)) + `<br />
+					<b>Assisted Stats:</b>
+					<div id="infoStats"></div>
+				</div>`;
+			
+			var assistedStats = getAssistedStats(index);
+			calculatedStatsTable('infoStats', assistedStats[0], assistedStats[1], assistedStats[2]);
+		}
+		else if (mode == 'Global') {
+			var forcesData = [];
+			for (var i = 0; i < forces.length; i++) {
+				var cityCount = getCities(forces[i].Id, 'force').length;
+				if (cityCount > 0) {
+					forcesData.push({
+						'Name' : officers[forces[i].Ruler].Name + ' Forces',
+						'CityCount' : cityCount,
+						'OfficerCount' : getOfficers(forces[i].Id, 'force').length,
+						'Strength' : getForceStrength(forces[i].Id, true)
+					});
+				}
+			}
+			
+			if (sort) {
+				for (var i = 0; i < forcesData.length; i++) {
+					for (var j = i + 1; j < forcesData.length; j++) {
+						var swap = false;
+						if (sort == 'Cities' && forcesData[i]['CityCount'] < forcesData[j]['CityCount']) swap = true;
+						else if (sort == 'Officers' && forcesData[i]['OfficerCount'] < forcesData[j]['OfficerCount']) swap = true;
+						else if (sort == 'Strength' && forcesData[i]['Strength'] < forcesData[j]['Strength']) swap = true;
+						if (swap) {
+							var temp = forcesData[i];
+							forcesData[i] = forcesData[j];
+							forcesData[j] = temp;
+						}
 					}
 				}
 			}
-		}
-		
-		var forcesHTML = '';
-		for (var i = 0; i < forcesData.length; i++) {
-			forcesHTML += `<tr>
-					<td>` + forcesData[i]['Name'] + `</td>
-					<td>` + forcesData[i]['CityCount'] + `</td>
-					<td>` + forcesData[i]['OfficerCount'] + `</td>
-					<td>` + forcesData[i]['Strength'] + `</td>
-				</tr>`;
-		}
-		
-		var abilitiesHTML = '';
-		for (var i = 0; i < abilities.length; i++) {
-			var officersHTML = '';
-			for (var j = 0; j < abilities[i].Officers.length; j++) {
-				if (officersHTML.length > 0) officersHTML += ', ' + officers[abilities[i].Officers[j]].Name;
-				else officersHTML += officers[abilities[i].Officers[j]].Name;
+			
+			var forcesHTML = '';
+			for (var i = 0; i < forcesData.length; i++) {
+				forcesHTML += `<tr>
+						<td>` + forcesData[i]['Name'] + `</td>
+						<td>` + forcesData[i]['CityCount'] + `</td>
+						<td>` + forcesData[i]['OfficerCount'] + `</td>
+						<td>` + forcesData[i]['Strength'] + `</td>
+					</tr>`;
 			}
-			abilitiesHTML += `<tr>
-					<td class="center">` + abilities[i].Name + `</td>
-					<td>` + abilities[i].AllyEffect + `</td>
-					<td>` + abilities[i].EnemyEffect + `</td>
-					<td class="left">` + officersHTML + `</td>
-				</tr>`;
+			
+			var abilitiesHTML = '';
+			for (var i = 0; i < abilities.length; i++) {
+				var officersHTML = '';
+				for (var j = 0; j < abilities[i].Officers.length; j++) {
+					if (officersHTML.length > 0) officersHTML += ', ' + officers[abilities[i].Officers[j]].Name;
+					else officersHTML += officers[abilities[i].Officers[j]].Name;
+				}
+				abilitiesHTML += `<tr>
+						<td class="center">` + abilities[i].Name + `</td>
+						<td>` + abilities[i].AllyEffect + `</td>
+						<td>` + abilities[i].EnemyEffect + `</td>
+						<td class="left">` + officersHTML + `</td>
+					</tr>`;
+			}
+			
+			infoCard.innerHTML = `<div class="title allyColor">Info</div>
+				<div class="forceContent">
+					<table class="stats">
+						<tr>
+							<th class="sortable" onclick="openInfoCard('Global', ` + index + `)"><span>Forces</span></th>
+							<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Cities')"><span>Cities</span></th>
+							<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Officers')"><span>Officers</span></th>
+							<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Strength')"><span>Strength</span></th>
+						</tr>
+						` + forcesHTML + `
+					</table><br />
+					<table class="stats">
+						<tr>
+							<th>Abilities</th>
+							<th>Ally +</th>
+							<th>Enemy -</th>
+							<th>Officers</th>
+						</tr>
+						` + abilitiesHTML + `
+					</table>
+				</div>`;
 		}
 		
-		infoCard.innerHTML = `<div class="title allyColor">Info</div>
-			<div class="forceContent">
-				<table class="stats">
-					<tr>
-						<th class="sortable" onclick="openInfoCard('Global', ` + index + `)"><span>Forces</span></th>
-						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Cities')"><span>Cities</span></th>
-						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Officers')"><span>Officers</span></th>
-						<th class="sortable" onclick="openInfoCard('Global', ` + index + `, 'Strength')"><span>Strength</span></th>
-					</tr>
-					` + forcesHTML + `
-				</table><br />
-				<table class="stats">
-					<tr>
-						<th>Abilities</th>
-						<th>Ally +</th>
-						<th>Enemy -</th>
-						<th>Officers</th>
-					</tr>
-					` + abilitiesHTML + `
-				</table>
-			</div>`;
+		infoCard.style.visibility = 'visible';
 	}
-	
-	infoCard.style.visibility = 'visible';
 }
 
 // Import card
