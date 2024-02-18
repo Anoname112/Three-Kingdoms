@@ -17,9 +17,9 @@ DONE:
 - Click (i) show officer count in cities
 - Fix Recruit
 - Disband unit
+- Optimize drawing (implement fps control)
 
 TO DO:
 - Items
-- Optimize drawing
 - Create Officer
 - Create new Force
