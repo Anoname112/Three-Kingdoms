@@ -62,7 +62,7 @@ openPlayerCard();
 // Add Jiang Wei to Cao Cao Forces, then position him in Chen Liu
 officers[getOfficerIndexByName('Jiang Wei')].Force = 0;
 officers[getOfficerIndexByName('Jiang Wei')].City = 8;
-officers[getOfficerIndexByName('Jiang Wei')].Position = new Point(24, 12);
+officers[getOfficerIndexByName('Jiang Wei')].Position = getCityPosition(8);
 
 // Construct famous officers array, with battle stats and ability (delete is optional)
 var famous = ['Cao Cao', 'Xiahou Yuan', 'Liu Bei', 'Guan Yu', 'Sun Ce', 'Zhou Yu', 'Lu Bu', 'Zhang Liao', 'Gongsun Zan', 'Zhao Yun', 'Ma Teng', 'Ma Chao'];
