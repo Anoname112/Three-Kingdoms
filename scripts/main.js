@@ -1617,7 +1617,7 @@ function draw () {
 		var x = canvasPad;
 		var y = canvasPad;
 		// Draw background map
-		drawImage(mapImage, x, y, map.length * squareSize, map.length * squareSize);
+		drawImage(mapImage, x, y, mapSize, mapSize);
 		// Draw roads
 		ctx.globalAlpha = roadAlpha;
 		for (var i = 0; i < map.length; i++) {
