@@ -7,7 +7,7 @@ GENERAL
 
 In addition to the 'IMPORT DATA' feature, external save data can also be imported by dragging and dropping it.
 
-Click the (i) icon to show the number of officers in each city. Click it again to hide the numbers.
+Click the (i) icon to show/hide the number of officers in each city.
 
 OFFICER AND UNIT
 ================
