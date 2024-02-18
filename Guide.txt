@@ -5,7 +5,7 @@ GENERAL
 'DOWNLOAD DATA' is used to download save data as a .txt file.
 'LOAD DATA' is used to load save data and continue playing.
 
-Other than using the 'IMPORT DATA' feature, external save data can be dragged and dropped to be imported.
+In addition to the 'IMPORT DATA' feature, external save data can also be imported by dragging and dropping it.
 
 Click the (i) icon to show the number of officers in each city. Click it again to hide the numbers.
 
