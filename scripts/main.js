@@ -987,8 +987,8 @@ function onMouseClick (e) {
 	}
 }
 
-function animateUnits (unitIndexes, elapsed, allyAbilities, enemyAbilities) {
-	var elapsedSecond = elapsed / battleSeconds;
+function animateUnits (unitIndexes, elapsedTimestamp, allyAbilities, enemyAbilities) {
+	var elapsedSecond = elapsedTimestamp / battleSeconds;
 	for (var i = 0; i < unitIndexes.length; i++) {
 		var unit = units[unitIndexes[i]];
 		var targetIndex = getUnitIndexById(unit.Target);
@@ -1031,7 +1031,7 @@ function animateBattle (timestamp) {
 	if (battles.length > 0) {
 		// Calculate elapsed time
 		var currentTimestamp = Date.now();
-		var elapsed = currentTimestamp - startTimestamp;
+		var elapsedTimestamp = currentTimestamp - startTimestamp;
 		startTimestamp = currentTimestamp;
 		
 		// Animate when battle is not paused
@@ -1050,8 +1050,8 @@ function animateBattle (timestamp) {
 				}
 			}
 			
-			animateUnits(attUnits, elapsed, battles[0]['Abilities0'], battles[0]['Abilities1']);
-			animateUnits(defUnits, elapsed, battles[0]['Abilities1'], battles[0]['Abilities0']);
+			animateUnits(attUnits, elapsedTimestamp, battles[0]['Abilities0'], battles[0]['Abilities1']);
+			animateUnits(defUnits, elapsedTimestamp, battles[0]['Abilities1'], battles[0]['Abilities0']);
 			
 			// Remove defeated units
 			for (var i = 0; i < units.length; i++) {
