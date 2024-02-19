@@ -29,7 +29,6 @@ var mousePos;
 var infoIconHover;
 var elapsed;
 var then;
-var now;
 var startTimestamp;
 var mapAnimationStep;
 var squareSize;
@@ -946,7 +945,7 @@ function onMouseClick (e) {
 				startTimestamp = 0;
 				openPlayerCard();
 				openInfoCard('City', officers[player].City);
-				draw();
+				draw(true);
 				saveData();
 				stopAudio(battleSound);
 				playAudio(mainSound);
@@ -1553,10 +1552,10 @@ function playClick (e) {
 	requestAnimationFrame(animateMap);
 }
 
-function draw () {
-	now = Date.now();
+function draw (force) {
+	var now = Date.now();
 	elapsed = now - then;
-	if (elapsed > fpsInterval) {
+	if (elapsed > fpsInterval || force) {
 		then = now;
 		
 		// Invalidate
