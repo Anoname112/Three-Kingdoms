@@ -1029,7 +1029,7 @@ function animateUnits (unitIndexes, elapsedTimestamp, allyAbilities, enemyAbilit
 function animateBattle (timestamp) {
 	if (battles.length > 0) {
 		// Calculate elapsed time
-		var currentTimestamp = Date.now();
+		var currentTimestamp = performance.now();
 		var elapsedTimestamp = currentTimestamp - startTimestamp;
 		startTimestamp = currentTimestamp;
 		
@@ -1120,12 +1120,12 @@ function initBattle () {
 	}
 	
 	// Start battle animation
-	startTimestamp = Date.now();
+	startTimestamp = performance.now();
 	requestAnimationFrame(animateBattle);
 }
 
 function animateMap (timestamp) {
-	mapAnimationStep = (Date.now() - startTimestamp) / animationTime;
+	mapAnimationStep = (performance.now() - startTimestamp) / animationTime;
 	if (mapAnimationStep < 1) {
 		// Continue map animation
 		draw();
@@ -1548,12 +1548,12 @@ function playClick (e) {
 	}
 	
 	// Start map animation
-	startTimestamp = Date.now();
+	startTimestamp = performance.now();
 	requestAnimationFrame(animateMap);
 }
 
 function draw (force) {
-	var now = Date.now();
+	var now = performance.now();
 	elapsed = now - then;
 	if (elapsed > fpsInterval || force) {
 		then = now;
